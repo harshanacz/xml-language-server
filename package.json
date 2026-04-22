@@ -1,0 +1,13 @@
+{
+  "name": "xml-language-server",
+  "version": "1.0.0",
+  "description": "LSP wrapper for xml-language-service",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "vitest",
+    "test:run": "vitest run"
+  }
+}
