@@ -2,7 +2,7 @@ import {
   Connection,
   Diagnostic,
   DiagnosticSeverity,
-} from "vscode-languageserver/node";
+} from "vscode-languageserver/node.js";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { getLanguageService, SchemaInfo } from "xml-language-service";
 
@@ -28,6 +28,7 @@ export class DiagnosticsHandler {
 
   /** Registers an XSD schema so subsequent validations use it. */
   async registerSchema(info: SchemaInfo): Promise<void> {
+    this.connection.console.log(`[DiagnosticsHandler] Registering schema: ${info.uri}`);
     await this.service.registerSchema(info);
     this.schemaUri = info.uri;
   }
@@ -37,8 +38,12 @@ export class DiagnosticsHandler {
    * to the client. Does nothing when no schema has been registered yet.
    */
   async validateAndSend(document: TextDocument): Promise<void> {
-    if (!this.schemaUri) return;
+    if (!this.schemaUri) {
+      this.connection.console.log(`[DiagnosticsHandler] Skipping validation for ${document.uri} (no schema registered)`);
+      return;
+    }
 
+    this.connection.console.log(`[DiagnosticsHandler] Validating ${document.uri} against schema ${this.schemaUri}`);
     const xmlDoc = this.service.parseXMLDocument(
       document.uri,
       document.getText()
@@ -52,11 +57,13 @@ export class DiagnosticsHandler {
       source: "xml-language-service",
     }));
 
+    this.connection.console.log(`[DiagnosticsHandler] Found ${diagnostics.length} diagnostics for ${document.uri}`);
     this.connection.sendDiagnostics({ uri: document.uri, diagnostics });
   }
 
   /** Clears all diagnostics for the given document URI. */
   clearDiagnostics(uri: string): void {
+    this.connection.console.log(`[DiagnosticsHandler] Clearing diagnostics for ${uri}`);
     this.connection.sendDiagnostics({ uri, diagnostics: [] });
   }
 }
