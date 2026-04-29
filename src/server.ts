@@ -9,6 +9,7 @@ import {
   HoverParams,
   DocumentSymbolParams,
   FoldingRangeParams,
+  DocumentFormattingParams,
   RenameParams,
   DefinitionParams,
   ReferenceParams,
@@ -33,7 +34,12 @@ import { DiagnosticsHandler } from "./diagnosticsHandler.js";
 const connection = createConnection(ProposedFeatures.all);
 const documents = new TextDocuments(TextDocument);
 const service = getLanguageService();
-const diagnosticsHandler = new DiagnosticsHandler(connection);
+const diagnosticsHandler = new DiagnosticsHandler(connection, service);
+
+function getFileName(uri: string): string {
+  const parts = uri.split('/');
+  return parts[parts.length - 1];
+}
 
 // ── Type adapters ────────────────────────────────────────────────────────────
 
@@ -80,24 +86,6 @@ function toLSPFoldingRange(r: XmlFoldingRange): LSPFoldingRange {
   return { startLine: r.startLine, endLine: r.endLine, kind: r.kind };
 }
 
-// ── Test schema ──────────────────────────────────────────────────────────────
-
-const TEST_SCHEMA_URI = "test-schema://test.xsd";
-
-const TEST_XSD = `<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="config">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="name"    type="xs:string"  minOccurs="1" maxOccurs="1"/>
-        <xs:element name="value"   type="xs:string"  minOccurs="0" maxOccurs="unbounded"/>
-        <xs:element name="enabled" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
-      </xs:sequence>
-      <xs:attribute name="version" type="xs:string"/>
-    </xs:complexType>
-  </xs:element>
-</xs:schema>`;
-
 // ── LSP lifecycle ────────────────────────────────────────────────────────────
 
 connection.onInitialize((_params: InitializeParams): InitializeResult => {
@@ -114,13 +102,9 @@ connection.onInitialize((_params: InitializeParams): InitializeResult => {
       renameProvider: true,
       definitionProvider: true,
       referencesProvider: true,
+      documentFormattingProvider: true,
     },
   };
-});
-
-connection.onInitialized(async () => {
-  await diagnosticsHandler.registerSchema({ uri: TEST_SCHEMA_URI, xsdText: TEST_XSD });
-  connection.console.log(`[server] Test schema registered: ${TEST_SCHEMA_URI}`);
 });
 
 // ── Request handlers ─────────────────────────────────────────────────────────
@@ -130,8 +114,9 @@ connection.onCompletion((params: CompletionParams) => {
   connection.console.log(`[onCompletion] Triggered for ${params.textDocument.uri} at line ${params.position.line}, char ${params.position.character}`);
   const document = documents.get(params.textDocument.uri);
   if (!document) return [];
+  const fileName = getFileName(params.textDocument.uri);
   const xmlDoc = service.parseXMLDocument(document.uri, document.getText());
-  return toLSPCompletionList(service.doComplete(xmlDoc, params.position));
+  return toLSPCompletionList(service.doComplete(xmlDoc, params.position, fileName));
 });
 
 /** Returns hover information for the symbol under the cursor. */
@@ -140,8 +125,9 @@ connection.onHover((params: HoverParams) => {
 
   const document = documents.get(params.textDocument.uri);
   if (!document) return null;
+  const fileName = getFileName(params.textDocument.uri);
   const xmlDoc = service.parseXMLDocument(document.uri, document.getText());
-  const result = service.doHover(xmlDoc, params.position);
+  const result = service.doHover(xmlDoc, params.position, fileName);
   connection.console.log(`[onHover] Result: ${JSON.stringify(result)}`);
   return result ? toLSPHover(result) : null;
 });
@@ -170,15 +156,14 @@ connection.onRenameRequest((params: RenameParams) => {
   const document = documents.get(params.textDocument.uri);
   if (!document) return null;
   const uri = document.uri;
-  const text = document.getText();
-  const xmlDoc = service.parseXMLDocument(uri, text);
+  const xmlDoc = service.parseXMLDocument(uri, document.getText());
   const edits = service.doRename(xmlDoc, params.position, params.newName);
   if (!edits) return null;
 
   const lspEdits = edits.map((e) => ({
     range: {
-      start: positionAt(text, e.startOffset),
-      end: positionAt(text, e.endOffset),
+      start: document.positionAt(e.startOffset),
+      end: document.positionAt(e.endOffset),
     },
     newText: e.newText,
   }));
@@ -209,29 +194,32 @@ connection.onReferences((params: ReferenceParams) => {
   }));
 });
 
+/** Formats the entire document. */
+connection.onDocumentFormatting((params: DocumentFormattingParams) => {
+  connection.console.log(`[onDocumentFormatting] Triggered for ${params.textDocument.uri}`);
+  const document = documents.get(params.textDocument.uri);
+  if (!document) return [];
+  const xmlDoc = service.parseXMLDocument(document.uri, document.getText());
+  return service.format(xmlDoc, {
+    tabSize: params.options.tabSize,
+    insertSpaces: params.options.insertSpaces,
+  }).map((edit) => ({
+    range: {
+      start: document.positionAt(edit.startOffset),
+      end: document.positionAt(edit.endOffset),
+    },
+    newText: edit.newText,
+  }));
+});
+
 documents.onDidChangeContent(async (change) => {
   connection.console.log(`[onDidChangeContent] Validating ${change.document.uri}`);
   await diagnosticsHandler.validateAndSend(change.document);
 });
 
-// ── Utilities ────────────────────────────────────────────────────────────────
-
-/** Converts a character offset to an LSP { line, character } position. */
-function positionAt(
-  text: string,
-  offset: number
-): { line: number; character: number } {
-  const clamped = Math.max(0, Math.min(offset, text.length));
-  let line = 0;
-  let lineStart = 0;
-  for (let i = 0; i < clamped; i++) {
-    if (text[i] === "\n") {
-      line++;
-      lineStart = i + 1;
-    }
-  }
-  return { line, character: clamped - lineStart };
-}
+connection.onShutdown(() => {
+  service.dispose();
+});
 
 // ── Bootstrap ────────────────────────────────────────────────────────────────
 
