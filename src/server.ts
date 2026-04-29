@@ -20,8 +20,11 @@ import {
   Hover,
   FoldingRange as LSPFoldingRange,
   MarkupKind,
+  DidChangeConfigurationParams,
 } from "vscode-languageserver/node.js";
 import { TextDocument } from "vscode-languageserver-textdocument";
+import * as fs from "fs";
+import * as path from "path";
 import {
   getLanguageService,
   CompletionItem as XmlCompletionItem,
@@ -39,6 +42,15 @@ const diagnosticsHandler = new DiagnosticsHandler(connection, service);
 function getFileName(uri: string): string {
   const parts = uri.split('/');
   return parts[parts.length - 1];
+}
+
+function getDocumentPath(uri: string): string | undefined {
+  if (!uri.startsWith("file://")) return undefined;
+  return decodeURIComponent(uri.replace("file://", ""));
+}
+
+function escapeMd(text: string): string {
+  return text.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]!));
 }
 
 // ── Type adapters ────────────────────────────────────────────────────────────
@@ -88,14 +100,17 @@ function toLSPFoldingRange(r: XmlFoldingRange): LSPFoldingRange {
 
 // ── LSP lifecycle ────────────────────────────────────────────────────────────
 
-connection.onInitialize((_params: InitializeParams): InitializeResult => {
+connection.onInitialize((params: InitializeParams): InitializeResult => {
+  workspaceRoot = params.workspaceFolders?.[0]?.uri.replace("file://", "") ?? null;
   connection.console.log("=== STARTUP WAS TRIGGERED!===");
+
+  const schemas: SchemaConfig[] = (params.initializationOptions as any)?.schemas ?? [];
+  if (schemas.length > 0) applySchemaSettings(schemas);
+
   return {
     capabilities: {
-      textDocumentSync: TextDocumentSyncKind.Incremental, 
-      completionProvider: { resolveProvider: false
-        , triggerCharacters: ['<', ' ', '"', '/']
-       },
+      textDocumentSync: TextDocumentSyncKind.Incremental,
+      completionProvider: { resolveProvider: false, triggerCharacters: ['<', ' ', '"', '/'] },
       hoverProvider: true,
       documentSymbolProvider: true,
       foldingRangeProvider: true,
@@ -103,8 +118,61 @@ connection.onInitialize((_params: InitializeParams): InitializeResult => {
       definitionProvider: true,
       referencesProvider: true,
       documentFormattingProvider: true,
+      workspace: { workspaceFolders: { supported: true } },
     },
   };
+});
+
+connection.onInitialized(async () => {
+  try {
+    const config = await connection.workspace.getConfiguration('xmlLanguageServer');
+    connection.console.log(`[config] Fetched initial config: ${JSON.stringify(config)}`);
+    const schemas: SchemaConfig[] = config?.schemas ?? [];
+    applySchemaSettings(schemas);
+  } catch (e) {
+    connection.console.log(`[config] Could not fetch initial config: ${e}`);
+  }
+});
+
+// ── Configuration ────────────────────────────────────────────────────────────
+
+interface SchemaConfig {
+  pattern: string;
+  xsdPath: string;
+}
+
+let workspaceRoot: string | null = null;
+
+function applySchemaSettings(schemas: SchemaConfig[]): void {
+  for (const entry of schemas) {
+    const resolved = path.isAbsolute(entry.xsdPath)
+      ? entry.xsdPath
+      : workspaceRoot
+        ? path.join(workspaceRoot, entry.xsdPath)
+        : null;
+
+    if (!resolved) {
+      connection.console.warn(`[config] Cannot resolve relative xsdPath '${entry.xsdPath}' without a workspace root`);
+      continue;
+    }
+
+    if (!fs.existsSync(resolved)) {
+      connection.console.warn(`[config] XSD not found: ${resolved}`);
+      continue;
+    }
+
+    service.addUserAssociation({ pattern: entry.pattern, xsdPath: resolved, isBuiltIn: false });
+    connection.console.log(`[config] Registered schema: ${entry.pattern} → ${resolved}`);
+  }
+}
+
+connection.onDidChangeConfiguration((params: DidChangeConfigurationParams) => {
+  connection.console.log(`[config] onDidChangeConfiguration fired: ${JSON.stringify(params.settings?.xmlLanguageServer)}`);
+  const schemas: SchemaConfig[] = params.settings?.xmlLanguageServer?.schemas ?? [];
+  applySchemaSettings(schemas);
+  for (const doc of documents.all()) {
+    diagnosticsHandler.validateAndSend(doc);
+  }
 });
 
 // ── Request handlers ─────────────────────────────────────────────────────────
@@ -115,8 +183,9 @@ connection.onCompletion((params: CompletionParams) => {
   const document = documents.get(params.textDocument.uri);
   if (!document) return [];
   const fileName = getFileName(params.textDocument.uri);
+  const documentPath = getDocumentPath(params.textDocument.uri);
   const xmlDoc = service.parseXMLDocument(document.uri, document.getText());
-  return toLSPCompletionList(service.doComplete(xmlDoc, params.position, fileName));
+  return toLSPCompletionList(service.doComplete(xmlDoc, params.position, fileName, documentPath));
 });
 
 /** Returns hover information for the symbol under the cursor. */
@@ -129,15 +198,20 @@ connection.onHover((params: HoverParams) => {
 
   const errors = diagnosticsHandler.getDiagnosticsAt(document.uri, line, character);
   if (errors.length > 0) {
-    const errorMd = errors
-      .map((d) => `$(error) **${d.message}**`)
-      .join("\n\n");
-    return { contents: { kind: MarkupKind.Markdown, value: errorMd } };
+    const isError = (d: typeof errors[number]) =>
+      d.severity === undefined || d.severity === 1;
+    const sections = errors.map((d) => {
+      const label = isError(d) ? "**ERROR**" : "**WARNING**";
+      return `${label} — ${escapeMd(d.message)}`;
+    });
+    const value = sections.join("\n\n");
+    return { contents: { kind: MarkupKind.Markdown, value } };
   }
 
   const fileName = getFileName(params.textDocument.uri);
+  const documentPath = getDocumentPath(params.textDocument.uri);
   const xmlDoc = service.parseXMLDocument(document.uri, document.getText());
-  const result = service.doHover(xmlDoc, params.position, fileName);
+  const result = service.doHover(xmlDoc, params.position, fileName, documentPath);
   connection.console.log(`[onHover] Result: ${JSON.stringify(result)}`);
   return result ? toLSPHover(result) : null;
 });

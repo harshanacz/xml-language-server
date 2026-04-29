@@ -5,6 +5,8 @@ import {
 } from "vscode-languageserver/node.js";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { getLanguageService, SchemaInfo } from "xml-language-service";
+import * as fs from "fs";
+import * as path from "path";
 
 type LanguageService = ReturnType<typeof getLanguageService>;
 
@@ -48,6 +50,9 @@ export class DiagnosticsHandler {
 
   async validateAndSend(document: TextDocument): Promise<void> {
     const fileName = document.uri.split("/").pop() ?? "";
+    const documentPath = document.uri.startsWith("file://")
+      ? decodeURIComponent(document.uri.replace("file://", ""))
+      : undefined;
     const text = document.getText();
     const xmlDoc = this.service.parseXMLDocument(document.uri, text);
     const xmlns = (xmlDoc as any).getNamespace?.() ?? undefined;
@@ -63,14 +68,21 @@ export class DiagnosticsHandler {
     }
 
     // Auto-resolve schema by file name / namespace.
-    const resolved = this.service.resolveSchemaForDocument(fileName, xmlns);
+    const resolved = this.service.resolveSchemaForDocument(fileName, xmlns, documentPath);
     if (resolved) {
-      const autoUri = `auto://${fileName}`;
+      const autoUri = `auto://${documentPath ?? fileName}`;
       if (!this.service.hasSchema(autoUri)) {
+        const imports = resolved.xsdPath ? this.loadSiblingXsds(resolved.xsdPath) : undefined;
         this.connection.console.log(
-          `[DiagnosticsHandler] Auto-registering schema for ${fileName}`
+          `[DiagnosticsHandler] Auto-registering schema for ${fileName} (imports: ${
+            imports ? Object.keys(imports).join(", ") : "none"
+          })`
         );
-        await this.service.registerSchema({ uri: autoUri, xsdText: resolved.xsdText });
+        await this.service.registerSchema({
+          uri: autoUri,
+          xsdText: resolved.xsdText,
+          imports,
+        });
       }
       this.connection.console.log(
         `[DiagnosticsHandler] Validating ${document.uri} against auto schema`
@@ -96,6 +108,28 @@ export class DiagnosticsHandler {
   private send(uri: string, diagnostics: Diagnostic[]): void {
     this.diagnosticsByUri.set(uri, diagnostics);
     this.connection.sendDiagnostics({ uri, diagnostics });
+  }
+
+  /** Loads every sibling .xsd file (excluding the entry XSD) into a name→content map.
+   *  This is what xs:include/xs:import schemaLocation references resolve against in the WASM bridge. */
+  private loadSiblingXsds(entryPath: string): Record<string, string> | undefined {
+    try {
+      const dir = path.dirname(entryPath);
+      const entryName = path.basename(entryPath);
+      const imports: Record<string, string> = {};
+      for (const name of fs.readdirSync(dir)) {
+        if (name === entryName || !name.toLowerCase().endsWith(".xsd")) continue;
+        const full = path.join(dir, name);
+        try {
+          imports[name] = fs.readFileSync(full, "utf-8");
+        } catch {
+          // ignore unreadable files
+        }
+      }
+      return Object.keys(imports).length > 0 ? imports : undefined;
+    } catch {
+      return undefined;
+    }
   }
 
   private toDiagnostics(raw: Awaited<ReturnType<LanguageService["validate"]>>): Diagnostic[] {
