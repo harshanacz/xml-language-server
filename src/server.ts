@@ -125,6 +125,16 @@ connection.onHover((params: HoverParams) => {
 
   const document = documents.get(params.textDocument.uri);
   if (!document) return null;
+  const { line, character } = params.position;
+
+  const errors = diagnosticsHandler.getDiagnosticsAt(document.uri, line, character);
+  if (errors.length > 0) {
+    const errorMd = errors
+      .map((d) => `$(error) **${d.message}**`)
+      .join("\n\n");
+    return { contents: { kind: MarkupKind.Markdown, value: errorMd } };
+  }
+
   const fileName = getFileName(params.textDocument.uri);
   const xmlDoc = service.parseXMLDocument(document.uri, document.getText());
   const result = service.doHover(xmlDoc, params.position, fileName);

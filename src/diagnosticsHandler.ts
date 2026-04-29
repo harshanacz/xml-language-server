@@ -19,11 +19,24 @@ export class DiagnosticsHandler {
   private connection: Connection;
   private service: LanguageService;
   private schemaUri: string | null;
+  private diagnosticsByUri = new Map<string, Diagnostic[]>();
 
   constructor(connection: Connection, service: LanguageService) {
     this.connection = connection;
     this.service = service;
     this.schemaUri = null;
+  }
+
+  /** Returns all diagnostics at the given position for a document. */
+  getDiagnosticsAt(uri: string, line: number, character: number): Diagnostic[] {
+    const all = this.diagnosticsByUri.get(uri) ?? [];
+    return all.filter((d) => {
+      const { start, end } = d.range;
+      if (line < start.line || line > end.line) return false;
+      if (line === start.line && character < start.character) return false;
+      if (line === end.line && character > end.character) return false;
+      return true;
+    });
   }
 
   /** Registers an XSD schema so subsequent validations use it. Manual schemas take priority over auto-resolved ones. */
@@ -45,7 +58,7 @@ export class DiagnosticsHandler {
         `[DiagnosticsHandler] Validating ${document.uri} against manual schema ${this.schemaUri}`
       );
       const raw = await this.service.validate(this.schemaUri, xmlDoc);
-      this.connection.sendDiagnostics({ uri: document.uri, diagnostics: this.toDiagnostics(raw) });
+      this.send(document.uri, this.toDiagnostics(raw));
       return;
     }
 
@@ -63,7 +76,7 @@ export class DiagnosticsHandler {
         `[DiagnosticsHandler] Validating ${document.uri} against auto schema`
       );
       const raw = await this.service.validate(autoUri, xmlDoc);
-      this.connection.sendDiagnostics({ uri: document.uri, diagnostics: this.toDiagnostics(raw) });
+      this.send(document.uri, this.toDiagnostics(raw));
       return;
     }
 
@@ -71,13 +84,18 @@ export class DiagnosticsHandler {
     this.connection.console.log(
       `[DiagnosticsHandler] No schema for ${document.uri}, clearing diagnostics`
     );
-    this.connection.sendDiagnostics({ uri: document.uri, diagnostics: [] });
+    this.send(document.uri, []);
   }
 
   /** Clears all diagnostics for the given document URI. */
   clearDiagnostics(uri: string): void {
     this.connection.console.log(`[DiagnosticsHandler] Clearing diagnostics for ${uri}`);
-    this.connection.sendDiagnostics({ uri, diagnostics: [] });
+    this.send(uri, []);
+  }
+
+  private send(uri: string, diagnostics: Diagnostic[]): void {
+    this.diagnosticsByUri.set(uri, diagnostics);
+    this.connection.sendDiagnostics({ uri, diagnostics });
   }
 
   private toDiagnostics(raw: Awaited<ReturnType<LanguageService["validate"]>>): Diagnostic[] {
