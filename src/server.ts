@@ -62,6 +62,19 @@ const COMPLETION_KIND_MAP: Record<XmlCompletionItem["kind"], CompletionItemKind>
   closeTag: CompletionItemKind.Keyword,
 };
 
+const DOCUMENT_SYMBOL_KIND_MAP: Record<XmlDocumentSymbol["kind"], SymbolKind> = {
+  namespace: SymbolKind.Namespace,
+  class: SymbolKind.Class,
+  method: SymbolKind.Method,
+  function: SymbolKind.Function,
+  property: SymbolKind.Property,
+  field: SymbolKind.Field,
+  interface: SymbolKind.Interface,
+  struct: SymbolKind.Struct,
+  array: SymbolKind.Array,
+  object: SymbolKind.Object,
+};
+
 function toLSPCompletionList(list: {
   items: XmlCompletionItem[];
   isIncomplete: boolean;
@@ -80,7 +93,7 @@ function toLSPCompletionList(list: {
 function toLSPDocumentSymbol(sym: XmlDocumentSymbol): LSPDocumentSymbol {
   return {
     name: sym.name,
-    kind: SymbolKind.Class,
+    kind: DOCUMENT_SYMBOL_KIND_MAP[sym.kind],
     range: sym.range,
     selectionRange: sym.selectionRange,
     children: sym.children.map(toLSPDocumentSymbol),
