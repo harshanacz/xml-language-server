@@ -129,6 +129,11 @@ connection.onInitialized(async () => {
     connection.console.log(`[config] Fetched initial config: ${JSON.stringify(config)}`);
     const schemas: SchemaConfig[] = config?.schemas ?? [];
     applySchemaSettings(schemas);
+    // Re-validate any documents that opened before schema associations were registered
+    // (race condition: onDidChangeContent can fire before getConfiguration resolves).
+    for (const doc of documents.all()) {
+      diagnosticsHandler.validateAndSend(doc);
+    }
   } catch (e) {
     connection.console.log(`[config] Could not fetch initial config: ${e}`);
   }
@@ -169,6 +174,7 @@ function applySchemaSettings(schemas: SchemaConfig[]): void {
 connection.onDidChangeConfiguration((params: DidChangeConfigurationParams) => {
   connection.console.log(`[config] onDidChangeConfiguration fired: ${JSON.stringify(params.settings?.xmlLanguageServer)}`);
   const schemas: SchemaConfig[] = params.settings?.xmlLanguageServer?.schemas ?? [];
+  service.invalidateAutoSchemas();
   applySchemaSettings(schemas);
   for (const doc of documents.all()) {
     diagnosticsHandler.validateAndSend(doc);
