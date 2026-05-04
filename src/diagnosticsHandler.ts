@@ -73,16 +73,18 @@ export class DiagnosticsHandler {
       const autoUri = `auto://${documentPath ?? fileName}`;
       if (!this.service.hasSchema(autoUri)) {
         const imports = resolved.xsdPath ? this.loadSiblingXsds(resolved.xsdPath) : undefined;
+        const importKeys = imports ? Object.keys(imports) : [];
         this.connection.console.log(
-          `[DiagnosticsHandler] Auto-registering schema for ${fileName} (imports: ${
-            imports ? Object.keys(imports).join(", ") : "none"
-          })`
+          `[DiagnosticsHandler] Auto-registering schema for ${fileName}: ${importKeys.length} import files (${importKeys.filter(k => k.includes("/")).length} in subdirs)`
         );
         await this.service.registerSchema({
           uri: autoUri,
           xsdText: resolved.xsdText,
           imports,
         });
+        this.connection.console.log(
+          `[DiagnosticsHandler] Schema registered at ${autoUri}`
+        );
       }
       this.connection.console.log(
         `[DiagnosticsHandler] Validating ${document.uri} against auto schema`
@@ -110,22 +112,39 @@ export class DiagnosticsHandler {
     this.connection.sendDiagnostics({ uri, diagnostics });
   }
 
-  /** Loads every sibling .xsd file (excluding the entry XSD) into a name→content map.
-   *  This is what xs:include/xs:import schemaLocation references resolve against in the WASM bridge. */
+  /** Recursively loads all .xsd files under the entry XSD's directory (excluding the entry itself).
+   *  Keys are relative paths from that directory (e.g. "misc/common.xsd", "mediators/mediators.xsd").
+   *  The WASM bridge registers them as memory:///key, which matches the URIs Xerces computes when
+   *  resolving xs:include schemaLocation values relative to memory:///main.xsd. */
   private loadSiblingXsds(entryPath: string): Record<string, string> | undefined {
     try {
       const dir = path.dirname(entryPath);
       const entryName = path.basename(entryPath);
       const imports: Record<string, string> = {};
-      for (const name of fs.readdirSync(dir)) {
-        if (name === entryName || !name.toLowerCase().endsWith(".xsd")) continue;
-        const full = path.join(dir, name);
-        try {
-          imports[name] = fs.readFileSync(full, "utf-8");
-        } catch {
-          // ignore unreadable files
+
+      const scan = (scanDir: string, relBase: string) => {
+        let names: string[];
+        try { names = fs.readdirSync(scanDir); } catch { return; }
+        for (const name of names) {
+          const full = path.join(scanDir, name);
+          const rel = relBase ? `${relBase}/${name}` : name;
+          try {
+            const stat = fs.statSync(full);
+            if (stat.isDirectory()) {
+              scan(full, rel);
+            } else if (
+              (name.toLowerCase().endsWith(".xsd") || name.toLowerCase().endsWith(".dtd")) &&
+              rel !== entryName
+            ) {
+              imports[rel] = fs.readFileSync(full, "utf-8");
+            }
+          } catch {
+            // ignore unreadable files or symlink cycles
+          }
         }
-      }
+      };
+
+      scan(dir, "");
       return Object.keys(imports).length > 0 ? imports : undefined;
     } catch {
       return undefined;

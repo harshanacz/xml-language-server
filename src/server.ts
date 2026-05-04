@@ -169,6 +169,7 @@ function applySchemaSettings(schemas: SchemaConfig[]): void {
 connection.onDidChangeConfiguration((params: DidChangeConfigurationParams) => {
   connection.console.log(`[config] onDidChangeConfiguration fired: ${JSON.stringify(params.settings?.xmlLanguageServer)}`);
   const schemas: SchemaConfig[] = params.settings?.xmlLanguageServer?.schemas ?? [];
+  service.invalidateAutoSchemas();
   applySchemaSettings(schemas);
   for (const doc of documents.all()) {
     diagnosticsHandler.validateAndSend(doc);
