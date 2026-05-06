@@ -13,7 +13,7 @@
   "dependencies": {
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12",
-    "xml-language-service": "file:../xml-language-service"
+    "xml-language-service": "1.0.1"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
