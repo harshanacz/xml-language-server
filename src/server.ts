@@ -162,11 +162,13 @@ connection.onInitialized(async () => {
     connection.console.log(`[config] Fetched initial config: ${JSON.stringify(config)}`);
     const schemas: SchemaConfig[] = config?.schemas ?? [];
     applySchemaSettings(schemas);
+  } catch (e) {
+    connection.console.log(`[config] Could not fetch initial config: ${e}`);
+  } finally {
+    initialConfigurationLoaded = true;
     // Re-validate any documents that opened before schema associations were registered
     // (race condition: onDidChangeContent can fire before getConfiguration resolves).
     await validateOpenDocumentsSafely("initial configuration");
-  } catch (e) {
-    connection.console.log(`[config] Could not fetch initial config: ${e}`);
   }
 });
 
@@ -178,6 +180,7 @@ interface SchemaConfig {
 }
 
 let workspaceRoot: string | null = null;
+let initialConfigurationLoaded = false;
 
 function applySchemaSettings(schemas: SchemaConfig[]): void {
   for (const entry of schemas) {
@@ -207,6 +210,10 @@ connection.onDidChangeConfiguration((params: DidChangeConfigurationParams) => {
   const schemas: SchemaConfig[] = params.settings?.xmlLanguageServer?.schemas ?? [];
   service.invalidateAutoSchemas();
   applySchemaSettings(schemas);
+  if (!initialConfigurationLoaded) {
+    connection.console.log("[config] Deferring configuration-change validation until initial configuration is loaded");
+    return;
+  }
   void validateOpenDocumentsSafely("configuration change");
 });
 
@@ -332,6 +339,13 @@ connection.onDocumentFormatting((params: DocumentFormattingParams) => {
 });
 
 documents.onDidChangeContent(async (change) => {
+  if (!initialConfigurationLoaded) {
+    connection.console.log(
+      `[onDidChangeContent] Deferring validation for ${change.document.uri} until initial configuration is loaded`
+    );
+    return;
+  }
+
   connection.console.log(`[onDidChangeContent] Validating ${change.document.uri}`);
   await validateAndSendSafely(change.document, "document change");
 });
