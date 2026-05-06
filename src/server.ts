@@ -53,6 +53,26 @@ function escapeMd(text: string): string {
   return text.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]!));
 }
 
+function formatError(error: unknown): string {
+  if (error instanceof Error) return error.stack ?? error.message;
+  return String(error);
+}
+
+async function validateAndSendSafely(document: TextDocument, reason: string): Promise<void> {
+  try {
+    await diagnosticsHandler.validateAndSend(document);
+  } catch (error) {
+    connection.console.error(
+      `[diagnostics] Validation failed during ${reason} for ${document.uri}: ${formatError(error)}`
+    );
+    diagnosticsHandler.clearDiagnostics(document.uri);
+  }
+}
+
+async function validateOpenDocumentsSafely(reason: string): Promise<void> {
+  await Promise.all(documents.all().map((doc) => validateAndSendSafely(doc, reason)));
+}
+
 // ── Type adapters ────────────────────────────────────────────────────────────
 
 const COMPLETION_KIND_MAP: Record<XmlCompletionItem["kind"], CompletionItemKind> = {
@@ -144,9 +164,7 @@ connection.onInitialized(async () => {
     applySchemaSettings(schemas);
     // Re-validate any documents that opened before schema associations were registered
     // (race condition: onDidChangeContent can fire before getConfiguration resolves).
-    for (const doc of documents.all()) {
-      diagnosticsHandler.validateAndSend(doc);
-    }
+    await validateOpenDocumentsSafely("initial configuration");
   } catch (e) {
     connection.console.log(`[config] Could not fetch initial config: ${e}`);
   }
@@ -189,9 +207,7 @@ connection.onDidChangeConfiguration((params: DidChangeConfigurationParams) => {
   const schemas: SchemaConfig[] = params.settings?.xmlLanguageServer?.schemas ?? [];
   service.invalidateAutoSchemas();
   applySchemaSettings(schemas);
-  for (const doc of documents.all()) {
-    diagnosticsHandler.validateAndSend(doc);
-  }
+  void validateOpenDocumentsSafely("configuration change");
 });
 
 // ── Request handlers ─────────────────────────────────────────────────────────
@@ -317,7 +333,7 @@ connection.onDocumentFormatting((params: DocumentFormattingParams) => {
 
 documents.onDidChangeContent(async (change) => {
   connection.console.log(`[onDidChangeContent] Validating ${change.document.uri}`);
-  await diagnosticsHandler.validateAndSend(change.document);
+  await validateAndSendSafely(change.document, "document change");
 });
 
 connection.onShutdown(() => {
