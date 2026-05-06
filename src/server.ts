@@ -53,6 +53,26 @@ function escapeMd(text: string): string {
   return text.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]!));
 }
 
+function formatError(error: unknown): string {
+  if (error instanceof Error) return error.stack ?? error.message;
+  return String(error);
+}
+
+async function validateAndSendSafely(document: TextDocument, reason: string): Promise<void> {
+  try {
+    await diagnosticsHandler.validateAndSend(document);
+  } catch (error) {
+    connection.console.error(
+      `[diagnostics] Validation failed during ${reason} for ${document.uri}: ${formatError(error)}`
+    );
+    diagnosticsHandler.clearDiagnostics(document.uri);
+  }
+}
+
+async function validateOpenDocumentsSafely(reason: string): Promise<void> {
+  await Promise.all(documents.all().map((doc) => validateAndSendSafely(doc, reason)));
+}
+
 // ── Type adapters ────────────────────────────────────────────────────────────
 
 const COMPLETION_KIND_MAP: Record<XmlCompletionItem["kind"], CompletionItemKind> = {
@@ -142,13 +162,13 @@ connection.onInitialized(async () => {
     connection.console.log(`[config] Fetched initial config: ${JSON.stringify(config)}`);
     const schemas: SchemaConfig[] = config?.schemas ?? [];
     applySchemaSettings(schemas);
-    // Re-validate any documents that opened before schema associations were registered
-    // (race condition: onDidChangeContent can fire before getConfiguration resolves).
-    for (const doc of documents.all()) {
-      diagnosticsHandler.validateAndSend(doc);
-    }
   } catch (e) {
     connection.console.log(`[config] Could not fetch initial config: ${e}`);
+  } finally {
+    initialConfigurationLoaded = true;
+    // Re-validate any documents that opened before schema associations were registered
+    // (race condition: onDidChangeContent can fire before getConfiguration resolves).
+    await validateOpenDocumentsSafely("initial configuration");
   }
 });
 
@@ -160,6 +180,7 @@ interface SchemaConfig {
 }
 
 let workspaceRoot: string | null = null;
+let initialConfigurationLoaded = false;
 
 function applySchemaSettings(schemas: SchemaConfig[]): void {
   for (const entry of schemas) {
@@ -189,9 +210,11 @@ connection.onDidChangeConfiguration((params: DidChangeConfigurationParams) => {
   const schemas: SchemaConfig[] = params.settings?.xmlLanguageServer?.schemas ?? [];
   service.invalidateAutoSchemas();
   applySchemaSettings(schemas);
-  for (const doc of documents.all()) {
-    diagnosticsHandler.validateAndSend(doc);
+  if (!initialConfigurationLoaded) {
+    connection.console.log("[config] Deferring configuration-change validation until initial configuration is loaded");
+    return;
   }
+  void validateOpenDocumentsSafely("configuration change");
 });
 
 // ── Request handlers ─────────────────────────────────────────────────────────
@@ -316,8 +339,15 @@ connection.onDocumentFormatting((params: DocumentFormattingParams) => {
 });
 
 documents.onDidChangeContent(async (change) => {
+  if (!initialConfigurationLoaded) {
+    connection.console.log(
+      `[onDidChangeContent] Deferring validation for ${change.document.uri} until initial configuration is loaded`
+    );
+    return;
+  }
+
   connection.console.log(`[onDidChangeContent] Validating ${change.document.uri}`);
-  await diagnosticsHandler.validateAndSend(change.document);
+  await validateAndSendSafely(change.document, "document change");
 });
 
 connection.onShutdown(() => {
