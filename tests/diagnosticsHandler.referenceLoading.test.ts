@@ -1,65 +1,14 @@
-import { afterEach, describe, expect, it } from "vitest";
-import * as fs from "fs";
-import * as os from "os";
+import { describe, expect, it } from "vitest";
 import * as path from "path";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { getLanguageService } from "xml-language-service";
 import { DiagnosticsHandler } from "../src/diagnosticsHandler.js";
-
-const tempDirs: string[] = [];
-
-function makeTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "xml-ls-schema-"));
-  tempDirs.push(dir);
-  return dir;
-}
-
-function writeFile(filePath: string, text: string): void {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, text);
-}
-
-function createConnection() {
-  const warnings: string[] = [];
-  const sentDiagnostics: unknown[] = [];
-  return {
-    warnings,
-    sentDiagnostics,
-    connection: {
-      console: {
-        log: () => undefined,
-        warn: (message: string) => warnings.push(message),
-        error: () => undefined,
-      },
-      sendDiagnostics: (params: unknown) => sentDiagnostics.push(params),
-    },
-  };
-}
-
-function createService(schemaPath: string, schemaText: string, registered: unknown[]) {
-  return {
-    parseXMLDocument: (uri: string, text: string) => ({
-      uri,
-      text,
-      getNamespace: () => undefined,
-    }),
-    resolveSchemaForDocument: () => ({
-      xsdPath: schemaPath,
-      xsdText: schemaText,
-    }),
-    hasSchema: () => false,
-    registerSchema: async (info: unknown) => {
-      registered.push(info);
-    },
-    validate: async () => [],
-  };
-}
-
-afterEach(() => {
-  for (const dir of tempDirs.splice(0)) {
-    fs.rmSync(dir, { recursive: true, force: true });
-  }
-});
+import {
+  createConnection,
+  createService,
+  makeTempDir,
+  writeFile,
+} from "./helpers/diagnosticsTestUtils.js";
 
 describe("DiagnosticsHandler schema reference loading", () => {
   it("loads only referenced XSD files recursively", () => {
@@ -88,7 +37,6 @@ describe("DiagnosticsHandler schema reference loading", () => {
 
     const { connection } = createConnection();
     const handler = new DiagnosticsHandler(connection as any, {} as any) as any;
-
     const imports = handler.loadReferencedXsds(mainPath, mainText);
 
     expect(Object.keys(imports).sort()).toEqual([
@@ -119,7 +67,6 @@ describe("DiagnosticsHandler schema reference loading", () => {
 
     const { connection } = createConnection();
     const handler = new DiagnosticsHandler(connection as any, {} as any) as any;
-
     const imports = handler.loadReferencedXsds(mainPath, mainText);
 
     expect(Object.keys(imports).sort()).toEqual([
