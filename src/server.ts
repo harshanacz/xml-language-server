@@ -19,7 +19,7 @@ const documents = new TextDocuments(TextDocument);
 const service = getLanguageService();
 const diagnosticsHandler = new DiagnosticsHandler(connection, service);
 
-let workspaceRoot: string | null = null;
+let workspaceRoots: string[] = [];
 let initialConfigurationLoaded = false;
 
 // ── Validation helpers ───────────────────────────────────────────────────────
@@ -42,11 +42,13 @@ async function validateOpenDocumentsSafely(reason: string): Promise<void> {
 // ── LSP lifecycle ────────────────────────────────────────────────────────────
 
 connection.onInitialize((params: InitializeParams): InitializeResult => {
-  workspaceRoot = params.workspaceFolders?.[0]?.uri.replace("file://", "") ?? null;
+  workspaceRoots = (params.workspaceFolders ?? []).map((f) =>
+    decodeURIComponent(f.uri.replace("file://", ""))
+  );
   connection.console.log("=== STARTUP WAS TRIGGERED!===");
 
   const schemas: SchemaConfig[] = (params.initializationOptions as any)?.schemas ?? [];
-  if (schemas.length > 0) applySchemaSettings(schemas, connection, service, workspaceRoot);
+  if (schemas.length > 0) applySchemaSettings(schemas, connection, service, workspaceRoots);
 
   return {
     capabilities: {
@@ -68,7 +70,7 @@ connection.onInitialized(async () => {
   try {
     const config = await connection.workspace.getConfiguration("xmlLanguageServer");
     connection.console.log(`[config] Fetched initial config: ${JSON.stringify(config)}`);
-    applySchemaSettings(config?.schemas ?? [], connection, service, workspaceRoot);
+    applySchemaSettings(config?.schemas ?? [], connection, service, workspaceRoots);
   } catch (e) {
     connection.console.log(`[config] Could not fetch initial config: ${e}`);
   } finally {
@@ -83,7 +85,7 @@ connection.onDidChangeConfiguration((params: DidChangeConfigurationParams) => {
   );
   const schemas: SchemaConfig[] = params.settings?.xmlLanguageServer?.schemas ?? [];
   service.invalidateAutoSchemas();
-  applySchemaSettings(schemas, connection, service, workspaceRoot);
+  applySchemaSettings(schemas, connection, service, workspaceRoots);
   if (!initialConfigurationLoaded) {
     connection.console.log("[config] Deferring configuration-change validation until initial configuration is loaded");
     return;

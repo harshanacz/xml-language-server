@@ -14,28 +14,30 @@ export function applySchemaSettings(
   schemas: SchemaConfig[],
   connection: Connection,
   service: LanguageService,
-  workspaceRoot: string | null
+  workspaceRoots: string[]
 ): void {
   for (const entry of schemas) {
-    const resolved = path.isAbsolute(entry.xsdPath)
-      ? entry.xsdPath
-      : workspaceRoot
-        ? path.join(workspaceRoot, entry.xsdPath)
-        : null;
+    const resolved = resolveXsdPath(entry.xsdPath, workspaceRoots);
 
     if (!resolved) {
       connection.console.warn(
-        `[config] Cannot resolve relative xsdPath '${entry.xsdPath}' without a workspace root`
+        `[config] Cannot resolve xsdPath '${entry.xsdPath}' — file not found in any workspace root`
       );
-      continue;
-    }
-
-    if (!fs.existsSync(resolved)) {
-      connection.console.warn(`[config] XSD not found: ${resolved}`);
       continue;
     }
 
     service.addUserAssociation({ pattern: entry.pattern, xsdPath: resolved, isBuiltIn: false });
     connection.console.log(`[config] Registered schema: ${entry.pattern} → ${resolved}`);
   }
+}
+
+function resolveXsdPath(xsdPath: string, workspaceRoots: string[]): string | null {
+  if (path.isAbsolute(xsdPath)) {
+    return fs.existsSync(xsdPath) ? xsdPath : null;
+  }
+  for (const root of workspaceRoots) {
+    const candidate = path.join(root, xsdPath);
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  return null;
 }
