@@ -4,7 +4,7 @@ import {
   DiagnosticSeverity,
 } from "vscode-languageserver/node.js";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { getLanguageService, SchemaInfo } from "xml-language-service";
+import { getLanguageService } from "xml-language-service";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -25,13 +25,11 @@ const SEVERITY_MAP: Record<"error" | "warning" | "info", DiagnosticSeverity> =
 export class DiagnosticsHandler {
   private connection: Connection;
   private service: LanguageService;
-  private schemaUri: string | null;
   private diagnosticsByUri = new Map<string, Diagnostic[]>();
 
   constructor(connection: Connection, service: LanguageService) {
     this.connection = connection;
     this.service = service;
-    this.schemaUri = null;
   }
 
   /** Returns all diagnostics at the given position for a document. */
@@ -46,13 +44,6 @@ export class DiagnosticsHandler {
     });
   }
 
-  /** Registers an XSD schema so subsequent validations use it. Manual schemas take priority over auto-resolved ones. */
-  async registerSchema(info: SchemaInfo): Promise<void> {
-    this.connection.console.log(`[DiagnosticsHandler] Registering schema: ${info.uri}`);
-    await this.service.registerSchema(info);
-    this.schemaUri = info.uri;
-  }
-
   async validateAndSend(document: TextDocument): Promise<void> {
     const fileName = document.uri.split("/").pop() ?? "";
     const documentPath = document.uri.startsWith("file://")
@@ -61,16 +52,6 @@ export class DiagnosticsHandler {
     const text = document.getText();
     const xmlDoc = this.service.parseXMLDocument(document.uri, text);
     const xmlns = (xmlDoc as any).getNamespace?.() ?? undefined;
-
-    // Manual schema takes priority over auto-resolution.
-    if (this.schemaUri) {
-      this.connection.console.log(
-        `[DiagnosticsHandler] Validating ${document.uri} against manual schema ${this.schemaUri}`
-      );
-      const raw = await this.service.validate(this.schemaUri, xmlDoc);
-      this.send(document.uri, this.toDiagnostics(raw));
-      return;
-    }
 
     // Auto-resolve schema by file name / namespace.
     const resolved = this.service.resolveSchemaForDocument(fileName, xmlns, documentPath);
