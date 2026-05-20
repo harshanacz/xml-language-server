@@ -1,0 +1,17 @@
+{
+  "name": "xml-lsp",
+  "displayName": "XML Language Server",
+  "version": "1.0.0",
+  "description": "Schema-aware XML language intelligence. Provides completion, hover, validation, go-to-definition and find-references for XML files powered by xerces-wasm.",
+  "lspServers": {
+    "xml": {
+      "command": "node",
+      "args": ["./dist/server.js", "--stdio"],
+      "extensionToLanguage": {
+        ".xml": "xml",
+        ".xsd": "xml",
+        ".xsl": "xml"
+      }
+    }
+  }
+}
