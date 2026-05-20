@@ -25,7 +25,7 @@ const SEVERITY_MAP: Record<"error" | "warning" | "info", DiagnosticSeverity> =
 export class DiagnosticsHandler {
   private connection: Connection;
   private service: LanguageService;
-  private diagnosticsByUri = new Map<string, Diagnostic[]>();
+  private diagnosticsByUri = new Map<string, Diagnostic[]>(); //Keeps errors/warnings per file.
 
   constructor(connection: Connection, service: LanguageService) {
     this.connection = connection;
