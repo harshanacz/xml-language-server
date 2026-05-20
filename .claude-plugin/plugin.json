@@ -1,12 +1,12 @@
 {
   "name": "xml-lsp",
   "displayName": "XML Language Server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Schema-aware XML language intelligence powered by xerces-wasm.",
   "lspServers": {
     "xml": {
       "command": "node",
-      "args": ["${pluginDir}/dist/server.js", "--stdio"],
+      "args": ["${CLAUDE_PLUGIN_ROOT}/dist/server.js", "--stdio"],
       "extensionToLanguage": {
         ".xml": "xml",
         ".xsd": "xml",
