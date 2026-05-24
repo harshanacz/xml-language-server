@@ -69,6 +69,7 @@ export class DiagnosticsHandler {
           uri: autoUri,
           xsdText: resolved.xsdText,
           imports,
+          xsdPath: resolved.xsdPath,
         });
         this.connection.console.log(
           `[DiagnosticsHandler] Schema registered at ${autoUri}`

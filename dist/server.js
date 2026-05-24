@@ -17614,10 +17614,10 @@ var require_api5 = __commonJS({
   }
 });
 
-// node_modules/xml-language-service/dist/xerces-wasm/xerces_validator.js
+// node_modules/xerces-wasm/wasm/xerces_validator.js
 var require_xerces_validator = __commonJS({
-  "node_modules/xml-language-service/dist/xerces-wasm/xerces_validator.js"(exports2, module2) {
-    var XercesModule2 = (() => {
+  "node_modules/xerces-wasm/wasm/xerces_validator.js"(exports2, module2) {
+    var XercesModule = (() => {
       var _scriptName = globalThis.document?.currentScript?.src;
       return async function(moduleArg = {}) {
         var moduleRtn;
@@ -21382,9 +21382,80 @@ ${functionBody}
       };
     })();
     if (typeof exports2 === "object" && typeof module2 === "object") {
-      module2.exports = XercesModule2;
-      module2.exports.default = XercesModule2;
-    } else if (typeof define === "function" && define["amd"]) define([], () => XercesModule2);
+      module2.exports = XercesModule;
+      module2.exports.default = XercesModule;
+    } else if (typeof define === "function" && define["amd"]) define([], () => XercesModule);
+  }
+});
+
+// node_modules/xerces-wasm/dist/index.js
+var require_dist = __commonJS({
+  "node_modules/xerces-wasm/dist/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.validate = validate2;
+    exports2.validateFiles = validateFiles;
+    var xerces_validator_js_1 = __importDefault(require_xerces_validator());
+    var promises_1 = require("fs/promises");
+    var _module = null;
+    async function getModule() {
+      if (!_module)
+        _module = await (0, xerces_validator_js_1.default)();
+      return _module;
+    }
+    async function toText2(input) {
+      if (typeof input === "string")
+        return input;
+      if (Buffer.isBuffer(input))
+        return input.toString("utf8");
+      if (typeof Blob !== "undefined" && input instanceof Blob)
+        return input.text();
+      throw new TypeError("Unsupported input type");
+    }
+    function isSchemaBundle2(xsd) {
+      return typeof xsd === "object" && !Buffer.isBuffer(xsd) && "entry" in xsd;
+    }
+    async function validate2(xml, xsd, targetNamespace) {
+      const xmlText = await toText2(xml);
+      const mod = await getModule();
+      const ns = targetNamespace ?? null;
+      if (isSchemaBundle2(xsd)) {
+        const entryText = await toText2(xsd.entry);
+        const imports = {};
+        if (xsd.imports) {
+          await Promise.all(Object.entries(xsd.imports).map(async ([key, val]) => {
+            imports[key] = await toText2(val);
+          }));
+        }
+        return mod.validate(xmlText, { entry: entryText, imports }, ns);
+      }
+      return mod.validate(xmlText, await toText2(xsd), ns);
+    }
+    async function validateFiles(xmlPath, xsd) {
+      if (typeof xsd === "string") {
+        const [xml2, xsdText] = await Promise.all([
+          (0, promises_1.readFile)(xmlPath, "utf8"),
+          (0, promises_1.readFile)(xsd, "utf8")
+        ]);
+        const mod2 = await getModule();
+        return mod2.validate(xml2, xsdText);
+      }
+      const [xml, entryText] = await Promise.all([
+        (0, promises_1.readFile)(xmlPath, "utf8"),
+        (0, promises_1.readFile)(xsd.entry, "utf8")
+      ]);
+      const imports = {};
+      if (xsd.imports) {
+        await Promise.all(Object.entries(xsd.imports).map(async ([key, filePath]) => {
+          imports[key] = await (0, promises_1.readFile)(filePath, "utf8");
+        }));
+      }
+      const mod = await getModule();
+      return mod.validate(xml, { entry: entryText, imports });
+    }
   }
 });
 
@@ -22494,13 +22565,7 @@ function findReferences(document, position) {
 }
 
 // node_modules/xml-language-service/dist/schema/xsdValidator.js
-var import_xerces_validator = __toESM(require_xerces_validator(), 1);
-var _module = null;
-async function getModule() {
-  if (!_module)
-    _module = await (0, import_xerces_validator.default)();
-  return _module;
-}
+var import_xerces_wasm = __toESM(require_dist(), 1);
 async function toText(input) {
   if (typeof input === "string")
     return input;
@@ -22596,26 +22661,18 @@ var XsdValidatorService = class _XsdValidatorService {
     this.xsd = xsd;
   }
   static async create(xsd) {
-    await getModule();
     return new _XsdValidatorService(xsd);
   }
   async validate(xmlText) {
-    const mod = await getModule();
     let result;
     if (isSchemaBundle(this.xsd)) {
       const entryText = await toText(this.xsd.entry);
-      const imports = {};
-      if (this.xsd.imports) {
-        await Promise.all(Object.entries(this.xsd.imports).map(async ([key, val]) => {
-          imports[key] = await toText(val);
-        }));
-      }
-      const targetNs = entryText.match(/\btargetNamespace="([^"]*)"/)?.[1] ?? "";
-      result = await mod.validate(xmlText, { entry: entryText, imports }, targetNs);
+      const targetNs = entryText.match(/\btargetNamespace\s*=\s*(["'])(.*?)\1/)?.[2] ?? "";
+      result = await (0, import_xerces_wasm.validate)(xmlText, this.xsd, targetNs);
     } else {
       const xsdText = await toText(this.xsd);
-      const targetNs = xsdText.match(/\btargetNamespace="([^"]*)"/)?.[1] ?? "";
-      result = await mod.validate(xmlText, xsdText, targetNs);
+      const targetNs = xsdText.match(/\btargetNamespace\s*=\s*(["'])(.*?)\1/)?.[2] ?? "";
+      result = await (0, import_xerces_wasm.validate)(xmlText, this.xsd, targetNs);
     }
     console.error(`[xsdValidator] raw result: valid=${result.valid} parseErrors=${result.parseErrors.length} schemaErrors=${result.schemaErrors.length}`);
     if (result.schemaErrors.length > 0) {
@@ -23128,26 +23185,40 @@ function inlineIncludes(text, imports, currentPath = "", visited = /* @__PURE__ 
 }
 var SchemaProvider = class {
   constructor() {
-    this.schemas = /* @__PURE__ */ new Map();
+    this.validators = /* @__PURE__ */ new Map();
+    this.documentToSchema = /* @__PURE__ */ new Map();
     this.completionProviders = /* @__PURE__ */ new Map();
     this.associator = new SchemaAssociator();
   }
   /**
-   * Compiles the given XSD and registers it under the provided URI.
-   * If a validator for that URI already exists it is disposed before being replaced.
-   * Also builds and caches a completion provider for the same XSD.
+   * Compiles the given XSD (if not already compiled for the same xsdPath) and
+   * maps the document URI to that validator.  Multiple documents sharing the
+   * same xsdPath reuse a single XsdValidatorService instance.
+   * Also builds and caches a completion provider for the document URI.
    */
   async registerSchema(info) {
-    const existing = this.schemas.get(info.uri);
-    if (existing)
-      existing.dispose();
-    const xsd = info.imports ? { entry: info.xsdText, imports: info.imports } : info.xsdText;
-    const validator = await XsdValidatorService.create(xsd);
-    this.schemas.set(info.uri, validator);
+    const xsdKey = info.xsdPath ?? info.uri;
+    const prevKey = this.documentToSchema.get(info.uri);
+    this.documentToSchema.set(info.uri, xsdKey);
+    if (prevKey && prevKey !== xsdKey && !this._isKeyReferenced(prevKey)) {
+      this.validators.get(prevKey)?.dispose();
+      this.validators.delete(prevKey);
+    }
+    if (!this.validators.has(xsdKey)) {
+      const xsd = info.imports ? { entry: info.xsdText, imports: info.imports } : info.xsdText;
+      this.validators.set(xsdKey, await XsdValidatorService.create(xsd));
+    }
     const completionXsd = info.imports ? inlineIncludes(info.xsdText, info.imports) : info.xsdText;
     const provider = new XsdCompletionProvider(completionXsd);
     console.error(`[schemaProvider] Built provider for ${info.uri}: ${provider.getAllElements().length} elements, payloadFactory=${provider.getElement("payloadFactory") !== void 0}, inlinedXsdLen=${completionXsd.length}`);
     this.completionProviders.set(info.uri, provider);
+  }
+  _isKeyReferenced(xsdKey) {
+    for (const k of this.documentToSchema.values()) {
+      if (k === xsdKey)
+        return true;
+    }
+    return false;
   }
   /** Registers a custom file-to-schema mapping that takes priority over built-in associations. */
   addUserAssociation(association) {
@@ -23182,29 +23253,38 @@ var SchemaProvider = class {
    * Returns a warning diagnostic when no matching schema is found.
    */
   async validate(schemaUri, document) {
-    const validator = this.schemas.get(schemaUri);
+    const xsdKey = this.documentToSchema.get(schemaUri);
+    const validator = xsdKey ? this.validators.get(xsdKey) : void 0;
     if (!validator) {
-      return [
-        {
-          message: "No schema registered for: " + schemaUri,
-          severity: "warning",
-          source: "xsd",
-          range: { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } }
+      return document.syntaxErrors.map((e) => ({
+        message: e.message,
+        severity: "error",
+        source: "syntax",
+        range: {
+          start: { line: e.line, character: e.character },
+          end: { line: e.line, character: e.character }
         }
-      ];
+      }));
     }
     return validator.validate(document.text);
   }
-  /** Returns true when a compiled validator for the given URI exists in the registry. */
+  /** Returns true when a compiled validator for the given document URI exists in the registry. */
   hasSchema(uri) {
-    return this.schemas.has(uri);
+    return this.documentToSchema.has(uri);
   }
   /** Removes all auto:// schemas so they are re-registered fresh on next validation. */
   invalidateAutoSchemas() {
-    for (const [key, validator] of this.schemas) {
-      if (key.startsWith("auto://")) {
-        validator.dispose();
-        this.schemas.delete(key);
+    const keysToCheck = /* @__PURE__ */ new Set();
+    for (const [docUri, xsdKey] of this.documentToSchema) {
+      if (docUri.startsWith("auto://")) {
+        keysToCheck.add(xsdKey);
+        this.documentToSchema.delete(docUri);
+      }
+    }
+    for (const xsdKey of keysToCheck) {
+      if (!this._isKeyReferenced(xsdKey)) {
+        this.validators.get(xsdKey)?.dispose();
+        this.validators.delete(xsdKey);
       }
     }
     for (const key of this.completionProviders.keys()) {
@@ -23215,10 +23295,11 @@ var SchemaProvider = class {
   }
   /** Disposes all registered validators and clears the registry. */
   dispose() {
-    for (const validator of this.schemas.values()) {
+    for (const validator of this.validators.values()) {
       validator.dispose();
     }
-    this.schemas.clear();
+    this.validators.clear();
+    this.documentToSchema.clear();
     this.completionProviders.clear();
   }
 };
@@ -23346,7 +23427,8 @@ var DiagnosticsHandler = class {
         await this.service.registerSchema({
           uri: autoUri,
           xsdText: resolved.xsdText,
-          imports
+          imports,
+          xsdPath: resolved.xsdPath
         });
         this.connection.console.log(
           `[DiagnosticsHandler] Schema registered at ${autoUri}`
@@ -23527,7 +23609,8 @@ var DiagnosticsHandler = class {
 // src/configuration.ts
 var fs3 = __toESM(require("fs"));
 var path2 = __toESM(require("path"));
-function applySchemaSettings(schemas, connection2, service2, workspaceRoots2) {
+function applySchemaSettings(schemas, connection2, service2, workspaceRoots2, invalidate = false) {
+  if (invalidate) service2.invalidateAutoSchemas();
   for (const entry of schemas) {
     const resolved = resolveXsdPath(entry.xsdPath, workspaceRoots2);
     if (!resolved) {
@@ -23786,8 +23869,7 @@ connection.onDidChangeConfiguration((params) => {
     `[config] onDidChangeConfiguration fired: ${JSON.stringify(params.settings?.xmlLanguageServer)}`
   );
   const schemas = params.settings?.xmlLanguageServer?.schemas ?? [];
-  service.invalidateAutoSchemas();
-  applySchemaSettings(schemas, connection, service, workspaceRoots);
+  applySchemaSettings(schemas, connection, service, workspaceRoots, true);
   if (!initialConfigurationLoaded) {
     connection.console.log("[config] Deferring configuration-change validation until initial configuration is loaded");
     return;
