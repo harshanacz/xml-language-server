@@ -46,6 +46,10 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
     decodeURIComponent(f.uri.replace("file://", ""))
   );
   connection.console.log("=== STARTUP WAS TRIGGERED!===");
+  connection.console.log("==================");
+  connection.console.log(`intalize params:\n${JSON.stringify(params, null, 2)}`);
+  connection.console.log(`initalize options:\n${JSON.stringify(params.initializationOptions, null, 2)}`);
+  connection.console.log("======");
 
   const schemas: SchemaConfig[] = (params.initializationOptions as any)?.schemas ?? [];
   if (schemas.length > 0) applySchemaSettings(schemas, connection, service, workspaceRoots);
@@ -84,8 +88,7 @@ connection.onDidChangeConfiguration((params: DidChangeConfigurationParams) => {
     `[config] onDidChangeConfiguration fired: ${JSON.stringify(params.settings?.xmlLanguageServer)}`
   );
   const schemas: SchemaConfig[] = params.settings?.xmlLanguageServer?.schemas ?? [];
-  service.invalidateAutoSchemas();
-  applySchemaSettings(schemas, connection, service, workspaceRoots);
+  applySchemaSettings(schemas, connection, service, workspaceRoots, true);
   if (!initialConfigurationLoaded) {
     connection.console.log("[config] Deferring configuration-change validation until initial configuration is loaded");
     return;

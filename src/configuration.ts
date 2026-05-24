@@ -14,8 +14,10 @@ export function applySchemaSettings(
   schemas: SchemaConfig[],
   connection: Connection,
   service: LanguageService,
-  workspaceRoots: string[]
+  workspaceRoots: string[],
+  invalidate = false
 ): void {
+  if (invalidate) service.invalidateAutoSchemas();
   for (const entry of schemas) {
     const resolved = resolveXsdPath(entry.xsdPath, workspaceRoots);
 

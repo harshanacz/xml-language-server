@@ -23746,6 +23746,12 @@ connection.onInitialize((params) => {
     (f) => decodeURIComponent(f.uri.replace("file://", ""))
   );
   connection.console.log("=== STARTUP WAS TRIGGERED!===");
+  connection.console.log("==================");
+  connection.console.log(`intalize params:
+${JSON.stringify(params, null, 2)}`);
+  connection.console.log(`initalize options:
+${JSON.stringify(params.initializationOptions, null, 2)}`);
+  connection.console.log("======");
   const schemas = params.initializationOptions?.schemas ?? [];
   if (schemas.length > 0) applySchemaSettings(schemas, connection, service, workspaceRoots);
   return {
