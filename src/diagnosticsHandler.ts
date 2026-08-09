@@ -7,6 +7,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { getLanguageService } from "xml-language-service";
 import * as fs from "fs";
 import * as path from "path";
+import { filterDiagnostics, formatDiagnosticMessage } from "./diagnosticsFilter.js";
 
 type LanguageService = ReturnType<typeof getLanguageService>;
 
@@ -269,11 +270,12 @@ export class DiagnosticsHandler {
   }
 
   private toDiagnostics(raw: Awaited<ReturnType<LanguageService["validate"]>>): Diagnostic[] {
-    return raw.map((d) => ({
+    const diagnostics = raw.map((d) => ({
       range: d.range,
-      message: d.message,
+      message: formatDiagnosticMessage(d.message),
       severity: SEVERITY_MAP[d.severity],
       source: "xml-language-service",
     }));
+    return filterDiagnostics(diagnostics);
   }
 }
