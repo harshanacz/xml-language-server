@@ -68,14 +68,11 @@ export function registerRequestHandlers(
     if (!document) return null;
     const { line, character } = params.position;
 
+    // Don't show schema hover for elements that Xerces has already flagged as invalid.
+    // VS Code displays the diagnostic natively; returning null avoids misleading hover
+    // content from local-only XSD element definitions.
     const errors = diagnosticsHandler.getDiagnosticsAt(document.uri, line, character);
-    if (errors.length > 0) {
-      const isError = (d: typeof errors[number]) => d.severity === undefined || d.severity === 1;
-      const value = errors
-        .map((d) => `${isError(d) ? "**ERROR**" : "**WARNING**"} — ${escapeMd(d.message)}`)
-        .join("\n\n");
-      return { contents: { kind: MarkupKind.Markdown, value } };
-    }
+    if (errors.length > 0) return null;
 
     const xmlDoc = getParsedDoc(document);
     const result = service.doHover(xmlDoc, params.position, getFileName(document.uri), getDocumentPath(document.uri));
