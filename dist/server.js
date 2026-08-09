@@ -3082,7 +3082,7 @@ var require_main = __commonJS({
     exports2.createMessageConnection = exports2.createServerSocketTransport = exports2.createClientSocketTransport = exports2.createServerPipeTransport = exports2.createClientPipeTransport = exports2.generateRandomPipeName = exports2.StreamMessageWriter = exports2.StreamMessageReader = exports2.SocketMessageWriter = exports2.SocketMessageReader = exports2.PortMessageWriter = exports2.PortMessageReader = exports2.IPCMessageWriter = exports2.IPCMessageReader = void 0;
     var ril_1 = require_ril();
     ril_1.default.install();
-    var path3 = require("path");
+    var path4 = require("path");
     var os = require("os");
     var crypto_1 = require("crypto");
     var net_1 = require("net");
@@ -3218,9 +3218,9 @@ var require_main = __commonJS({
       }
       let result;
       if (XDG_RUNTIME_DIR) {
-        result = path3.join(XDG_RUNTIME_DIR, `vscode-ipc-${randomSuffix}.sock`);
+        result = path4.join(XDG_RUNTIME_DIR, `vscode-ipc-${randomSuffix}.sock`);
       } else {
-        result = path3.join(os.tmpdir(), `vscode-${randomSuffix}.sock`);
+        result = path4.join(os.tmpdir(), `vscode-${randomSuffix}.sock`);
       }
       const limit = safeIpcPathLengths.get(process.platform);
       if (limit !== void 0 && result.length > limit) {
@@ -8310,7 +8310,7 @@ var require_files = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.resolveModulePath = exports2.FileSystem = exports2.resolveGlobalYarnPath = exports2.resolveGlobalNodePath = exports2.resolve = exports2.uriToFilePath = void 0;
     var url = require("url");
-    var path3 = require("path");
+    var path4 = require("path");
     var fs4 = require("fs");
     var child_process_1 = require("child_process");
     function uriToFilePath(uri) {
@@ -8329,7 +8329,7 @@ var require_files = __commonJS({
           segments.shift();
         }
       }
-      return path3.normalize(segments.join("/"));
+      return path4.normalize(segments.join("/"));
     }
     exports2.uriToFilePath = uriToFilePath;
     function isWindows() {
@@ -8360,7 +8360,7 @@ var require_files = __commonJS({
         Object.keys(env).forEach((key) => newEnv[key] = env[key]);
         if (nodePath && fs4.existsSync(nodePath)) {
           if (newEnv[nodePathKey]) {
-            newEnv[nodePathKey] = nodePath + path3.delimiter + newEnv[nodePathKey];
+            newEnv[nodePathKey] = nodePath + path4.delimiter + newEnv[nodePathKey];
           } else {
             newEnv[nodePathKey] = nodePath;
           }
@@ -8433,9 +8433,9 @@ var require_files = __commonJS({
         }
         if (prefix.length > 0) {
           if (isWindows()) {
-            return path3.join(prefix, "node_modules");
+            return path4.join(prefix, "node_modules");
           } else {
-            return path3.join(prefix, "lib", "node_modules");
+            return path4.join(prefix, "lib", "node_modules");
           }
         }
         return void 0;
@@ -8475,7 +8475,7 @@ var require_files = __commonJS({
           try {
             let yarn = JSON.parse(line);
             if (yarn.type === "log") {
-              return path3.join(yarn.data, "node_modules");
+              return path4.join(yarn.data, "node_modules");
             }
           } catch (e) {
           }
@@ -8505,17 +8505,17 @@ var require_files = __commonJS({
       FileSystem2.isCaseSensitive = isCaseSensitive;
       function isParent(parent, child) {
         if (isCaseSensitive()) {
-          return path3.normalize(child).indexOf(path3.normalize(parent)) === 0;
+          return path4.normalize(child).indexOf(path4.normalize(parent)) === 0;
         } else {
-          return path3.normalize(child).toLowerCase().indexOf(path3.normalize(parent).toLowerCase()) === 0;
+          return path4.normalize(child).toLowerCase().indexOf(path4.normalize(parent).toLowerCase()) === 0;
         }
       }
       FileSystem2.isParent = isParent;
     })(FileSystem || (exports2.FileSystem = FileSystem = {}));
     function resolveModulePath(workspaceRoot, moduleName, nodePath, tracer) {
       if (nodePath) {
-        if (!path3.isAbsolute(nodePath)) {
-          nodePath = path3.join(workspaceRoot, nodePath);
+        if (!path4.isAbsolute(nodePath)) {
+          nodePath = path4.join(workspaceRoot, nodePath);
         }
         return resolve2(moduleName, nodePath, nodePath, tracer).then((value) => {
           if (FileSystem.isParent(nodePath, value)) {
@@ -8876,9 +8876,9 @@ var require_node3 = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/version.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/version.js
 var require_version = __commonJS({
-  "node_modules/chevrotain/lib/src/version.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.VERSION = void 0;
@@ -8886,9 +8886,9 @@ var require_version = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/utils/utils.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/utils/utils.js
 var require_utils = __commonJS({
-  "node_modules/chevrotain/lib/src/utils/utils.js"(exports, module) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/utils/utils.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.peek = exports.toFastProperties = exports.applyMixins = exports.isES2015MapSupported = exports.PRINT_WARNING = exports.PRINT_ERROR = exports.packArray = exports.IDENTITY = exports.NOOP = exports.merge = exports.groupBy = exports.defaults = exports.assignNoOverwrite = exports.assign = exports.zipObject = exports.sortBy = exports.indexOf = exports.some = exports.difference = exports.every = exports.isObject = exports.isRegExp = exports.isArray = exports.partial = exports.uniq = exports.compact = exports.reduce = exports.findAll = exports.find = exports.cloneObj = exports.cloneArr = exports.contains = exports.has = exports.pick = exports.reject = exports.filter = exports.dropRight = exports.drop = exports.isFunction = exports.isUndefined = exports.isString = exports.forEach = exports.last = exports.first = exports.flatten = exports.map = exports.mapValues = exports.values = exports.keys = exports.isEmpty = void 0;
@@ -9334,9 +9334,9 @@ var require_utils = __commonJS({
   }
 });
 
-// node_modules/regexp-to-ast/lib/regexp-to-ast.js
+// ../xml-language-service/node_modules/regexp-to-ast/lib/regexp-to-ast.js
 var require_regexp_to_ast = __commonJS({
-  "node_modules/regexp-to-ast/lib/regexp-to-ast.js"(exports2, module2) {
+  "../xml-language-service/node_modules/regexp-to-ast/lib/regexp-to-ast.js"(exports2, module2) {
     (function(root, factory) {
       if (typeof define === "function" && define.amd) {
         define([], factory);
@@ -10212,9 +10212,9 @@ var require_regexp_to_ast = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/scan/reg_exp_parser.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/scan/reg_exp_parser.js
 var require_reg_exp_parser = __commonJS({
-  "node_modules/chevrotain/lib/src/scan/reg_exp_parser.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/scan/reg_exp_parser.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.clearRegExpParserCache = exports2.getRegExpAst = void 0;
@@ -10239,9 +10239,9 @@ var require_reg_exp_parser = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/scan/reg_exp.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/scan/reg_exp.js
 var require_reg_exp = __commonJS({
-  "node_modules/chevrotain/lib/src/scan/reg_exp.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/scan/reg_exp.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -10478,9 +10478,9 @@ var require_reg_exp = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/scan/lexer.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer.js
 var require_lexer = __commonJS({
-  "node_modules/chevrotain/lib/src/scan/lexer.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -11234,9 +11234,9 @@ var require_lexer = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/scan/tokens.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/scan/tokens.js
 var require_tokens = __commonJS({
-  "node_modules/chevrotain/lib/src/scan/tokens.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/scan/tokens.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.isTokenType = exports2.hasExtendingTokensTypesMapProperty = exports2.hasExtendingTokensTypesProperty = exports2.hasCategoriesProperty = exports2.hasShortKeyProperty = exports2.singleAssignCategoriesToksMap = exports2.assignCategoriesMapProp = exports2.assignCategoriesTokensProp = exports2.assignTokenDefaultProps = exports2.expandCategories = exports2.augmentTokenTypes = exports2.tokenIdxToClass = exports2.tokenShortNameIdx = exports2.tokenStructuredMatcherNoCategories = exports2.tokenStructuredMatcher = void 0;
@@ -11321,12 +11321,12 @@ var require_tokens = __commonJS({
       });
     }
     exports2.assignCategoriesMapProp = assignCategoriesMapProp;
-    function singleAssignCategoriesToksMap(path3, nextNode) {
-      utils_1.forEach(path3, function(pathNode) {
+    function singleAssignCategoriesToksMap(path4, nextNode) {
+      utils_1.forEach(path4, function(pathNode) {
         nextNode.categoryMatchesMap[pathNode.tokenTypeIdx] = true;
       });
       utils_1.forEach(nextNode.CATEGORIES, function(nextCategory) {
-        var newPath = path3.concat(nextNode);
+        var newPath = path4.concat(nextNode);
         if (!utils_1.contains(newPath, nextCategory)) {
           singleAssignCategoriesToksMap(newPath, nextCategory);
         }
@@ -11356,9 +11356,9 @@ var require_tokens = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/scan/lexer_errors_public.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer_errors_public.js
 var require_lexer_errors_public = __commonJS({
-  "node_modules/chevrotain/lib/src/scan/lexer_errors_public.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer_errors_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defaultLexerErrorProvider = void 0;
@@ -11373,9 +11373,9 @@ var require_lexer_errors_public = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/scan/lexer_public.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer_public.js
 var require_lexer_public = __commonJS({
-  "node_modules/chevrotain/lib/src/scan/lexer_public.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Lexer = exports2.LexerDefinitionErrorType = void 0;
@@ -11941,9 +11941,9 @@ var require_lexer_public = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/scan/tokens_public.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/scan/tokens_public.js
 var require_tokens_public = __commonJS({
-  "node_modules/chevrotain/lib/src/scan/tokens_public.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/scan/tokens_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.tokenMatcher = exports2.createTokenInstance = exports2.EOF = exports2.createToken = exports2.hasTokenLabel = exports2.tokenName = exports2.tokenLabel = void 0;
@@ -12039,9 +12039,9 @@ var require_tokens_public = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/gast/gast_public.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_public.js
 var require_gast_public = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/gast/gast_public.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_public.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -12361,9 +12361,9 @@ var require_gast_public = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/rest.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/rest.js
 var require_rest = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/rest.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/rest.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RestWalker = void 0;
@@ -12460,9 +12460,9 @@ var require_rest = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/gast/gast_visitor_public.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_visitor_public.js
 var require_gast_visitor_public = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/gast/gast_visitor_public.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_visitor_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.GAstVisitor = void 0;
@@ -12527,9 +12527,9 @@ var require_gast_visitor_public = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/gast/gast.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast.js
 var require_gast = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/gast/gast.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -12684,9 +12684,9 @@ var require_gast = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/first.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/first.js
 var require_first = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/first.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/first.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.firstForTerminal = exports2.firstForBranching = exports2.firstForSequence = exports2.first = void 0;
@@ -12738,9 +12738,9 @@ var require_first = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/constants.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/constants.js
 var require_constants = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/constants.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.IN = void 0;
@@ -12748,9 +12748,9 @@ var require_constants = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/follow.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/follow.js
 var require_follow = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/follow.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/follow.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -12824,9 +12824,9 @@ var require_follow = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/errors_public.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/errors_public.js
 var require_errors_public = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/errors_public.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/errors_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defaultGrammarValidatorErrorProvider = exports2.defaultGrammarResolverErrorProvider = exports2.defaultParserErrorProvider = void 0;
@@ -12987,9 +12987,9 @@ var require_errors_public = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/resolver.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/resolver.js
 var require_resolver = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/resolver.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/resolver.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -13058,9 +13058,9 @@ var require_resolver = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/interpreter.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/interpreter.js
 var require_interpreter = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/interpreter.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/interpreter.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -13089,10 +13089,10 @@ var require_interpreter = __commonJS({
       /** @class */
       (function(_super) {
         __extends(AbstractNextPossibleTokensWalker2, _super);
-        function AbstractNextPossibleTokensWalker2(topProd, path3) {
+        function AbstractNextPossibleTokensWalker2(topProd, path4) {
           var _this = _super.call(this) || this;
           _this.topProd = topProd;
-          _this.path = path3;
+          _this.path = path4;
           _this.possibleTokTypes = [];
           _this.nextProductionName = "";
           _this.nextProductionOccurrence = 0;
@@ -13146,9 +13146,9 @@ var require_interpreter = __commonJS({
       /** @class */
       (function(_super) {
         __extends(NextAfterTokenWalker2, _super);
-        function NextAfterTokenWalker2(topProd, path3) {
-          var _this = _super.call(this, topProd, path3) || this;
-          _this.path = path3;
+        function NextAfterTokenWalker2(topProd, path4) {
+          var _this = _super.call(this, topProd, path4) || this;
+          _this.path = path4;
           _this.nextTerminalName = "";
           _this.nextTerminalOccurrence = 0;
           _this.nextTerminalName = _this.path.lastTok.name;
@@ -13562,9 +13562,9 @@ var require_interpreter = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/lookahead.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/lookahead.js
 var require_lookahead = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/lookahead.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/lookahead.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -13845,10 +13845,10 @@ var require_lookahead = __commonJS({
       }
       return result;
     }
-    function pathToHashKeys(path3) {
+    function pathToHashKeys(path4) {
       var keys2 = [""];
-      for (var i = 0; i < path3.length; i++) {
-        var tokType = path3[i];
+      for (var i = 0; i < path4.length; i++) {
+        var tokType = path4[i];
         var longerKeys = [];
         for (var j = 0; j < keys2.length; j++) {
           var currShorterKey = keys2[j];
@@ -13987,9 +13987,9 @@ var require_lookahead = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/checks.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/checks.js
 var require_checks = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/checks.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/checks.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -14160,9 +14160,9 @@ var require_checks = __commonJS({
       return errors;
     }
     exports2.validateRuleIsOverridden = validateRuleIsOverridden;
-    function validateNoLeftRecursion(topRule, currRule, errMsgProvider, path3) {
-      if (path3 === void 0) {
-        path3 = [];
+    function validateNoLeftRecursion(topRule, currRule, errMsgProvider, path4) {
+      if (path4 === void 0) {
+        path4 = [];
       }
       var errors = [];
       var nextNonTerminals = getFirstNoneTerminal(currRule.definition);
@@ -14175,15 +14175,15 @@ var require_checks = __commonJS({
           errors.push({
             message: errMsgProvider.buildLeftRecursionError({
               topLevelRule: topRule,
-              leftRecursionPath: path3
+              leftRecursionPath: path4
             }),
             type: parser_1.ParserDefinitionErrorType.LEFT_RECURSION,
             ruleName
           });
         }
-        var validNextSteps = utils.difference(nextNonTerminals, path3.concat([topRule]));
+        var validNextSteps = utils.difference(nextNonTerminals, path4.concat([topRule]));
         var errorsFromNextSteps = utils.map(validNextSteps, function(currRefRule) {
-          var newPath = utils.cloneArr(path3);
+          var newPath = utils.cloneArr(path4);
           newPath.push(currRefRule);
           return validateNoLeftRecursion(topRule, currRefRule, errMsgProvider, newPath);
         });
@@ -14465,9 +14465,9 @@ var require_checks = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/gast/gast_resolver_public.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_resolver_public.js
 var require_gast_resolver_public = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/gast/gast_resolver_public.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_resolver_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.assignOccurrenceIndices = exports2.validateGrammar = exports2.resolveGrammar = void 0;
@@ -14509,9 +14509,9 @@ var require_gast_resolver_public = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/exceptions_public.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/exceptions_public.js
 var require_exceptions_public = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/exceptions_public.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/exceptions_public.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -14624,9 +14624,9 @@ var require_exceptions_public = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/parser/traits/recoverable.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recoverable.js
 var require_recoverable = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/parser/traits/recoverable.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recoverable.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.attemptInRepetitionRecovery = exports2.Recoverable = exports2.InRuleRecoveryException = exports2.IN_RULE_RECOVERY_EXCEPTION = exports2.EOF_FOLLOW_KEY = void 0;
@@ -14880,9 +14880,9 @@ var require_recoverable = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/grammar/keys.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/keys.js
 var require_keys = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/grammar/keys.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/keys.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getKeyForAutomaticLookahead = exports2.AT_LEAST_ONE_SEP_IDX = exports2.MANY_SEP_IDX = exports2.AT_LEAST_ONE_IDX = exports2.MANY_IDX = exports2.OPTION_IDX = exports2.OR_IDX = exports2.BITS_FOR_ALT_IDX = exports2.BITS_FOR_RULE_IDX = exports2.BITS_FOR_OCCURRENCE_IDX = exports2.BITS_FOR_METHOD_TYPE = void 0;
@@ -14904,9 +14904,9 @@ var require_keys = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/parser/traits/looksahead.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/looksahead.js
 var require_looksahead = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/parser/traits/looksahead.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/looksahead.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.LooksAhead = void 0;
@@ -15005,9 +15005,9 @@ var require_looksahead = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/cst/cst.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/cst/cst.js
 var require_cst = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/cst/cst.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/cst/cst.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.addNoneTerminalToCst = exports2.addTerminalToCst = exports2.setNodeLocationFull = exports2.setNodeLocationOnlyOffset = void 0;
@@ -15054,9 +15054,9 @@ var require_cst = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/lang/lang_extensions.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/lang/lang_extensions.js
 var require_lang_extensions = __commonJS({
-  "node_modules/chevrotain/lib/src/lang/lang_extensions.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/lang/lang_extensions.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defineNameProp = exports2.functionName = exports2.classNameFromInstance = void 0;
@@ -15092,9 +15092,9 @@ var require_lang_extensions = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/cst/cst_visitor.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/cst/cst_visitor.js
 var require_cst_visitor = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/cst/cst_visitor.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/cst/cst_visitor.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.validateRedundantMethods = exports2.validateMissingCstMethods = exports2.validateVisitor = exports2.CstVisitorDefinitionError = exports2.createBaseVisitorConstructorWithDefaults = exports2.createBaseSemanticVisitorConstructor = exports2.defaultVisit = void 0;
@@ -15202,9 +15202,9 @@ var require_cst_visitor = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/parser/traits/tree_builder.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/tree_builder.js
 var require_tree_builder = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/parser/traits/tree_builder.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/tree_builder.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TreeBuilder = void 0;
@@ -15377,9 +15377,9 @@ var require_tree_builder = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/parser/traits/lexer_adapter.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/lexer_adapter.js
 var require_lexer_adapter = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/parser/traits/lexer_adapter.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/lexer_adapter.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.LexerAdapter = void 0;
@@ -15450,9 +15450,9 @@ var require_lexer_adapter = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_api.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_api.js
 var require_recognizer_api = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_api.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RecognizerApi = void 0;
@@ -15792,9 +15792,9 @@ var require_recognizer_api = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_engine.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_engine.js
 var require_recognizer_engine = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_engine.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_engine.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RecognizerEngine = void 0;
@@ -16244,9 +16244,9 @@ var require_recognizer_engine = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/parser/traits/error_handler.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/error_handler.js
 var require_error_handler = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/parser/traits/error_handler.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/error_handler.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ErrorHandler = void 0;
@@ -16328,9 +16328,9 @@ var require_error_handler = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/parser/traits/context_assist.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/context_assist.js
 var require_context_assist = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/parser/traits/context_assist.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/context_assist.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ContentAssist = void 0;
@@ -16364,9 +16364,9 @@ var require_context_assist = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/parser/traits/gast_recorder.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/gast_recorder.js
 var require_gast_recorder = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/parser/traits/gast_recorder.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/gast_recorder.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.GastRecorder = void 0;
@@ -16648,9 +16648,9 @@ var require_gast_recorder = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/parser/traits/perf_tracer.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/perf_tracer.js
 var require_perf_tracer = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/parser/traits/perf_tracer.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/perf_tracer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PerformanceTracer = void 0;
@@ -16698,9 +16698,9 @@ var require_perf_tracer = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/parse/parser/parser.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/parser.js
 var require_parser = __commonJS({
-  "node_modules/chevrotain/lib/src/parse/parser/parser.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/parser.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -16922,9 +16922,9 @@ var require_parser = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/diagrams/render_public.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/diagrams/render_public.js
 var require_render_public = __commonJS({
-  "node_modules/chevrotain/lib/src/diagrams/render_public.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/diagrams/render_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createSyntaxDiagramsCode = void 0;
@@ -16943,9 +16943,9 @@ var require_render_public = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/generate/generate.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/generate/generate.js
 var require_generate = __commonJS({
-  "node_modules/chevrotain/lib/src/generate/generate.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/generate/generate.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.genSingleAlt = exports2.genAlternation = exports2.genNonTerminal = exports2.genTerminal = exports2.genRule = exports2.genAllRules = exports2.genClass = exports2.genWrapperFunction = exports2.genUmdModule = void 0;
@@ -17063,9 +17063,9 @@ var require_generate = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/generate/generate_public.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/generate/generate_public.js
 var require_generate_public = __commonJS({
-  "node_modules/chevrotain/lib/src/generate/generate_public.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/generate/generate_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.generateParserModule = exports2.generateParserFactory = void 0;
@@ -17093,9 +17093,9 @@ var require_generate_public = __commonJS({
   }
 });
 
-// node_modules/chevrotain/lib/src/api.js
+// ../xml-language-service/node_modules/chevrotain/lib/src/api.js
 var require_api4 = __commonJS({
-  "node_modules/chevrotain/lib/src/api.js"(exports2) {
+  "../xml-language-service/node_modules/chevrotain/lib/src/api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Parser = exports2.generateParserModule = exports2.generateParserFactory = exports2.createSyntaxDiagramsCode = exports2.clearCache = exports2.validateGrammar = exports2.resolveGrammar = exports2.assignOccurrenceIndices = exports2.GAstVisitor = exports2.serializeProduction = exports2.serializeGrammar = exports2.Terminal = exports2.Rule = exports2.RepetitionWithSeparator = exports2.RepetitionMandatoryWithSeparator = exports2.RepetitionMandatory = exports2.Repetition = exports2.Option = exports2.NonTerminal = exports2.Alternative = exports2.Alternation = exports2.defaultLexerErrorProvider = exports2.NoViableAltException = exports2.NotAllInputParsedException = exports2.MismatchedTokenException = exports2.isRecognitionException = exports2.EarlyExitException = exports2.defaultParserErrorProvider = exports2.defaultGrammarValidatorErrorProvider = exports2.defaultGrammarResolverErrorProvider = exports2.tokenName = exports2.tokenMatcher = exports2.tokenLabel = exports2.EOF = exports2.createTokenInstance = exports2.createToken = exports2.LexerDefinitionErrorType = exports2.Lexer = exports2.EMPTY_ALT = exports2.ParserDefinitionErrorType = exports2.EmbeddedActionsParser = exports2.CstParser = exports2.VERSION = void 0;
@@ -17252,9 +17252,9 @@ var require_api4 = __commonJS({
   }
 });
 
-// node_modules/@xml-tools/parser/lib/lexer.js
+// ../xml-language-service/node_modules/@xml-tools/parser/lib/lexer.js
 var require_lexer2 = __commonJS({
-  "node_modules/@xml-tools/parser/lib/lexer.js"(exports2, module2) {
+  "../xml-language-service/node_modules/@xml-tools/parser/lib/lexer.js"(exports2, module2) {
     var { createToken: createTokenOrg, Lexer } = require_api4();
     var fragments = {};
     var f = fragments;
@@ -17422,9 +17422,9 @@ var require_lexer2 = __commonJS({
   }
 });
 
-// node_modules/@xml-tools/parser/lib/parser.js
+// ../xml-language-service/node_modules/@xml-tools/parser/lib/parser.js
 var require_parser2 = __commonJS({
-  "node_modules/@xml-tools/parser/lib/parser.js"(exports2, module2) {
+  "../xml-language-service/node_modules/@xml-tools/parser/lib/parser.js"(exports2, module2) {
     var { CstParser, tokenMatcher } = require_api4();
     var { tokensDictionary: t } = require_lexer2();
     var Parser = class extends CstParser {
@@ -17592,9 +17592,9 @@ var require_parser2 = __commonJS({
   }
 });
 
-// node_modules/@xml-tools/parser/lib/api.js
+// ../xml-language-service/node_modules/@xml-tools/parser/lib/api.js
 var require_api5 = __commonJS({
-  "node_modules/@xml-tools/parser/lib/api.js"(exports2, module2) {
+  "../xml-language-service/node_modules/@xml-tools/parser/lib/api.js"(exports2, module2) {
     var { xmlLexer } = require_lexer2();
     var { xmlParser } = require_parser2();
     module2.exports = {
@@ -17614,9 +17614,9 @@ var require_api5 = __commonJS({
   }
 });
 
-// node_modules/xerces-wasm/wasm/xerces_validator.js
+// ../xml-language-service/node_modules/xerces-wasm/wasm/xerces_validator.js
 var require_xerces_validator = __commonJS({
-  "node_modules/xerces-wasm/wasm/xerces_validator.js"(exports2, module2) {
+  "../xml-language-service/node_modules/xerces-wasm/wasm/xerces_validator.js"(exports2, module2) {
     var XercesModule = (() => {
       var _scriptName = globalThis.document?.currentScript?.src;
       return async function(moduleArg = {}) {
@@ -17636,11 +17636,11 @@ var require_xerces_validator = __commonJS({
           _scriptName = self.location.href;
         }
         var scriptDirectory = "";
-        function locateFile(path3) {
+        function locateFile(path4) {
           if (Module["locateFile"]) {
-            return Module["locateFile"](path3, scriptDirectory);
+            return Module["locateFile"](path4, scriptDirectory);
           }
-          return scriptDirectory + path3;
+          return scriptDirectory + path4;
         }
         var readAsync, readBinary;
         if (ENVIRONMENT_IS_NODE) {
@@ -17995,7 +17995,7 @@ var require_xerces_validator = __commonJS({
           }
           throw exceptionLast;
         };
-        var PATH = { isAbs: (path3) => path3.charAt(0) === "/", splitPath: (filename) => {
+        var PATH = { isAbs: (path4) => path4.charAt(0) === "/", splitPath: (filename) => {
           var splitPathRe = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
           return splitPathRe.exec(filename).slice(1);
         }, normalizeArray: (parts, allowAboveRoot) => {
@@ -18018,18 +18018,18 @@ var require_xerces_validator = __commonJS({
             }
           }
           return parts;
-        }, normalize: (path3) => {
-          var isAbsolute3 = PATH.isAbs(path3), trailingSlash = path3.slice(-1) === "/";
-          path3 = PATH.normalizeArray(path3.split("/").filter((p) => !!p), !isAbsolute3).join("/");
-          if (!path3 && !isAbsolute3) {
-            path3 = ".";
+        }, normalize: (path4) => {
+          var isAbsolute3 = PATH.isAbs(path4), trailingSlash = path4.slice(-1) === "/";
+          path4 = PATH.normalizeArray(path4.split("/").filter((p) => !!p), !isAbsolute3).join("/");
+          if (!path4 && !isAbsolute3) {
+            path4 = ".";
           }
-          if (path3 && trailingSlash) {
-            path3 += "/";
+          if (path4 && trailingSlash) {
+            path4 += "/";
           }
-          return (isAbsolute3 ? "/" : "") + path3;
-        }, dirname: (path3) => {
-          var result = PATH.splitPath(path3), root = result[0], dir = result[1];
+          return (isAbsolute3 ? "/" : "") + path4;
+        }, dirname: (path4) => {
+          var result = PATH.splitPath(path4), root = result[0], dir = result[1];
           if (!root && !dir) {
             return ".";
           }
@@ -18037,7 +18037,7 @@ var require_xerces_validator = __commonJS({
             dir = dir.slice(0, -1);
           }
           return root + dir;
-        }, basename: (path3) => path3 && path3.match(/([^\/]+|\/)\/*$/)[1], join: (...paths) => PATH.normalize(paths.join("/")), join2: (l, r) => PATH.normalize(l + "/" + r) };
+        }, basename: (path4) => path4 && path4.match(/([^\/]+|\/)\/*$/)[1], join: (...paths) => PATH.normalize(paths.join("/")), join2: (l, r) => PATH.normalize(l + "/" + r) };
         var initRandomFill = () => {
           if (ENVIRONMENT_IS_NODE) {
             var nodeCrypto = require("node:crypto");
@@ -18049,14 +18049,14 @@ var require_xerces_validator = __commonJS({
         var PATH_FS = { resolve: (...args) => {
           var resolvedPath = "", resolvedAbsolute = false;
           for (var i = args.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-            var path3 = i >= 0 ? args[i] : FS.cwd();
-            if (typeof path3 != "string") {
+            var path4 = i >= 0 ? args[i] : FS.cwd();
+            if (typeof path4 != "string") {
               throw new TypeError("Arguments to path.resolve must be strings");
-            } else if (!path3) {
+            } else if (!path4) {
               return "";
             }
-            resolvedPath = path3 + "/" + resolvedPath;
-            resolvedAbsolute = PATH.isAbs(path3);
+            resolvedPath = path4 + "/" + resolvedPath;
+            resolvedAbsolute = PATH.isAbs(path4);
           }
           resolvedPath = PATH.normalizeArray(resolvedPath.split("/").filter((p) => !!p), !resolvedAbsolute).join("/");
           return (resolvedAbsolute ? "/" : "") + resolvedPath || ".";
@@ -18652,16 +18652,16 @@ var require_xerces_validator = __commonJS({
           get isDevice() {
             return FS.isChrdev(this.mode);
           }
-        }, lookupPath(path3, opts = {}) {
-          if (!path3) {
+        }, lookupPath(path4, opts = {}) {
+          if (!path4) {
             throw new FS.ErrnoError(44);
           }
           opts.follow_mount ??= true;
-          if (!PATH.isAbs(path3)) {
-            path3 = FS.cwd() + "/" + path3;
+          if (!PATH.isAbs(path4)) {
+            path4 = FS.cwd() + "/" + path4;
           }
           linkloop: for (var nlinks = 0; nlinks < 40; nlinks++) {
-            var parts = path3.split("/").filter((p) => !!p);
+            var parts = path4.split("/").filter((p) => !!p);
             var current = FS.root;
             var current_path = "/";
             for (var i = 0; i < parts.length; i++) {
@@ -18675,7 +18675,7 @@ var require_xerces_validator = __commonJS({
               if (parts[i] === "..") {
                 current_path = PATH.dirname(current_path);
                 if (FS.isRoot(current)) {
-                  path3 = current_path + "/" + parts.slice(i + 1).join("/");
+                  path4 = current_path + "/" + parts.slice(i + 1).join("/");
                   nlinks--;
                   continue linkloop;
                 } else {
@@ -18703,7 +18703,7 @@ var require_xerces_validator = __commonJS({
                 if (!PATH.isAbs(link)) {
                   link = PATH.dirname(current_path) + "/" + link;
                 }
-                path3 = link + "/" + parts.slice(i + 1).join("/");
+                path4 = link + "/" + parts.slice(i + 1).join("/");
                 continue linkloop;
               }
             }
@@ -18711,14 +18711,14 @@ var require_xerces_validator = __commonJS({
           }
           throw new FS.ErrnoError(32);
         }, getPath(node) {
-          var path3;
+          var path4;
           while (true) {
             if (FS.isRoot(node)) {
               var mount = node.mount.mountpoint;
-              if (!path3) return mount;
-              return mount[mount.length - 1] !== "/" ? `${mount}/${path3}` : mount + path3;
+              if (!path4) return mount;
+              return mount[mount.length - 1] !== "/" ? `${mount}/${path4}` : mount + path4;
             }
-            path3 = path3 ? `${node.name}/${path3}` : node.name;
+            path4 = path4 ? `${node.name}/${path4}` : node.name;
             node = node.parent;
           }
         }, hashName(parentid, name) {
@@ -18995,10 +18995,10 @@ var require_xerces_validator = __commonJS({
           node.mount.mounts.splice(idx, 1);
         }, lookup(parent, name) {
           return parent.node_ops.lookup(parent, name);
-        }, mknod(path3, mode, dev) {
-          var lookup = FS.lookupPath(path3, { parent: true });
+        }, mknod(path4, mode, dev) {
+          var lookup = FS.lookupPath(path4, { parent: true });
           var parent = lookup.node;
-          var name = PATH.basename(path3);
+          var name = PATH.basename(path4);
           if (!name) {
             throw new FS.ErrnoError(28);
           }
@@ -19013,8 +19013,8 @@ var require_xerces_validator = __commonJS({
             throw new FS.ErrnoError(63);
           }
           return parent.node_ops.mknod(parent, name, mode, dev);
-        }, statfs(path3) {
-          return FS.statfsNode(FS.lookupPath(path3, { follow: true }).node);
+        }, statfs(path4) {
+          return FS.statfsNode(FS.lookupPath(path4, { follow: true }).node);
         }, statfsStream(stream) {
           return FS.statfsNode(stream.node);
         }, statfsNode(node) {
@@ -19023,20 +19023,20 @@ var require_xerces_validator = __commonJS({
             Object.assign(rtn, node.node_ops.statfs(node.mount.opts.root));
           }
           return rtn;
-        }, create(path3, mode = 438) {
+        }, create(path4, mode = 438) {
           mode &= 4095;
           mode |= 32768;
-          return FS.mknod(path3, mode, 0);
-        }, mkdir(path3, mode = 511) {
+          return FS.mknod(path4, mode, 0);
+        }, mkdir(path4, mode = 511) {
           mode &= 511 | 512;
           mode |= 16384;
-          return FS.mknod(path3, mode, 0);
-        }, mkdirTree(path3, mode) {
-          var dirs = path3.split("/");
+          return FS.mknod(path4, mode, 0);
+        }, mkdirTree(path4, mode) {
+          var dirs = path4.split("/");
           var d = "";
           for (var dir of dirs) {
             if (!dir) continue;
-            if (d || PATH.isAbs(path3)) d += "/";
+            if (d || PATH.isAbs(path4)) d += "/";
             d += dir;
             try {
               FS.mkdir(d, mode);
@@ -19044,13 +19044,13 @@ var require_xerces_validator = __commonJS({
               if (e.errno != 20) throw e;
             }
           }
-        }, mkdev(path3, mode, dev) {
+        }, mkdev(path4, mode, dev) {
           if (typeof dev == "undefined") {
             dev = mode;
             mode = 438;
           }
           mode |= 8192;
-          return FS.mknod(path3, mode, dev);
+          return FS.mknod(path4, mode, dev);
         }, symlink(oldpath, newpath) {
           if (!PATH_FS.resolve(oldpath)) {
             throw new FS.ErrnoError(44);
@@ -19130,10 +19130,10 @@ var require_xerces_validator = __commonJS({
           } finally {
             FS.hashAddNode(old_node);
           }
-        }, rmdir(path3) {
-          var lookup = FS.lookupPath(path3, { parent: true });
+        }, rmdir(path4) {
+          var lookup = FS.lookupPath(path4, { parent: true });
           var parent = lookup.node;
-          var name = PATH.basename(path3);
+          var name = PATH.basename(path4);
           var node = FS.lookupNode(parent, name);
           var errCode = FS.mayDelete(parent, name, true);
           if (errCode) {
@@ -19147,18 +19147,18 @@ var require_xerces_validator = __commonJS({
           }
           parent.node_ops.rmdir(parent, name);
           FS.destroyNode(node);
-        }, readdir(path3) {
-          var lookup = FS.lookupPath(path3, { follow: true });
+        }, readdir(path4) {
+          var lookup = FS.lookupPath(path4, { follow: true });
           var node = lookup.node;
           var readdir = FS.checkOpExists(node.node_ops.readdir, 54);
           return readdir(node);
-        }, unlink(path3) {
-          var lookup = FS.lookupPath(path3, { parent: true });
+        }, unlink(path4) {
+          var lookup = FS.lookupPath(path4, { parent: true });
           var parent = lookup.node;
           if (!parent) {
             throw new FS.ErrnoError(44);
           }
-          var name = PATH.basename(path3);
+          var name = PATH.basename(path4);
           var node = FS.lookupNode(parent, name);
           var errCode = FS.mayDelete(parent, name, false);
           if (errCode) {
@@ -19172,8 +19172,8 @@ var require_xerces_validator = __commonJS({
           }
           parent.node_ops.unlink(parent, name);
           FS.destroyNode(node);
-        }, readlink(path3) {
-          var lookup = FS.lookupPath(path3);
+        }, readlink(path4) {
+          var lookup = FS.lookupPath(path4);
           var link = lookup.node;
           if (!link) {
             throw new FS.ErrnoError(44);
@@ -19182,8 +19182,8 @@ var require_xerces_validator = __commonJS({
             throw new FS.ErrnoError(28);
           }
           return link.node_ops.readlink(link);
-        }, stat(path3, dontFollow) {
-          var lookup = FS.lookupPath(path3, { follow: !dontFollow });
+        }, stat(path4, dontFollow) {
+          var lookup = FS.lookupPath(path4, { follow: !dontFollow });
           var node = lookup.node;
           var getattr = FS.checkOpExists(node.node_ops.getattr, 63);
           return getattr(node);
@@ -19195,37 +19195,37 @@ var require_xerces_validator = __commonJS({
           getattr ??= node.node_ops.getattr;
           FS.checkOpExists(getattr, 63);
           return getattr(arg);
-        }, lstat(path3) {
-          return FS.stat(path3, true);
+        }, lstat(path4) {
+          return FS.stat(path4, true);
         }, doChmod(stream, node, mode, dontFollow) {
           FS.doSetAttr(stream, node, { mode: mode & 4095 | node.mode & ~4095, ctime: Date.now(), dontFollow });
-        }, chmod(path3, mode, dontFollow) {
+        }, chmod(path4, mode, dontFollow) {
           var node;
-          if (typeof path3 == "string") {
-            var lookup = FS.lookupPath(path3, { follow: !dontFollow });
+          if (typeof path4 == "string") {
+            var lookup = FS.lookupPath(path4, { follow: !dontFollow });
             node = lookup.node;
           } else {
-            node = path3;
+            node = path4;
           }
           FS.doChmod(null, node, mode, dontFollow);
-        }, lchmod(path3, mode) {
-          FS.chmod(path3, mode, true);
+        }, lchmod(path4, mode) {
+          FS.chmod(path4, mode, true);
         }, fchmod(fd, mode) {
           var stream = FS.getStreamChecked(fd);
           FS.doChmod(stream, stream.node, mode, false);
         }, doChown(stream, node, dontFollow) {
           FS.doSetAttr(stream, node, { timestamp: Date.now(), dontFollow });
-        }, chown(path3, uid, gid, dontFollow) {
+        }, chown(path4, uid, gid, dontFollow) {
           var node;
-          if (typeof path3 == "string") {
-            var lookup = FS.lookupPath(path3, { follow: !dontFollow });
+          if (typeof path4 == "string") {
+            var lookup = FS.lookupPath(path4, { follow: !dontFollow });
             node = lookup.node;
           } else {
-            node = path3;
+            node = path4;
           }
           FS.doChown(null, node, dontFollow);
-        }, lchown(path3, uid, gid) {
-          FS.chown(path3, uid, gid, true);
+        }, lchown(path4, uid, gid) {
+          FS.chown(path4, uid, gid, true);
         }, fchown(fd, uid, gid) {
           var stream = FS.getStreamChecked(fd);
           FS.doChown(stream, stream.node, false);
@@ -19241,16 +19241,16 @@ var require_xerces_validator = __commonJS({
             throw new FS.ErrnoError(errCode);
           }
           FS.doSetAttr(stream, node, { size: len, timestamp: Date.now() });
-        }, truncate(path3, len) {
+        }, truncate(path4, len) {
           if (len < 0) {
             throw new FS.ErrnoError(28);
           }
           var node;
-          if (typeof path3 == "string") {
-            var lookup = FS.lookupPath(path3, { follow: true });
+          if (typeof path4 == "string") {
+            var lookup = FS.lookupPath(path4, { follow: true });
             node = lookup.node;
           } else {
-            node = path3;
+            node = path4;
           }
           FS.doTruncate(null, node, len);
         }, ftruncate(fd, len) {
@@ -19259,13 +19259,13 @@ var require_xerces_validator = __commonJS({
             throw new FS.ErrnoError(28);
           }
           FS.doTruncate(stream, stream.node, len);
-        }, utime(path3, atime, mtime) {
-          var lookup = FS.lookupPath(path3, { follow: true });
+        }, utime(path4, atime, mtime) {
+          var lookup = FS.lookupPath(path4, { follow: true });
           var node = lookup.node;
           var setattr = FS.checkOpExists(node.node_ops.setattr, 63);
           setattr(node, { atime, mtime });
-        }, open(path3, flags, mode = 438) {
-          if (path3 === "") {
+        }, open(path4, flags, mode = 438) {
+          if (path4 === "") {
             throw new FS.ErrnoError(44);
           }
           flags = FS_modeStringToFlags(flags);
@@ -19276,13 +19276,13 @@ var require_xerces_validator = __commonJS({
           }
           var node;
           var isDirPath;
-          if (typeof path3 == "object") {
-            node = path3;
+          if (typeof path4 == "object") {
+            node = path4;
           } else {
-            isDirPath = path3.endsWith("/");
-            var lookup = FS.lookupPath(path3, { follow: !(flags & 131072), noent_okay: true });
+            isDirPath = path4.endsWith("/");
+            var lookup = FS.lookupPath(path4, { follow: !(flags & 131072), noent_okay: true });
             node = lookup.node;
-            path3 = lookup.path;
+            path4 = lookup.path;
           }
           var created = false;
           if (flags & 64) {
@@ -19293,7 +19293,7 @@ var require_xerces_validator = __commonJS({
             } else if (isDirPath) {
               throw new FS.ErrnoError(31);
             } else {
-              node = FS.mknod(path3, mode | 511, 0);
+              node = FS.mknod(path4, mode | 511, 0);
               created = true;
             }
           }
@@ -19431,14 +19431,14 @@ var require_xerces_validator = __commonJS({
             throw new FS.ErrnoError(59);
           }
           return stream.stream_ops.ioctl(stream, cmd, arg);
-        }, readFile(path3, opts = {}) {
+        }, readFile(path4, opts = {}) {
           opts.flags = opts.flags || 0;
           opts.encoding = opts.encoding || "binary";
           if (opts.encoding !== "utf8" && opts.encoding !== "binary") {
             abort(`Invalid encoding type "${opts.encoding}"`);
           }
-          var stream = FS.open(path3, opts.flags);
-          var stat = FS.stat(path3);
+          var stream = FS.open(path4, opts.flags);
+          var stat = FS.stat(path4);
           var length = stat.size;
           var buf = new Uint8Array(length);
           FS.read(stream, buf, 0, length, 0);
@@ -19447,14 +19447,14 @@ var require_xerces_validator = __commonJS({
           }
           FS.close(stream);
           return buf;
-        }, writeFile(path3, data, opts = {}) {
+        }, writeFile(path4, data, opts = {}) {
           opts.flags = opts.flags || 577;
-          var stream = FS.open(path3, opts.flags, opts.mode);
+          var stream = FS.open(path4, opts.flags, opts.mode);
           data = FS_fileDataToTypedArray(data);
           FS.write(stream, data, 0, data.byteLength, void 0, opts.canOwn);
           FS.close(stream);
-        }, cwd: () => FS.currentPath, chdir(path3) {
-          var lookup = FS.lookupPath(path3, { follow: true });
+        }, cwd: () => FS.currentPath, chdir(path4) {
+          var lookup = FS.lookupPath(path4, { follow: true });
           if (lookup.node === null) {
             throw new FS.ErrnoError(44);
           }
@@ -19547,26 +19547,26 @@ var require_xerces_validator = __commonJS({
               FS.close(stream);
             }
           }
-        }, findObject(path3, dontResolveLastLink) {
-          var ret = FS.analyzePath(path3, dontResolveLastLink);
+        }, findObject(path4, dontResolveLastLink) {
+          var ret = FS.analyzePath(path4, dontResolveLastLink);
           if (!ret.exists) {
             return null;
           }
           return ret.object;
-        }, analyzePath(path3, dontResolveLastLink) {
+        }, analyzePath(path4, dontResolveLastLink) {
           try {
-            var lookup = FS.lookupPath(path3, { follow: !dontResolveLastLink });
-            path3 = lookup.path;
+            var lookup = FS.lookupPath(path4, { follow: !dontResolveLastLink });
+            path4 = lookup.path;
           } catch (e) {
           }
           var ret = { isRoot: false, exists: false, error: 0, name: null, path: null, object: null, parentExists: false, parentPath: null, parentObject: null };
           try {
-            var lookup = FS.lookupPath(path3, { parent: true });
+            var lookup = FS.lookupPath(path4, { parent: true });
             ret.parentExists = true;
             ret.parentPath = lookup.path;
             ret.parentObject = lookup.node;
-            ret.name = PATH.basename(path3);
-            lookup = FS.lookupPath(path3, { follow: !dontResolveLastLink });
+            ret.name = PATH.basename(path4);
+            lookup = FS.lookupPath(path4, { follow: !dontResolveLastLink });
             ret.exists = true;
             ret.path = lookup.path;
             ret.object = lookup.node;
@@ -19576,9 +19576,9 @@ var require_xerces_validator = __commonJS({
             ret.error = e.errno;
           }
           return ret;
-        }, createPath(parent, path3, canRead, canWrite) {
+        }, createPath(parent, path4, canRead, canWrite) {
           parent = typeof parent == "string" ? parent : FS.getPath(parent);
-          var parts = path3.split("/").reverse();
+          var parts = path4.split("/").reverse();
           while (parts.length) {
             var part = parts.pop();
             if (!part) continue;
@@ -19592,17 +19592,17 @@ var require_xerces_validator = __commonJS({
           }
           return current;
         }, createFile(parent, name, properties, canRead, canWrite) {
-          var path3 = PATH.join2(typeof parent == "string" ? parent : FS.getPath(parent), name);
+          var path4 = PATH.join2(typeof parent == "string" ? parent : FS.getPath(parent), name);
           var mode = FS_getMode(canRead, canWrite);
-          return FS.create(path3, mode);
+          return FS.create(path4, mode);
         }, createDataFile(parent, name, data, canRead, canWrite, canOwn) {
-          var path3 = name;
+          var path4 = name;
           if (parent) {
             parent = typeof parent == "string" ? parent : FS.getPath(parent);
-            path3 = name ? PATH.join2(parent, name) : parent;
+            path4 = name ? PATH.join2(parent, name) : parent;
           }
           var mode = FS_getMode(canRead, canWrite);
-          var node = FS.create(path3, mode);
+          var node = FS.create(path4, mode);
           if (data) {
             data = FS_fileDataToTypedArray(data);
             FS.chmod(node, mode | 146);
@@ -19612,7 +19612,7 @@ var require_xerces_validator = __commonJS({
             FS.chmod(node, mode);
           }
         }, createDevice(parent, name, input, output) {
-          var path3 = PATH.join2(typeof parent == "string" ? parent : FS.getPath(parent), name);
+          var path4 = PATH.join2(typeof parent == "string" ? parent : FS.getPath(parent), name);
           var mode = FS_getMode(!!input, !!output);
           FS.createDevice.major ??= 64;
           var dev = FS.makedev(FS.createDevice.major++, 0);
@@ -19655,7 +19655,7 @@ var require_xerces_validator = __commonJS({
             }
             return i;
           } });
-          return FS.mkdev(path3, mode, dev);
+          return FS.mkdev(path4, mode, dev);
         }, forceLoadFile(obj) {
           if (obj.isDevice || obj.isFolder || obj.link || obj.contents) return true;
           if (globalThis.XMLHttpRequest) {
@@ -19800,9 +19800,9 @@ var require_xerces_validator = __commonJS({
           return node;
         } };
         var UTF8ToString = (ptr, maxBytesToRead, ignoreNul) => ptr ? UTF8ArrayToString(HEAPU8, ptr, maxBytesToRead, ignoreNul) : "";
-        var SYSCALLS = { calculateAt(dirfd, path3, allowEmpty) {
-          if (PATH.isAbs(path3)) {
-            return path3;
+        var SYSCALLS = { calculateAt(dirfd, path4, allowEmpty) {
+          if (PATH.isAbs(path4)) {
+            return path4;
           }
           var dir;
           if (dirfd === -100) {
@@ -19811,13 +19811,13 @@ var require_xerces_validator = __commonJS({
             var dirstream = SYSCALLS.getStreamFromFD(dirfd);
             dir = dirstream.path;
           }
-          if (path3.length == 0) {
+          if (path4.length == 0) {
             if (!allowEmpty) {
               throw new FS.ErrnoError(44);
             }
             return dir;
           }
-          return dir + "/" + path3;
+          return dir + "/" + path4;
         }, writeStat(buf, stat) {
           HEAPU32[buf >> 2] = stat.dev;
           HEAPU32[buf + 4 >> 2] = stat.mode;
@@ -20028,24 +20028,24 @@ var require_xerces_validator = __commonJS({
             return -e.errno;
           }
         }
-        function ___syscall_openat(dirfd, path3, flags, varargs) {
+        function ___syscall_openat(dirfd, path4, flags, varargs) {
           SYSCALLS.varargs = varargs;
           try {
-            path3 = SYSCALLS.getStr(path3);
-            path3 = SYSCALLS.calculateAt(dirfd, path3);
+            path4 = SYSCALLS.getStr(path4);
+            path4 = SYSCALLS.calculateAt(dirfd, path4);
             var mode = varargs ? syscallGetVarargI() : 0;
-            return FS.open(path3, flags, mode).fd;
+            return FS.open(path4, flags, mode).fd;
           } catch (e) {
             if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
             return -e.errno;
           }
         }
-        function ___syscall_readlinkat(dirfd, path3, buf, bufsize) {
+        function ___syscall_readlinkat(dirfd, path4, buf, bufsize) {
           try {
-            path3 = SYSCALLS.getStr(path3);
-            path3 = SYSCALLS.calculateAt(dirfd, path3);
+            path4 = SYSCALLS.getStr(path4);
+            path4 = SYSCALLS.calculateAt(dirfd, path4);
             if (bufsize <= 0) return -28;
-            var ret = FS.readlink(path3);
+            var ret = FS.readlink(path4);
             var len = Math.min(bufsize, lengthBytesUTF8(ret));
             var endChar = HEAP8[buf + len];
             stringToUTF8(ret, buf, bufsize + 1);
@@ -20140,165 +20140,133 @@ var require_xerces_validator = __commonJS({
             return this.fromWireType(HEAPU8[pointer]);
           }, destructorFunction: null });
         };
-        var emval_freelist = [];
-        var emval_handles = [0, 1, , 1, null, 1, true, 1, false, 1];
-        var emval_exception_decrefs = [];
-        var __emval_decref = (handle) => {
-          if (handle > 9 && 0 === --emval_handles[handle + 1]) {
-            var value = emval_handles[handle];
-            emval_handles[handle] = void 0;
-            var destructor = emval_exception_decrefs[handle];
-            if (destructor) {
-              emval_exception_decrefs[handle] = void 0;
-              destructor(value);
-            }
-            emval_freelist.push(handle);
+        var shallowCopyInternalPointer = (o) => ({ count: o.count, deleteScheduled: o.deleteScheduled, preservePointerOnDelete: o.preservePointerOnDelete, ptr: o.ptr, ptrType: o.ptrType, smartPtr: o.smartPtr, smartPtrType: o.smartPtrType });
+        var throwInstanceAlreadyDeleted = (obj) => {
+          function getInstanceTypeName(handle) {
+            return handle.$$.ptrType.registeredClass.name;
+          }
+          throwBindingError(getInstanceTypeName(obj) + " instance already deleted");
+        };
+        var finalizationRegistry = false;
+        var detachFinalizer = (handle) => {
+        };
+        var runDestructor = ($$) => {
+          if ($$.smartPtr) {
+            $$.smartPtrType.rawDestructor($$.smartPtr);
+          } else {
+            $$.ptrType.registeredClass.rawDestructor($$.ptr);
           }
         };
-        var Emval = { toValue: (handle) => {
-          if (!handle) {
-            throwBindingError(`Cannot use deleted val. handle = ${handle}`);
+        var releaseClassHandle = ($$) => {
+          $$.count.value -= 1;
+          var toDelete = 0 === $$.count.value;
+          if (toDelete) {
+            runDestructor($$);
           }
-          return emval_handles[handle];
-        }, toHandle: (value) => {
-          switch (value) {
-            case void 0:
-              return 2;
-            case null:
-              return 4;
-            case true:
-              return 6;
-            case false:
-              return 8;
-            default: {
-              const handle = emval_freelist.pop() || emval_handles.length;
-              emval_handles[handle] = value;
-              emval_handles[handle + 1] = 1;
-              return handle;
+        };
+        var attachFinalizer = (handle) => {
+          if (!globalThis.FinalizationRegistry) {
+            attachFinalizer = (handle2) => handle2;
+            return handle;
+          }
+          finalizationRegistry = new FinalizationRegistry((info) => {
+            releaseClassHandle(info.$$);
+          });
+          attachFinalizer = (handle2) => {
+            var $$ = handle2.$$;
+            var hasSmartPtr = !!$$.smartPtr;
+            if (hasSmartPtr) {
+              var info = { $$ };
+              finalizationRegistry.register(handle2, info, handle2);
             }
+            return handle2;
+          };
+          detachFinalizer = (handle2) => finalizationRegistry.unregister(handle2);
+          return attachFinalizer(handle);
+        };
+        var deletionQueue = [];
+        var flushPendingDeletes = () => {
+          while (deletionQueue.length) {
+            var obj = deletionQueue.pop();
+            obj.$$.deleteScheduled = false;
+            obj["delete"]();
           }
-        } };
-        function readPointer(pointer) {
-          return this.fromWireType(HEAPU32[pointer >> 2]);
+        };
+        var delayFunction;
+        var init_ClassHandle = () => {
+          let proto = ClassHandle.prototype;
+          Object.assign(proto, { isAliasOf(other) {
+            if (!(this instanceof ClassHandle)) {
+              return false;
+            }
+            if (!(other instanceof ClassHandle)) {
+              return false;
+            }
+            var leftClass = this.$$.ptrType.registeredClass;
+            var left = this.$$.ptr;
+            other.$$ = other.$$;
+            var rightClass = other.$$.ptrType.registeredClass;
+            var right = other.$$.ptr;
+            while (leftClass.baseClass) {
+              left = leftClass.upcast(left);
+              leftClass = leftClass.baseClass;
+            }
+            while (rightClass.baseClass) {
+              right = rightClass.upcast(right);
+              rightClass = rightClass.baseClass;
+            }
+            return leftClass === rightClass && left === right;
+          }, clone() {
+            if (!this.$$.ptr) {
+              throwInstanceAlreadyDeleted(this);
+            }
+            if (this.$$.preservePointerOnDelete) {
+              this.$$.count.value += 1;
+              return this;
+            } else {
+              var clone = attachFinalizer(Object.create(Object.getPrototypeOf(this), { $$: { value: shallowCopyInternalPointer(this.$$) } }));
+              clone.$$.count.value += 1;
+              clone.$$.deleteScheduled = false;
+              return clone;
+            }
+          }, delete() {
+            if (!this.$$.ptr) {
+              throwInstanceAlreadyDeleted(this);
+            }
+            if (this.$$.deleteScheduled && !this.$$.preservePointerOnDelete) {
+              throwBindingError("Object already scheduled for deletion");
+            }
+            detachFinalizer(this);
+            releaseClassHandle(this.$$);
+            if (!this.$$.preservePointerOnDelete) {
+              this.$$.smartPtr = void 0;
+              this.$$.ptr = void 0;
+            }
+          }, isDeleted() {
+            return !this.$$.ptr;
+          }, deleteLater() {
+            if (!this.$$.ptr) {
+              throwInstanceAlreadyDeleted(this);
+            }
+            if (this.$$.deleteScheduled && !this.$$.preservePointerOnDelete) {
+              throwBindingError("Object already scheduled for deletion");
+            }
+            deletionQueue.push(this);
+            if (deletionQueue.length === 1 && delayFunction) {
+              delayFunction(flushPendingDeletes);
+            }
+            this.$$.deleteScheduled = true;
+            return this;
+          } });
+          const symbolDispose = Symbol.dispose;
+          if (symbolDispose) {
+            proto[symbolDispose] = proto["delete"];
+          }
+        };
+        function ClassHandle() {
         }
-        var EmValType = { name: "emscripten::val", fromWireType: (handle) => {
-          var rv = Emval.toValue(handle);
-          __emval_decref(handle);
-          return rv;
-        }, toWireType: (destructors, value) => Emval.toHandle(value), readValueFromPointer: readPointer, destructorFunction: null };
-        var __embind_register_emval = (rawType) => registerType(rawType, EmValType);
-        var floatReadValueFromPointer = (name, width) => {
-          switch (width) {
-            case 4:
-              return function(pointer) {
-                return this.fromWireType(HEAPF32[pointer >> 2]);
-              };
-            case 8:
-              return function(pointer) {
-                return this.fromWireType(HEAPF64[pointer >> 3]);
-              };
-            default:
-              throw new TypeError(`invalid float width (${width}): ${name}`);
-          }
-        };
-        var __embind_register_float = (rawType, name, size) => {
-          name = AsciiToString(name);
-          registerType(rawType, { name, fromWireType: (value) => value, toWireType: (destructors, value) => value, readValueFromPointer: floatReadValueFromPointer(name, size), destructorFunction: null });
-        };
         var createNamedFunction = (name, func) => Object.defineProperty(func, "name", { value: name });
-        var runDestructors = (destructors) => {
-          while (destructors.length) {
-            var ptr = destructors.pop();
-            var del = destructors.pop();
-            del(ptr);
-          }
-        };
-        function usesDestructorStack(argTypes) {
-          for (var i = 1; i < argTypes.length; ++i) {
-            if (argTypes[i] !== null && argTypes[i].destructorFunction === void 0) {
-              return true;
-            }
-          }
-          return false;
-        }
-        function createJsInvoker(argTypes, isClassMethodFunc, returns, isAsync) {
-          var needsDestructorStack = usesDestructorStack(argTypes);
-          var argCount = argTypes.length - 2;
-          var argsList = [];
-          var argsListWired = ["fn"];
-          if (isClassMethodFunc) {
-            argsListWired.push("thisWired");
-          }
-          for (var i = 0; i < argCount; ++i) {
-            argsList.push(`arg${i}`);
-            argsListWired.push(`arg${i}Wired`);
-          }
-          argsList = argsList.join(",");
-          argsListWired = argsListWired.join(",");
-          var invokerFnBody = `return function (${argsList}) {
-`;
-          if (needsDestructorStack) {
-            invokerFnBody += "var destructors = [];\n";
-          }
-          var dtorStack = needsDestructorStack ? "destructors" : "null";
-          var args1 = ["humanName", "throwBindingError", "invoker", "fn", "runDestructors", "fromRetWire", "toClassParamWire"];
-          if (isClassMethodFunc) {
-            invokerFnBody += `var thisWired = toClassParamWire(${dtorStack}, this);
-`;
-          }
-          for (var i = 0; i < argCount; ++i) {
-            var argName = `toArg${i}Wire`;
-            invokerFnBody += `var arg${i}Wired = ${argName}(${dtorStack}, arg${i});
-`;
-            args1.push(argName);
-          }
-          invokerFnBody += (returns || isAsync ? "var rv = " : "") + `invoker(${argsListWired});
-`;
-          if (needsDestructorStack) {
-            invokerFnBody += "runDestructors(destructors);\n";
-          } else {
-            for (var i = isClassMethodFunc ? 1 : 2; i < argTypes.length; ++i) {
-              var paramName = i === 1 ? "thisWired" : "arg" + (i - 2) + "Wired";
-              if (argTypes[i].destructorFunction !== null) {
-                invokerFnBody += `${paramName}_dtor(${paramName});
-`;
-                args1.push(`${paramName}_dtor`);
-              }
-            }
-          }
-          if (returns) {
-            invokerFnBody += "var ret = fromRetWire(rv);\nreturn ret;\n";
-          } else {
-          }
-          invokerFnBody += "}\n";
-          return new Function(args1, invokerFnBody);
-        }
-        function craftInvokerFunction(humanName, argTypes, classType, cppInvokerFunc, cppTargetFunc, isAsync) {
-          var argCount = argTypes.length;
-          if (argCount < 2) {
-            throwBindingError("argTypes array size mismatch! Must at least get return value and 'this' types!");
-          }
-          var isClassMethodFunc = argTypes[1] !== null && classType !== null;
-          var needsDestructorStack = usesDestructorStack(argTypes);
-          var returns = !argTypes[0].isVoid;
-          var retType = argTypes[0];
-          var instType = argTypes[1];
-          var closureArgs = [humanName, throwBindingError, cppInvokerFunc, cppTargetFunc, runDestructors, retType.fromWireType.bind(retType), instType?.toWireType.bind(instType)];
-          for (var i = 2; i < argCount; ++i) {
-            var argType = argTypes[i];
-            closureArgs.push(argType.toWireType.bind(argType));
-          }
-          if (!needsDestructorStack) {
-            for (var i = isClassMethodFunc ? 1 : 2; i < argTypes.length; ++i) {
-              if (argTypes[i].destructorFunction !== null) {
-                closureArgs.push(argTypes[i].destructorFunction);
-              }
-            }
-          }
-          let invokerFactory = createJsInvoker(argTypes, isClassMethodFunc, returns, isAsync);
-          var invokerFn = invokerFactory(...closureArgs);
-          return createNamedFunction(humanName, invokerFn);
-        }
+        var registeredPointers = {};
         var ensureOverloadTable = (proto, methodName, humanName) => {
           if (void 0 === proto[methodName].overloadTable) {
             var prevFunc = proto[methodName];
@@ -20327,12 +20295,174 @@ var require_xerces_validator = __commonJS({
             Module[name].argCount = numArguments;
           }
         };
-        var heap32VectorToArray = (count, firstElement) => {
-          var array = [];
-          for (var i = 0; i < count; i++) {
-            array.push(HEAPU32[firstElement + i * 4 >> 2]);
+        var char_0 = 48;
+        var char_9 = 57;
+        var makeLegalFunctionName = (name) => {
+          name = name.replace(/[^a-zA-Z0-9_]/g, "$");
+          var f = name.charCodeAt(0);
+          if (f >= char_0 && f <= char_9) {
+            return `_${name}`;
           }
-          return array;
+          return name;
+        };
+        function RegisteredClass(name, constructor, instancePrototype, rawDestructor, baseClass, getActualType, upcast, downcast) {
+          this.name = name;
+          this.constructor = constructor;
+          this.instancePrototype = instancePrototype;
+          this.rawDestructor = rawDestructor;
+          this.baseClass = baseClass;
+          this.getActualType = getActualType;
+          this.upcast = upcast;
+          this.downcast = downcast;
+          this.pureVirtualFunctions = [];
+        }
+        var upcastPointer = (ptr, ptrClass, desiredClass) => {
+          while (ptrClass !== desiredClass) {
+            if (!ptrClass.upcast) {
+              throwBindingError(`Expected null or instance of ${desiredClass.name}, got an instance of ${ptrClass.name}`);
+            }
+            ptr = ptrClass.upcast(ptr);
+            ptrClass = ptrClass.baseClass;
+          }
+          return ptr;
+        };
+        var embindRepr = (v) => {
+          if (v === null) {
+            return "null";
+          }
+          var t = typeof v;
+          if (t === "object" || t === "array" || t === "function") {
+            return v.toString();
+          } else {
+            return "" + v;
+          }
+        };
+        function constNoSmartPtrRawPointerToWireType(destructors, handle) {
+          if (handle === null) {
+            if (this.isReference) {
+              throwBindingError(`null is not a valid ${this.name}`);
+            }
+            return 0;
+          }
+          if (!handle.$$) {
+            throwBindingError(`Cannot pass "${embindRepr(handle)}" as a ${this.name}`);
+          }
+          if (!handle.$$.ptr) {
+            throwBindingError(`Cannot pass deleted object as a pointer of type ${this.name}`);
+          }
+          var handleClass = handle.$$.ptrType.registeredClass;
+          var ptr = upcastPointer(handle.$$.ptr, handleClass, this.registeredClass);
+          return ptr;
+        }
+        function genericPointerToWireType(destructors, handle) {
+          var ptr;
+          if (handle === null) {
+            if (this.isReference) {
+              throwBindingError(`null is not a valid ${this.name}`);
+            }
+            if (this.isSmartPointer) {
+              ptr = this.rawConstructor();
+              if (destructors !== null) {
+                destructors.push(this.rawDestructor, ptr);
+              }
+              return ptr;
+            } else {
+              return 0;
+            }
+          }
+          if (!handle || !handle.$$) {
+            throwBindingError(`Cannot pass "${embindRepr(handle)}" as a ${this.name}`);
+          }
+          if (!handle.$$.ptr) {
+            throwBindingError(`Cannot pass deleted object as a pointer of type ${this.name}`);
+          }
+          if (!this.isConst && handle.$$.ptrType.isConst) {
+            throwBindingError(`Cannot convert argument of type ${handle.$$.smartPtrType ? handle.$$.smartPtrType.name : handle.$$.ptrType.name} to parameter type ${this.name}`);
+          }
+          var handleClass = handle.$$.ptrType.registeredClass;
+          ptr = upcastPointer(handle.$$.ptr, handleClass, this.registeredClass);
+          if (this.isSmartPointer) {
+            if (void 0 === handle.$$.smartPtr) {
+              throwBindingError("Passing raw pointer to smart pointer is illegal");
+            }
+            switch (this.sharingPolicy) {
+              case 0:
+                if (handle.$$.smartPtrType === this) {
+                  ptr = handle.$$.smartPtr;
+                } else {
+                  throwBindingError(`Cannot convert argument of type ${handle.$$.smartPtrType ? handle.$$.smartPtrType.name : handle.$$.ptrType.name} to parameter type ${this.name}`);
+                }
+                break;
+              case 1:
+                ptr = handle.$$.smartPtr;
+                break;
+              case 2:
+                if (handle.$$.smartPtrType === this) {
+                  ptr = handle.$$.smartPtr;
+                } else {
+                  var clonedHandle = handle["clone"]();
+                  ptr = this.rawShare(ptr, Emval.toHandle(() => clonedHandle["delete"]()));
+                  if (destructors !== null) {
+                    destructors.push(this.rawDestructor, ptr);
+                  }
+                }
+                break;
+              default:
+                throwBindingError("Unsupported sharing policy");
+            }
+          }
+          return ptr;
+        }
+        function nonConstNoSmartPtrRawPointerToWireType(destructors, handle) {
+          if (handle === null) {
+            if (this.isReference) {
+              throwBindingError(`null is not a valid ${this.name}`);
+            }
+            return 0;
+          }
+          if (!handle.$$) {
+            throwBindingError(`Cannot pass "${embindRepr(handle)}" as a ${this.name}`);
+          }
+          if (!handle.$$.ptr) {
+            throwBindingError(`Cannot pass deleted object as a pointer of type ${this.name}`);
+          }
+          if (handle.$$.ptrType.isConst) {
+            throwBindingError(`Cannot convert argument of type ${handle.$$.ptrType.name} to parameter type ${this.name}`);
+          }
+          var handleClass = handle.$$.ptrType.registeredClass;
+          var ptr = upcastPointer(handle.$$.ptr, handleClass, this.registeredClass);
+          return ptr;
+        }
+        function readPointer(pointer) {
+          return this.fromWireType(HEAPU32[pointer >> 2]);
+        }
+        var downcastPointer = (ptr, ptrClass, desiredClass) => {
+          if (ptrClass === desiredClass) {
+            return ptr;
+          }
+          if (void 0 === desiredClass.baseClass) {
+            return null;
+          }
+          var rv = downcastPointer(ptr, ptrClass, desiredClass.baseClass);
+          if (rv === null) {
+            return null;
+          }
+          return desiredClass.downcast(rv);
+        };
+        var registeredInstances = {};
+        var getBasestPointer = (class_, ptr) => {
+          if (ptr === void 0) {
+            throwBindingError("ptr should not be undefined");
+          }
+          while (class_.baseClass) {
+            ptr = class_.upcast(ptr);
+            class_ = class_.baseClass;
+          }
+          return ptr;
+        };
+        var getInheritedInstance = (class_, ptr) => {
+          ptr = getBasestPointer(class_, ptr);
+          return registeredInstances[ptr];
         };
         var InternalError = class InternalError extends Error {
           constructor(message) {
@@ -20343,6 +20473,98 @@ var require_xerces_validator = __commonJS({
         var throwInternalError = (message) => {
           throw new InternalError(message);
         };
+        var makeClassHandle = (prototype, record) => {
+          if (!record.ptrType || !record.ptr) {
+            throwInternalError("makeClassHandle requires ptr and ptrType");
+          }
+          var hasSmartPtrType = !!record.smartPtrType;
+          var hasSmartPtr = !!record.smartPtr;
+          if (hasSmartPtrType !== hasSmartPtr) {
+            throwInternalError("Both smartPtrType and smartPtr must be specified");
+          }
+          record.count = { value: 1 };
+          return attachFinalizer(Object.create(prototype, { $$: { value: record, writable: true } }));
+        };
+        function RegisteredPointer_fromWireType(ptr) {
+          var rawPointer = this.getPointee(ptr);
+          if (!rawPointer) {
+            this.destructor(ptr);
+            return null;
+          }
+          var registeredInstance = getInheritedInstance(this.registeredClass, rawPointer);
+          if (void 0 !== registeredInstance) {
+            if (0 === registeredInstance.$$.count.value) {
+              registeredInstance.$$.ptr = rawPointer;
+              registeredInstance.$$.smartPtr = ptr;
+              return registeredInstance["clone"]();
+            } else {
+              var rv = registeredInstance["clone"]();
+              this.destructor(ptr);
+              return rv;
+            }
+          }
+          function makeDefaultHandle() {
+            if (this.isSmartPointer) {
+              return makeClassHandle(this.registeredClass.instancePrototype, { ptrType: this.pointeeType, ptr: rawPointer, smartPtrType: this, smartPtr: ptr });
+            } else {
+              return makeClassHandle(this.registeredClass.instancePrototype, { ptrType: this, ptr });
+            }
+          }
+          var actualType = this.registeredClass.getActualType(rawPointer);
+          var registeredPointerRecord = registeredPointers[actualType];
+          if (!registeredPointerRecord) {
+            return makeDefaultHandle.call(this);
+          }
+          var toType;
+          if (this.isConst) {
+            toType = registeredPointerRecord.constPointerType;
+          } else {
+            toType = registeredPointerRecord.pointerType;
+          }
+          var dp = downcastPointer(rawPointer, this.registeredClass, toType.registeredClass);
+          if (dp === null) {
+            return makeDefaultHandle.call(this);
+          }
+          if (this.isSmartPointer) {
+            return makeClassHandle(toType.registeredClass.instancePrototype, { ptrType: toType, ptr: dp, smartPtrType: this, smartPtr: ptr });
+          } else {
+            return makeClassHandle(toType.registeredClass.instancePrototype, { ptrType: toType, ptr: dp });
+          }
+        }
+        var init_RegisteredPointer = () => {
+          Object.assign(RegisteredPointer.prototype, { getPointee(ptr) {
+            if (this.rawGetPointee) {
+              ptr = this.rawGetPointee(ptr);
+            }
+            return ptr;
+          }, destructor(ptr) {
+            this.rawDestructor?.(ptr);
+          }, readValueFromPointer: readPointer, fromWireType: RegisteredPointer_fromWireType });
+        };
+        function RegisteredPointer(name, registeredClass, isReference, isConst, isSmartPointer, pointeeType, sharingPolicy, rawGetPointee, rawConstructor, rawShare, rawDestructor) {
+          this.name = name;
+          this.registeredClass = registeredClass;
+          this.isReference = isReference;
+          this.isConst = isConst;
+          this.isSmartPointer = isSmartPointer;
+          this.pointeeType = pointeeType;
+          this.sharingPolicy = sharingPolicy;
+          this.rawGetPointee = rawGetPointee;
+          this.rawConstructor = rawConstructor;
+          this.rawShare = rawShare;
+          this.rawDestructor = rawDestructor;
+          if (!isSmartPointer && registeredClass.baseClass === void 0) {
+            if (isConst) {
+              this.toWireType = constNoSmartPtrRawPointerToWireType;
+              this.destructorFunction = null;
+            } else {
+              this.toWireType = nonConstNoSmartPtrRawPointerToWireType;
+              this.destructorFunction = null;
+            }
+          } else {
+            this.toWireType = genericPointerToWireType;
+          }
+        }
         var replacePublicSymbol = (name, value, numArguments) => {
           if (!Module.hasOwnProperty(name)) {
             throwInternalError("Replacing nonexistent public symbol");
@@ -20437,11 +20659,284 @@ var require_xerces_validator = __commonJS({
             onComplete(typeConverters);
           }
         };
+        var __embind_register_class = (rawType, rawPointerType, rawConstPointerType, baseClassRawType, getActualTypeSignature, getActualType, upcastSignature, upcast, downcastSignature, downcast, name, destructorSignature, rawDestructor) => {
+          name = AsciiToString(name);
+          getActualType = embind__requireFunction(getActualTypeSignature, getActualType);
+          upcast &&= embind__requireFunction(upcastSignature, upcast);
+          downcast &&= embind__requireFunction(downcastSignature, downcast);
+          rawDestructor = embind__requireFunction(destructorSignature, rawDestructor);
+          var legalFunctionName = makeLegalFunctionName(name);
+          exposePublicSymbol(legalFunctionName, function() {
+            throwUnboundTypeError(`Cannot construct ${name} due to unbound types`, [baseClassRawType]);
+          });
+          whenDependentTypesAreResolved([rawType, rawPointerType, rawConstPointerType], baseClassRawType ? [baseClassRawType] : [], (base) => {
+            base = base[0];
+            var baseClass;
+            var basePrototype;
+            if (baseClassRawType) {
+              baseClass = base.registeredClass;
+              basePrototype = baseClass.instancePrototype;
+            } else {
+              basePrototype = ClassHandle.prototype;
+            }
+            var constructor = createNamedFunction(name, function(...args) {
+              if (Object.getPrototypeOf(this) !== instancePrototype) {
+                throw new BindingError(`Use 'new' to construct ${name}`);
+              }
+              if (void 0 === registeredClass.constructor_body) {
+                throw new BindingError(`${name} has no accessible constructor`);
+              }
+              var body = registeredClass.constructor_body[args.length];
+              if (void 0 === body) {
+                throw new BindingError(`Tried to invoke ctor of ${name} with invalid number of parameters (${args.length}) - expected (${Object.keys(registeredClass.constructor_body).toString()}) parameters instead!`);
+              }
+              return body.apply(this, args);
+            });
+            var instancePrototype = Object.create(basePrototype, { constructor: { value: constructor } });
+            constructor.prototype = instancePrototype;
+            var registeredClass = new RegisteredClass(name, constructor, instancePrototype, rawDestructor, baseClass, getActualType, upcast, downcast);
+            if (registeredClass.baseClass) {
+              registeredClass.baseClass.__derivedClasses ??= [];
+              registeredClass.baseClass.__derivedClasses.push(registeredClass);
+            }
+            var referenceConverter = new RegisteredPointer(name, registeredClass, true, false, false);
+            var pointerConverter = new RegisteredPointer(name + "*", registeredClass, false, false, false);
+            var constPointerConverter = new RegisteredPointer(name + " const*", registeredClass, false, true, false);
+            registeredPointers[rawType] = { pointerType: pointerConverter, constPointerType: constPointerConverter };
+            replacePublicSymbol(legalFunctionName, constructor);
+            return [referenceConverter, pointerConverter, constPointerConverter];
+          });
+        };
+        var heap32VectorToArray = (count, firstElement) => {
+          var array = [];
+          for (var i = 0; i < count; i++) {
+            array.push(HEAPU32[firstElement + i * 4 >> 2]);
+          }
+          return array;
+        };
+        var runDestructors = (destructors) => {
+          while (destructors.length) {
+            var ptr = destructors.pop();
+            var del = destructors.pop();
+            del(ptr);
+          }
+        };
+        function usesDestructorStack(argTypes) {
+          for (var i = 1; i < argTypes.length; ++i) {
+            if (argTypes[i] !== null && argTypes[i].destructorFunction === void 0) {
+              return true;
+            }
+          }
+          return false;
+        }
+        function createJsInvoker(argTypes, isClassMethodFunc, returns, isAsync) {
+          var needsDestructorStack = usesDestructorStack(argTypes);
+          var argCount = argTypes.length - 2;
+          var argsList = [];
+          var argsListWired = ["fn"];
+          if (isClassMethodFunc) {
+            argsListWired.push("thisWired");
+          }
+          for (var i = 0; i < argCount; ++i) {
+            argsList.push(`arg${i}`);
+            argsListWired.push(`arg${i}Wired`);
+          }
+          argsList = argsList.join(",");
+          argsListWired = argsListWired.join(",");
+          var invokerFnBody = `return function (${argsList}) {
+`;
+          if (needsDestructorStack) {
+            invokerFnBody += "var destructors = [];\n";
+          }
+          var dtorStack = needsDestructorStack ? "destructors" : "null";
+          var args1 = ["humanName", "throwBindingError", "invoker", "fn", "runDestructors", "fromRetWire", "toClassParamWire"];
+          if (isClassMethodFunc) {
+            invokerFnBody += `var thisWired = toClassParamWire(${dtorStack}, this);
+`;
+          }
+          for (var i = 0; i < argCount; ++i) {
+            var argName = `toArg${i}Wire`;
+            invokerFnBody += `var arg${i}Wired = ${argName}(${dtorStack}, arg${i});
+`;
+            args1.push(argName);
+          }
+          invokerFnBody += (returns || isAsync ? "var rv = " : "") + `invoker(${argsListWired});
+`;
+          if (needsDestructorStack) {
+            invokerFnBody += "runDestructors(destructors);\n";
+          } else {
+            for (var i = isClassMethodFunc ? 1 : 2; i < argTypes.length; ++i) {
+              var paramName = i === 1 ? "thisWired" : "arg" + (i - 2) + "Wired";
+              if (argTypes[i].destructorFunction !== null) {
+                invokerFnBody += `${paramName}_dtor(${paramName});
+`;
+                args1.push(`${paramName}_dtor`);
+              }
+            }
+          }
+          if (returns) {
+            invokerFnBody += "var ret = fromRetWire(rv);\nreturn ret;\n";
+          } else {
+          }
+          invokerFnBody += "}\n";
+          return new Function(args1, invokerFnBody);
+        }
+        function craftInvokerFunction(humanName, argTypes, classType, cppInvokerFunc, cppTargetFunc, isAsync) {
+          var argCount = argTypes.length;
+          if (argCount < 2) {
+            throwBindingError("argTypes array size mismatch! Must at least get return value and 'this' types!");
+          }
+          var isClassMethodFunc = argTypes[1] !== null && classType !== null;
+          var needsDestructorStack = usesDestructorStack(argTypes);
+          var returns = !argTypes[0].isVoid;
+          var retType = argTypes[0];
+          var instType = argTypes[1];
+          var closureArgs = [humanName, throwBindingError, cppInvokerFunc, cppTargetFunc, runDestructors, retType.fromWireType.bind(retType), instType?.toWireType.bind(instType)];
+          for (var i = 2; i < argCount; ++i) {
+            var argType = argTypes[i];
+            closureArgs.push(argType.toWireType.bind(argType));
+          }
+          if (!needsDestructorStack) {
+            for (var i = isClassMethodFunc ? 1 : 2; i < argTypes.length; ++i) {
+              if (argTypes[i].destructorFunction !== null) {
+                closureArgs.push(argTypes[i].destructorFunction);
+              }
+            }
+          }
+          let invokerFactory = createJsInvoker(argTypes, isClassMethodFunc, returns, isAsync);
+          var invokerFn = invokerFactory(...closureArgs);
+          return createNamedFunction(humanName, invokerFn);
+        }
+        var __embind_register_class_constructor = (rawClassType, argCount, rawArgTypesAddr, invokerSignature, invoker, rawConstructor) => {
+          var rawArgTypes = heap32VectorToArray(argCount, rawArgTypesAddr);
+          invoker = embind__requireFunction(invokerSignature, invoker);
+          whenDependentTypesAreResolved([], [rawClassType], (classType) => {
+            classType = classType[0];
+            var humanName = `constructor ${classType.name}`;
+            if (void 0 === classType.registeredClass.constructor_body) {
+              classType.registeredClass.constructor_body = [];
+            }
+            if (void 0 !== classType.registeredClass.constructor_body[argCount - 1]) {
+              throw new BindingError(`Cannot register multiple constructors with identical number of parameters (${argCount - 1}) for class '${classType.name}'! Overload resolution is currently only performed using the parameter count, not actual type info!`);
+            }
+            classType.registeredClass.constructor_body[argCount - 1] = () => {
+              throwUnboundTypeError(`Cannot construct ${classType.name} due to unbound types`, rawArgTypes);
+            };
+            whenDependentTypesAreResolved([], rawArgTypes, (argTypes) => {
+              argTypes.splice(1, 0, null);
+              classType.registeredClass.constructor_body[argCount - 1] = craftInvokerFunction(humanName, argTypes, null, invoker, rawConstructor);
+              return [];
+            });
+            return [];
+          });
+        };
         var getFunctionName = (signature) => {
           signature = signature.trim();
           const argsIndex = signature.indexOf("(");
           if (argsIndex === -1) return signature;
           return signature.slice(0, argsIndex);
+        };
+        var __embind_register_class_function = (rawClassType, methodName, argCount, rawArgTypesAddr, invokerSignature, rawInvoker, context, isPureVirtual, isAsync, isNonnullReturn) => {
+          var rawArgTypes = heap32VectorToArray(argCount, rawArgTypesAddr);
+          methodName = AsciiToString(methodName);
+          methodName = getFunctionName(methodName);
+          rawInvoker = embind__requireFunction(invokerSignature, rawInvoker, isAsync);
+          whenDependentTypesAreResolved([], [rawClassType], (classType) => {
+            classType = classType[0];
+            var humanName = `${classType.name}.${methodName}`;
+            if (methodName.startsWith("@@")) {
+              methodName = Symbol[methodName.substring(2)];
+            }
+            if (isPureVirtual) {
+              classType.registeredClass.pureVirtualFunctions.push(methodName);
+            }
+            function unboundTypesHandler() {
+              throwUnboundTypeError(`Cannot call ${humanName} due to unbound types`, rawArgTypes);
+            }
+            var proto = classType.registeredClass.instancePrototype;
+            var method = proto[methodName];
+            if (void 0 === method || void 0 === method.overloadTable && method.className !== classType.name && method.argCount === argCount - 2) {
+              unboundTypesHandler.argCount = argCount - 2;
+              unboundTypesHandler.className = classType.name;
+              proto[methodName] = unboundTypesHandler;
+            } else {
+              ensureOverloadTable(proto, methodName, humanName);
+              proto[methodName].overloadTable[argCount - 2] = unboundTypesHandler;
+            }
+            whenDependentTypesAreResolved([], rawArgTypes, (argTypes) => {
+              var memberFunction = craftInvokerFunction(humanName, argTypes, classType, rawInvoker, context, isAsync);
+              if (void 0 === proto[methodName].overloadTable) {
+                memberFunction.argCount = argCount - 2;
+                proto[methodName] = memberFunction;
+              } else {
+                proto[methodName].overloadTable[argCount - 2] = memberFunction;
+              }
+              return [];
+            });
+            return [];
+          });
+        };
+        var emval_freelist = [];
+        var emval_handles = [0, 1, , 1, null, 1, true, 1, false, 1];
+        var emval_exception_decrefs = [];
+        var __emval_decref = (handle) => {
+          if (handle > 9 && 0 === --emval_handles[handle + 1]) {
+            var value = emval_handles[handle];
+            emval_handles[handle] = void 0;
+            var destructor = emval_exception_decrefs[handle];
+            if (destructor) {
+              emval_exception_decrefs[handle] = void 0;
+              destructor(value);
+            }
+            emval_freelist.push(handle);
+          }
+        };
+        var Emval = { toValue: (handle) => {
+          if (!handle) {
+            throwBindingError(`Cannot use deleted val. handle = ${handle}`);
+          }
+          return emval_handles[handle];
+        }, toHandle: (value) => {
+          switch (value) {
+            case void 0:
+              return 2;
+            case null:
+              return 4;
+            case true:
+              return 6;
+            case false:
+              return 8;
+            default: {
+              const handle = emval_freelist.pop() || emval_handles.length;
+              emval_handles[handle] = value;
+              emval_handles[handle + 1] = 1;
+              return handle;
+            }
+          }
+        } };
+        var EmValType = { name: "emscripten::val", fromWireType: (handle) => {
+          var rv = Emval.toValue(handle);
+          __emval_decref(handle);
+          return rv;
+        }, toWireType: (destructors, value) => Emval.toHandle(value), readValueFromPointer: readPointer, destructorFunction: null };
+        var __embind_register_emval = (rawType) => registerType(rawType, EmValType);
+        var floatReadValueFromPointer = (name, width) => {
+          switch (width) {
+            case 4:
+              return function(pointer) {
+                return this.fromWireType(HEAPF32[pointer >> 2]);
+              };
+            case 8:
+              return function(pointer) {
+                return this.fromWireType(HEAPF64[pointer >> 3]);
+              };
+            default:
+              throw new TypeError(`invalid float width (${width}): ${name}`);
+          }
+        };
+        var __embind_register_float = (rawType, name, size) => {
+          name = AsciiToString(name);
+          registerType(rawType, { name, fromWireType: (value) => value, toWireType: (destructors, value) => value, readValueFromPointer: floatReadValueFromPointer(name, size), destructorFunction: null });
         };
         var __embind_register_function = (name, argCount, rawArgTypesAddr, signature, rawInvoker, fn, isAsync, isNonnullReturn) => {
           var argTypes = heap32VectorToArray(argCount, rawArgTypesAddr);
@@ -20982,6 +21477,8 @@ ${functionBody}
         FS.createPreloadedFile = FS_createPreloadedFile;
         FS.preloadFile = FS_preloadFile;
         FS.staticInit();
+        init_ClassHandle();
+        init_RegisteredPointer();
         {
           if (Module["noExitRuntime"]) noExitRuntime = Module["noExitRuntime"];
           if (Module["preloadPlugins"]) preloadPlugins = Module["preloadPlugins"];
@@ -21016,7 +21513,7 @@ ${functionBody}
           memory = wasmMemory = wasmExports2["memory"];
           __indirect_function_table = wasmTable = wasmExports2["__indirect_function_table"];
         }
-        var wasmImports = { __cxa_begin_catch: ___cxa_begin_catch, __cxa_end_catch: ___cxa_end_catch, __cxa_find_matching_catch_2: ___cxa_find_matching_catch_2, __cxa_find_matching_catch_3: ___cxa_find_matching_catch_3, __cxa_find_matching_catch_4: ___cxa_find_matching_catch_4, __cxa_find_matching_catch_5: ___cxa_find_matching_catch_5, __cxa_find_matching_catch_6: ___cxa_find_matching_catch_6, __cxa_find_matching_catch_7: ___cxa_find_matching_catch_7, __cxa_rethrow: ___cxa_rethrow, __cxa_throw: ___cxa_throw, __resumeException: ___resumeException, __syscall_dup: ___syscall_dup, __syscall_fcntl64: ___syscall_fcntl64, __syscall_getcwd: ___syscall_getcwd, __syscall_ioctl: ___syscall_ioctl, __syscall_openat: ___syscall_openat, __syscall_readlinkat: ___syscall_readlinkat, _abort_js: __abort_js, _embind_register_bigint: __embind_register_bigint, _embind_register_bool: __embind_register_bool, _embind_register_emval: __embind_register_emval, _embind_register_float: __embind_register_float, _embind_register_function: __embind_register_function, _embind_register_integer: __embind_register_integer, _embind_register_memory_view: __embind_register_memory_view, _embind_register_std_string: __embind_register_std_string, _embind_register_std_wstring: __embind_register_std_wstring, _embind_register_void: __embind_register_void, _emval_create_invoker: __emval_create_invoker, _emval_decref: __emval_decref, _emval_get_global: __emval_get_global, _emval_get_property: __emval_get_property, _emval_incref: __emval_incref, _emval_invoke: __emval_invoke, _emval_new_array: __emval_new_array, _emval_new_cstring: __emval_new_cstring, _emval_new_object: __emval_new_object, _emval_run_destructors: __emval_run_destructors, _emval_set_property: __emval_set_property, emscripten_resize_heap: _emscripten_resize_heap, environ_get: _environ_get, environ_sizes_get: _environ_sizes_get, exit: _exit, fd_close: _fd_close, fd_read: _fd_read, fd_seek: _fd_seek, fd_write: _fd_write, invoke_diiiii, invoke_i, invoke_ii, invoke_iii, invoke_iiii, invoke_iiiii, invoke_iiiiii, invoke_iiiiiii, invoke_iiiiiiii, invoke_iiiiiiiii, invoke_iiiiiiiiii, invoke_iiiiiiiiiii, invoke_iiiiiiiiiiii, invoke_iiiiiiiiiiiii, invoke_iiiiiiiiiiiiii, invoke_iiiji, invoke_iiijii, invoke_iiijiiiiii, invoke_ji, invoke_v, invoke_vi, invoke_vii, invoke_viii, invoke_viiii, invoke_viiiii, invoke_viiiiii, invoke_viiiiiii, invoke_viiiiiiii, invoke_viiiiiiiii, invoke_viiiiiiiiii, invoke_viiiiiiijj, invoke_viiijj, llvm_eh_typeid_for: _llvm_eh_typeid_for };
+        var wasmImports = { __cxa_begin_catch: ___cxa_begin_catch, __cxa_end_catch: ___cxa_end_catch, __cxa_find_matching_catch_2: ___cxa_find_matching_catch_2, __cxa_find_matching_catch_3: ___cxa_find_matching_catch_3, __cxa_find_matching_catch_4: ___cxa_find_matching_catch_4, __cxa_find_matching_catch_5: ___cxa_find_matching_catch_5, __cxa_find_matching_catch_6: ___cxa_find_matching_catch_6, __cxa_find_matching_catch_7: ___cxa_find_matching_catch_7, __cxa_rethrow: ___cxa_rethrow, __cxa_throw: ___cxa_throw, __resumeException: ___resumeException, __syscall_dup: ___syscall_dup, __syscall_fcntl64: ___syscall_fcntl64, __syscall_getcwd: ___syscall_getcwd, __syscall_ioctl: ___syscall_ioctl, __syscall_openat: ___syscall_openat, __syscall_readlinkat: ___syscall_readlinkat, _abort_js: __abort_js, _embind_register_bigint: __embind_register_bigint, _embind_register_bool: __embind_register_bool, _embind_register_class: __embind_register_class, _embind_register_class_constructor: __embind_register_class_constructor, _embind_register_class_function: __embind_register_class_function, _embind_register_emval: __embind_register_emval, _embind_register_float: __embind_register_float, _embind_register_function: __embind_register_function, _embind_register_integer: __embind_register_integer, _embind_register_memory_view: __embind_register_memory_view, _embind_register_std_string: __embind_register_std_string, _embind_register_std_wstring: __embind_register_std_wstring, _embind_register_void: __embind_register_void, _emval_create_invoker: __emval_create_invoker, _emval_decref: __emval_decref, _emval_get_global: __emval_get_global, _emval_get_property: __emval_get_property, _emval_incref: __emval_incref, _emval_invoke: __emval_invoke, _emval_new_array: __emval_new_array, _emval_new_cstring: __emval_new_cstring, _emval_new_object: __emval_new_object, _emval_run_destructors: __emval_run_destructors, _emval_set_property: __emval_set_property, emscripten_resize_heap: _emscripten_resize_heap, environ_get: _environ_get, environ_sizes_get: _environ_sizes_get, exit: _exit, fd_close: _fd_close, fd_read: _fd_read, fd_seek: _fd_seek, fd_write: _fd_write, invoke_diiiii, invoke_i, invoke_ii, invoke_iii, invoke_iiii, invoke_iiiii, invoke_iiiiii, invoke_iiiiiii, invoke_iiiiiiii, invoke_iiiiiiiii, invoke_iiiiiiiiii, invoke_iiiiiiiiiii, invoke_iiiiiiiiiiii, invoke_iiiiiiiiiiiii, invoke_iiiiiiiiiiiiii, invoke_iiiji, invoke_iiijii, invoke_iiijiiiiii, invoke_ji, invoke_v, invoke_vi, invoke_vii, invoke_viii, invoke_viiii, invoke_viiiii, invoke_viiiiii, invoke_viiiiiii, invoke_viiiiiiii, invoke_viiiiiiiii, invoke_viiiiiiiiii, invoke_viiiiiiijj, invoke_viiijj, llvm_eh_typeid_for: _llvm_eh_typeid_for };
         function invoke_ii(index, a1) {
           var sp = stackSave();
           try {
@@ -21097,16 +21594,6 @@ ${functionBody}
             _setThrew(1, 0);
           }
         }
-        function invoke_iiiii(index, a1, a2, a3, a4) {
-          var sp = stackSave();
-          try {
-            return getWasmTableEntry(index)(a1, a2, a3, a4);
-          } catch (e) {
-            stackRestore(sp);
-            if (!(e instanceof EmscriptenEH)) throw e;
-            _setThrew(1, 0);
-          }
-        }
         function invoke_vii(index, a1, a2) {
           var sp = stackSave();
           try {
@@ -21117,10 +21604,10 @@ ${functionBody}
             _setThrew(1, 0);
           }
         }
-        function invoke_iiiiiii(index, a1, a2, a3, a4, a5, a6) {
+        function invoke_iiiii(index, a1, a2, a3, a4) {
           var sp = stackSave();
           try {
-            return getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6);
+            return getWasmTableEntry(index)(a1, a2, a3, a4);
           } catch (e) {
             stackRestore(sp);
             if (!(e instanceof EmscriptenEH)) throw e;
@@ -21131,6 +21618,16 @@ ${functionBody}
           var sp = stackSave();
           try {
             getWasmTableEntry(index)();
+          } catch (e) {
+            stackRestore(sp);
+            if (!(e instanceof EmscriptenEH)) throw e;
+            _setThrew(1, 0);
+          }
+        }
+        function invoke_iiiiiii(index, a1, a2, a3, a4, a5, a6) {
+          var sp = stackSave();
+          try {
+            return getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6);
           } catch (e) {
             stackRestore(sp);
             if (!(e instanceof EmscriptenEH)) throw e;
@@ -21388,14 +21885,69 @@ ${functionBody}
   }
 });
 
-// node_modules/xerces-wasm/dist/index.js
+// ../xml-language-service/node_modules/xerces-wasm/dist/project-validator.js
+var require_project_validator = __commonJS({
+  "../xml-language-service/node_modules/xerces-wasm/dist/project-validator.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.createProjectValidator = createProjectValidator;
+    var index_1 = require_dist();
+    async function filesToTextMap(files) {
+      const out = {};
+      await Promise.all(Object.entries(files).map(async ([name, val]) => {
+        out[name] = await (0, index_1.toText)(val);
+      }));
+      return out;
+    }
+    async function createProjectValidator(options) {
+      const mod = await (0, index_1.getModule)();
+      const filesText = await filesToTextMap(options.files);
+      if (!(options.entry in filesText)) {
+        throw new Error(`ProjectValidator: entry "${options.entry}" not found in files`);
+      }
+      const instance = new mod.ProjectValidator();
+      const ok = instance.init(options.entry, filesText, options.targetNamespace ?? null);
+      if (!ok) {
+        instance.delete();
+        throw new Error(`ProjectValidator: failed to compile schema for entry "${options.entry}"`);
+      }
+      let destroyed = false;
+      return {
+        async validate(xml) {
+          if (destroyed)
+            throw new Error("ProjectValidator: already destroyed");
+          return instance.validate(await (0, index_1.toText)(xml));
+        },
+        async reload(files) {
+          if (destroyed)
+            throw new Error("ProjectValidator: already destroyed");
+          const filesText2 = await filesToTextMap(files);
+          const ok2 = instance.init(options.entry, filesText2, options.targetNamespace ?? null);
+          if (!ok2)
+            throw new Error(`ProjectValidator: failed to recompile schema on reload`);
+        },
+        destroy() {
+          if (destroyed)
+            return;
+          destroyed = true;
+          instance.delete();
+        }
+      };
+    }
+  }
+});
+
+// ../xml-language-service/node_modules/xerces-wasm/dist/index.js
 var require_dist = __commonJS({
-  "node_modules/xerces-wasm/dist/index.js"(exports2) {
+  "../xml-language-service/node_modules/xerces-wasm/dist/index.js"(exports2) {
     "use strict";
     var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.createProjectValidator = void 0;
+    exports2.getModule = getModule;
+    exports2.toText = toText2;
     exports2.validate = validate2;
     exports2.validateFiles = validateFiles;
     var xerces_validator_js_1 = __importDefault(require_xerces_validator());
@@ -21419,8 +21971,8 @@ var require_dist = __commonJS({
       return typeof xsd === "object" && !Buffer.isBuffer(xsd) && "entry" in xsd;
     }
     async function validate2(xml, xsd, targetNamespace) {
-      const xmlText = await toText2(xml);
       const mod = await getModule();
+      const xmlText = await toText2(xml);
       const ns = targetNamespace ?? null;
       if (isSchemaBundle2(xsd)) {
         const entryText = await toText2(xsd.entry);
@@ -21435,13 +21987,13 @@ var require_dist = __commonJS({
       return mod.validate(xmlText, await toText2(xsd), ns);
     }
     async function validateFiles(xmlPath, xsd) {
+      const mod = await getModule();
       if (typeof xsd === "string") {
         const [xml2, xsdText] = await Promise.all([
           (0, promises_1.readFile)(xmlPath, "utf8"),
           (0, promises_1.readFile)(xsd, "utf8")
         ]);
-        const mod2 = await getModule();
-        return mod2.validate(xml2, xsdText);
+        return mod.validate(xml2, xsdText);
       }
       const [xml, entryText] = await Promise.all([
         (0, promises_1.readFile)(xmlPath, "utf8"),
@@ -21453,9 +22005,12 @@ var require_dist = __commonJS({
           imports[key] = await (0, promises_1.readFile)(filePath, "utf8");
         }));
       }
-      const mod = await getModule();
       return mod.validate(xml, { entry: entryText, imports });
     }
+    var project_validator_1 = require_project_validator();
+    Object.defineProperty(exports2, "createProjectValidator", { enumerable: true, get: function() {
+      return project_validator_1.createProjectValidator;
+    } });
   }
 });
 
@@ -21686,10 +22241,10 @@ function getWellformedEdit(textEdit) {
   return textEdit;
 }
 
-// node_modules/xml-language-service/dist/parser/xmlParser.js
+// ../xml-language-service/dist/parser/xmlParser.js
 var import_parser = __toESM(require_api5(), 1);
 
-// node_modules/xml-language-service/dist/parser/xmlDocument.js
+// ../xml-language-service/dist/parser/xmlDocument.js
 var XMLDocumentImpl = class {
   constructor(uri, text, cst, lexErrors = [], parseErrors = []) {
     this.type = "root";
@@ -21781,13 +22336,13 @@ var XMLDocumentImpl = class {
   }
 };
 
-// node_modules/xml-language-service/dist/parser/xmlParser.js
+// ../xml-language-service/dist/parser/xmlParser.js
 function parseXMLDocument(uri, text) {
   const { cst, lexErrors, parseErrors } = (0, import_parser.parse)(text);
   return new XMLDocumentImpl(uri, text, cst, lexErrors, parseErrors);
 }
 
-// node_modules/xml-language-service/dist/utils/xmlPrinter.js
+// ../xml-language-service/dist/utils/xmlPrinter.js
 function printTreeAST(document) {
   const lines = ["Document"];
   renderTreeNodes(document.children.filter((c) => c.type === "element"), "", lines);
@@ -21998,7 +22553,7 @@ function cstNodeToJSON(node, opts) {
   return null;
 }
 
-// node_modules/xml-language-service/dist/utils/positionUtils.js
+// ../xml-language-service/dist/utils/positionUtils.js
 function positionToOffset(text, position) {
   const lines = text.split("\n");
   const line = Math.max(0, Math.min(position.line, lines.length - 1));
@@ -22023,7 +22578,7 @@ function offsetToPosition(text, offset) {
   return { line, character: clamped - lineStart };
 }
 
-// node_modules/xml-language-service/dist/services/xmlCompletion.js
+// ../xml-language-service/dist/services/xmlCompletion.js
 function doComplete(document, position, schemaProvider) {
   const offset = positionToOffset(document.text, position);
   const textBefore = document.text.substring(0, offset);
@@ -22134,7 +22689,7 @@ function doComplete(document, position, schemaProvider) {
   return { items: [], isIncomplete: false };
 }
 
-// node_modules/xml-language-service/dist/utils/rangeUtils.js
+// ../xml-language-service/dist/utils/rangeUtils.js
 function offsetsToRange(text, startOffset, endOffset) {
   return {
     start: offsetToPosition(text, startOffset),
@@ -22142,7 +22697,7 @@ function offsetsToRange(text, startOffset, endOffset) {
   };
 }
 
-// node_modules/xml-language-service/dist/services/xmlHover.js
+// ../xml-language-service/dist/services/xmlHover.js
 function doHover(document, position, schemaProvider) {
   const offset = positionToOffset(document.text, position);
   const node = document.findNodeAt(offset);
@@ -22191,7 +22746,7 @@ ${node.name ?? ""}`,
   return null;
 }
 
-// node_modules/xml-language-service/dist/services/xmlSymbols.js
+// ../xml-language-service/dist/services/xmlSymbols.js
 var ARTIFACT_ELEMENTS = /* @__PURE__ */ new Set([
   "api",
   "endpoint",
@@ -22302,7 +22857,7 @@ function hasIdentifier(node) {
   return node.attributes.some((attr) => ["name", "id", "key"].includes(attr.name) && attr.value != null && attr.value !== "");
 }
 
-// node_modules/xml-language-service/dist/services/xmlFolding.js
+// ../xml-language-service/dist/services/xmlFolding.js
 function getFoldingRanges(document) {
   const result = [];
   collectRanges(document.children, document.text, result);
@@ -22329,7 +22884,7 @@ function collectRanges(nodes, text, result) {
   }
 }
 
-// node_modules/xml-language-service/dist/services/xmlFormatter.js
+// ../xml-language-service/dist/services/xmlFormatter.js
 function format(document, options) {
   if (!document.text)
     return [];
@@ -22496,7 +23051,7 @@ function indent(level, unit) {
   return unit.repeat(level);
 }
 
-// node_modules/xml-language-service/dist/services/xmlRename.js
+// ../xml-language-service/dist/services/xmlRename.js
 function doRename(document, position, newName) {
   if (!newName || /[\s<>]/.test(newName))
     return null;
@@ -22521,7 +23076,7 @@ function doRename(document, position, newName) {
   return edits;
 }
 
-// node_modules/xml-language-service/dist/services/xmlDefinition.js
+// ../xml-language-service/dist/services/xmlDefinition.js
 function doDefinition(document, position) {
   const offset = positionToOffset(document.text, position);
   const node = document.findNodeAt(offset);
@@ -22545,7 +23100,7 @@ function doDefinition(document, position) {
   };
 }
 
-// node_modules/xml-language-service/dist/services/xmlReferences.js
+// ../xml-language-service/dist/services/xmlReferences.js
 function findReferences(document, position) {
   const offset = positionToOffset(document.text, position);
   const node = document.findNodeAt(offset);
@@ -22564,7 +23119,7 @@ function findReferences(document, position) {
   return results;
 }
 
-// node_modules/xml-language-service/dist/schema/xsdValidator.js
+// ../xml-language-service/dist/schema/xsdValidator.js
 var import_xerces_wasm = __toESM(require_dist(), 1);
 async function toText(input) {
   if (typeof input === "string")
@@ -22674,17 +23229,13 @@ var XsdValidatorService = class _XsdValidatorService {
       const targetNs = xsdText.match(/\btargetNamespace\s*=\s*(["'])(.*?)\1/)?.[2] ?? "";
       result = await (0, import_xerces_wasm.validate)(xmlText, this.xsd, targetNs);
     }
-    console.error(`[xsdValidator] raw result: valid=${result.valid} parseErrors=${result.parseErrors.length} schemaErrors=${result.schemaErrors.length}`);
-    if (result.schemaErrors.length > 0) {
-      console.error(`[xsdValidator] schemaErrors[0]: ${JSON.stringify(result.schemaErrors[0])}`);
-    }
     return mapResults(result, xmlText);
   }
   dispose() {
   }
 };
 
-// node_modules/xml-language-service/dist/schema/xsdCompletionProvider.js
+// ../xml-language-service/dist/schema/xsdCompletionProvider.js
 var import_parser2 = __toESM(require_api5(), 1);
 var XsdCompletionProvider = class {
   constructor(xsdText) {
@@ -23063,22 +23614,38 @@ var XsdCompletionProvider = class {
   }
 };
 
-// node_modules/xml-language-service/dist/schema/schemaAssociator.js
+// ../xml-language-service/dist/schema/schemaAssociator.js
 var import_fs = __toESM(require("fs"), 1);
+var import_path = __toESM(require("path"), 1);
 var import_url = require("url");
+function resolveSchemaRoot() {
+  try {
+    const dir = import_path.default.dirname((0, import_url.fileURLToPath)(_fileUrl));
+    const bundled = import_path.default.join(dir, "resources", "schemas");
+    if (import_fs.default.existsSync(bundled))
+      return bundled;
+    const oldDefault = import_path.default.join(dir, "resources", "default");
+    if (import_fs.default.existsSync(oldDefault))
+      return oldDefault;
+    return import_path.default.join(dir, "..", "resources", "default");
+  } catch {
+    return import_path.default.join(process.cwd(), "src", "schema", "resources", "default");
+  }
+}
+var SCHEMAS_ROOT = resolveSchemaRoot();
 var SchemaAssociator = class {
   constructor() {
     this.builtInAssociations = [
       {
-        pattern: "pom.xml",
+        pattern: "**/pom.xml",
         namespace: "http://maven.apache.org/POM/4.0.0",
-        xsdPath: (0, import_url.fileURLToPath)(new URL("../resources/default/maven-4.0.0.xsd", _fileUrl)),
+        xsdPath: import_path.default.join(SCHEMAS_ROOT, "maven-4.0.0.xsd"),
         isBuiltIn: true
       },
       {
         pattern: "web.xml",
         namespace: "http://xmlns.jcp.org/xml/ns/javaee",
-        xsdPath: (0, import_url.fileURLToPath)(new URL("../resources/default/web-app_3_1.xsd", _fileUrl)),
+        xsdPath: import_path.default.join(SCHEMAS_ROOT, "web-app_3_1.xsd"),
         isBuiltIn: true
       }
     ];
@@ -23091,12 +23658,24 @@ var SchemaAssociator = class {
   addUserAssociation(association) {
     this.userAssociations.push(association);
   }
+  /** Clears all user-registered associations. */
+  clearUserAssociations() {
+    this.userAssociations = [];
+  }
   /**
    * Finds and reads the XSD schema for the given file name and optional xmlns namespace.
-   * User associations are checked first and short-circuit built-in lookup on match.
+   * Priority: user associations (pattern match) > built-in associations (namespace/pattern match).
    * Returns null if no matching schema is found.
    */
   findSchema(fileName, xmlns, documentPath) {
+    if (fileName === "pom.xml" || fileName.endsWith("/pom.xml") || fileName.endsWith("\\pom.xml")) {
+      const pomAssoc = this.builtInAssociations.find((a) => a.namespace === "http://maven.apache.org/POM/4.0.0");
+      if (pomAssoc) {
+        const xsdText = this.readXsdFile(pomAssoc.xsdPath);
+        if (xsdText)
+          return { xsdText, xsdPath: pomAssoc.xsdPath, source: "builtin" };
+      }
+    }
     for (const assoc of this.userAssociations) {
       if (this.matchesPattern(fileName, assoc.pattern, documentPath)) {
         const xsdText = this.readXsdFile(assoc.xsdPath);
@@ -23120,7 +23699,7 @@ var SchemaAssociator = class {
       return true;
     if (documentPath && this.globMatches(pattern, documentPath))
       return true;
-    const stripped = pattern.replace(/^\*\*\//, "");
+    const stripped = pattern.replace(/^\*\*\//, "").replace(/^\*/, "");
     return !stripped.includes("/") && fileName.endsWith(stripped);
   }
   // Converts a glob pattern to a RegExp and tests it against filePath.
@@ -23159,7 +23738,7 @@ var SchemaAssociator = class {
   }
 };
 
-// node_modules/xml-language-service/dist/schema/schemaProvider.js
+// ../xml-language-service/dist/schema/schemaProvider.js
 function resolveRelativePath(basePath, location) {
   const parts = basePath.split("/");
   parts.pop();
@@ -23201,17 +23780,33 @@ var SchemaProvider = class {
     const prevKey = this.documentToSchema.get(info.uri);
     this.documentToSchema.set(info.uri, xsdKey);
     if (prevKey && prevKey !== xsdKey && !this._isKeyReferenced(prevKey)) {
-      this.validators.get(prevKey)?.dispose();
+      const prevPromise = this.validators.get(prevKey);
       this.validators.delete(prevKey);
+      if (prevPromise) {
+        prevPromise.then((v) => v.dispose()).catch(() => {
+        });
+      }
     }
     if (!this.validators.has(xsdKey)) {
       const xsd = info.imports ? { entry: info.xsdText, imports: info.imports } : info.xsdText;
-      this.validators.set(xsdKey, await XsdValidatorService.create(xsd));
+      const pending = XsdValidatorService.create(xsd).catch((err) => {
+        this.validators.delete(xsdKey);
+        throw err;
+      });
+      this.validators.set(xsdKey, pending);
     }
-    const completionXsd = info.imports ? inlineIncludes(info.xsdText, info.imports) : info.xsdText;
-    const provider = new XsdCompletionProvider(completionXsd);
-    console.error(`[schemaProvider] Built provider for ${info.uri}: ${provider.getAllElements().length} elements, payloadFactory=${provider.getElement("payloadFactory") !== void 0}, inlinedXsdLen=${completionXsd.length}`);
-    this.completionProviders.set(info.uri, provider);
+    await this.validators.get(xsdKey);
+    await this.buildAndCacheCompletionProvider(info);
+  }
+  /** Builds and caches an XSD completion provider for the given SchemaInfo. */
+  async buildAndCacheCompletionProvider(info) {
+    const xsdKey = info.xsdPath ?? info.uri;
+    this.documentToSchema.set(info.uri, xsdKey);
+    if (!this.completionProviders.has(xsdKey)) {
+      const completionXsd = info.imports ? inlineIncludes(info.xsdText, info.imports) : info.xsdText;
+      const provider = new XsdCompletionProvider(completionXsd);
+      this.completionProviders.set(xsdKey, provider);
+    }
   }
   _isKeyReferenced(xsdKey) {
     for (const k of this.documentToSchema.values()) {
@@ -23224,6 +23819,10 @@ var SchemaProvider = class {
   addUserAssociation(association) {
     this.associator.addUserAssociation(association);
   }
+  /** Clears all user-registered associations. */
+  clearUserAssociations() {
+    this.associator.clearUserAssociations();
+  }
   /** Returns the raw ResolvedSchema (with xsdText) for the given file name and optional namespace, or null if none matches. */
   findSchemaForDocument(fileName, xmlns, documentPath) {
     return this.associator.findSchema(fileName, xmlns, documentPath);
@@ -23235,9 +23834,13 @@ var SchemaProvider = class {
    */
   resolveSchemaForDocument(fileName, xmlns, documentPath) {
     if (documentPath) {
-      const registered = this.completionProviders.get(`auto://${documentPath}`);
-      if (registered)
-        return registered;
+      const autoUri = `auto://${documentPath}`;
+      const xsdKey = this.documentToSchema.get(autoUri);
+      if (xsdKey) {
+        const registered = this.completionProviders.get(xsdKey);
+        if (registered)
+          return registered;
+      }
     }
     const cacheKey = `${documentPath ?? fileName}|${xmlns ?? ""}`;
     const cached = this.completionProviders.get(cacheKey);
@@ -23254,8 +23857,8 @@ var SchemaProvider = class {
    */
   async validate(schemaUri, document) {
     const xsdKey = this.documentToSchema.get(schemaUri);
-    const validator = xsdKey ? this.validators.get(xsdKey) : void 0;
-    if (!validator) {
+    const validatorPromise = xsdKey ? this.validators.get(xsdKey) : void 0;
+    if (!validatorPromise) {
       return document.syntaxErrors.map((e) => ({
         message: e.message,
         severity: "error",
@@ -23266,6 +23869,7 @@ var SchemaProvider = class {
         }
       }));
     }
+    const validator = await validatorPromise;
     return validator.validate(document.text);
   }
   /** Returns true when a compiled validator for the given document URI exists in the registry. */
@@ -23273,7 +23877,7 @@ var SchemaProvider = class {
     return this.documentToSchema.has(uri);
   }
   /** Removes all auto:// schemas so they are re-registered fresh on next validation. */
-  invalidateAutoSchemas() {
+  async invalidateAutoSchemas() {
     const keysToCheck = /* @__PURE__ */ new Set();
     for (const [docUri, xsdKey] of this.documentToSchema) {
       if (docUri.startsWith("auto://")) {
@@ -23283,8 +23887,15 @@ var SchemaProvider = class {
     }
     for (const xsdKey of keysToCheck) {
       if (!this._isKeyReferenced(xsdKey)) {
-        this.validators.get(xsdKey)?.dispose();
+        const promise = this.validators.get(xsdKey);
         this.validators.delete(xsdKey);
+        if (promise) {
+          try {
+            const v = await promise;
+            v.dispose();
+          } catch {
+          }
+        }
       }
     }
     for (const key of this.completionProviders.keys()) {
@@ -23294,9 +23905,13 @@ var SchemaProvider = class {
     }
   }
   /** Disposes all registered validators and clears the registry. */
-  dispose() {
-    for (const validator of this.validators.values()) {
-      validator.dispose();
+  async dispose() {
+    for (const validatorPromise of this.validators.values()) {
+      try {
+        const v = await validatorPromise;
+        v.dispose();
+      } catch {
+      }
     }
     this.validators.clear();
     this.documentToSchema.clear();
@@ -23304,7 +23919,7 @@ var SchemaProvider = class {
   }
 };
 
-// node_modules/xml-language-service/dist/xmlLanguageService.js
+// ../xml-language-service/dist/xmlLanguageService.js
 function getLanguageService() {
   const schemaProvider = new SchemaProvider();
   return {
@@ -23368,12 +23983,19 @@ function getLanguageService() {
     addUserAssociation(association) {
       schemaProvider.addUserAssociation(association);
     },
-    /** Clears all auto-registered schemas so they are re-loaded from disk on next validation. */
-    invalidateAutoSchemas() {
-      schemaProvider.invalidateAutoSchemas();
+    /** Removes all user-registered associations so a fresh set can be applied. */
+    clearUserAssociations() {
+      schemaProvider.clearUserAssociations();
     },
-    dispose() {
-      schemaProvider.dispose();
+    async buildAndCacheCompletionProvider(info) {
+      return schemaProvider.buildAndCacheCompletionProvider(info);
+    },
+    /** Clears all auto-registered schemas so they are re-loaded from disk on next validation. */
+    async invalidateAutoSchemas() {
+      return schemaProvider.invalidateAutoSchemas();
+    },
+    async dispose() {
+      return schemaProvider.dispose();
     }
   };
 }
@@ -23381,7 +24003,7 @@ function getLanguageService() {
 // src/diagnosticsHandler.ts
 var import_node = __toESM(require_node3());
 var fs2 = __toESM(require("fs"));
-var path = __toESM(require("path"));
+var path2 = __toESM(require("path"));
 var MAX_SCHEMA_IMPORT_FILES = 200;
 var MAX_SCHEMA_IMPORT_FILE_BYTES = 2 * 1024 * 1024;
 var MAX_SCHEMA_IMPORT_TOTAL_BYTES = 20 * 1024 * 1024;
@@ -23437,14 +24059,15 @@ var DiagnosticsHandler = class {
       this.connection.console.log(
         `[DiagnosticsHandler] Validating ${document.uri} against auto schema`
       );
-      const raw = await this.service.validate(autoUri, xmlDoc);
-      this.send(document.uri, this.toDiagnostics(raw));
+      const raw2 = await this.service.validate(autoUri, xmlDoc);
+      this.send(document.uri, this.toDiagnostics(raw2));
       return;
     }
     this.connection.console.log(
-      `[DiagnosticsHandler] No schema for ${document.uri}, clearing diagnostics`
+      `[DiagnosticsHandler] No schema for ${document.uri}, validating syntax errors`
     );
-    this.send(document.uri, []);
+    const raw = await this.service.validate(document.uri, xmlDoc);
+    this.send(document.uri, this.toDiagnostics(raw));
   }
   /** Clears all diagnostics for the given document URI. */
   clearDiagnostics(uri) {
@@ -23470,8 +24093,8 @@ var DiagnosticsHandler = class {
    *  resolving schemaLocation values relative to memory:///main.xsd. */
   loadReferencedXsds(entryPath, entryText) {
     try {
-      const rootDir = path.dirname(path.resolve(entryPath));
-      const entryFullPath = path.resolve(entryPath);
+      const rootDir = path2.dirname(path2.resolve(entryPath));
+      const entryFullPath = path2.resolve(entryPath);
       const imports = {};
       const visited = /* @__PURE__ */ new Set([entryFullPath]);
       let totalBytes = 0;
@@ -23585,16 +24208,16 @@ var DiagnosticsHandler = class {
       this.warn(`[DiagnosticsHandler] Skipping unsupported schema reference '${location}'`);
       return void 0;
     }
-    const resolvedPath = path.resolve(path.dirname(currentPath), location);
-    const relativeToRoot = path.relative(rootDir, resolvedPath);
-    if (relativeToRoot.startsWith("..") || path.isAbsolute(relativeToRoot)) {
+    const resolvedPath = path2.resolve(path2.dirname(currentPath), location);
+    const relativeToRoot = path2.relative(rootDir, resolvedPath);
+    if (relativeToRoot.startsWith("..") || path2.isAbsolute(relativeToRoot)) {
       this.warn(`[DiagnosticsHandler] Skipping schema reference outside schema root '${location}'`);
       return void 0;
     }
     return resolvedPath;
   }
   toImportKey(rootDir, fullPath) {
-    return path.relative(rootDir, fullPath).split(path.sep).join("/");
+    return path2.relative(rootDir, fullPath).split(path2.sep).join("/");
   }
   toDiagnostics(raw) {
     return raw.map((d) => ({
@@ -23608,7 +24231,7 @@ var DiagnosticsHandler = class {
 
 // src/configuration.ts
 var fs3 = __toESM(require("fs"));
-var path2 = __toESM(require("path"));
+var path3 = __toESM(require("path"));
 function applySchemaSettings(schemas, connection2, service2, workspaceRoots2, invalidate = false) {
   if (invalidate) service2.invalidateAutoSchemas();
   for (const entry of schemas) {
@@ -23624,11 +24247,11 @@ function applySchemaSettings(schemas, connection2, service2, workspaceRoots2, in
   }
 }
 function resolveXsdPath(xsdPath, workspaceRoots2) {
-  if (path2.isAbsolute(xsdPath)) {
+  if (path3.isAbsolute(xsdPath)) {
     return fs3.existsSync(xsdPath) ? xsdPath : null;
   }
   for (const root of workspaceRoots2) {
-    const candidate = path2.join(root, xsdPath);
+    const candidate = path3.join(root, xsdPath);
     if (fs3.existsSync(candidate)) return candidate;
   }
   return null;

@@ -83,11 +83,12 @@ export class DiagnosticsHandler {
       return;
     }
 
-    // No schema found — clear any stale diagnostics.
+    // No schema found — validate XML syntax errors.
     this.connection.console.log(
-      `[DiagnosticsHandler] No schema for ${document.uri}, clearing diagnostics`
+      `[DiagnosticsHandler] No schema for ${document.uri}, validating syntax errors`
     );
-    this.send(document.uri, []);
+    const raw = await this.service.validate(document.uri, xmlDoc);
+    this.send(document.uri, this.toDiagnostics(raw));
   }
 
   /** Clears all diagnostics for the given document URI. */
