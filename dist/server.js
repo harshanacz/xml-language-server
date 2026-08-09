@@ -24345,13 +24345,22 @@ function toLSPFoldingRange(r) {
 
 // src/requestHandlers.ts
 function registerRequestHandlers(connection2, documents2, service2, diagnosticsHandler2) {
+  const xmlDocCache = /* @__PURE__ */ new Map();
+  function getParsedDoc(document) {
+    const cached = xmlDocCache.get(document.uri);
+    if (cached && cached.version === document.version) return cached.doc;
+    const doc = service2.parseXMLDocument(document.uri, document.getText());
+    xmlDocCache.set(document.uri, { version: document.version, doc });
+    return doc;
+  }
+  documents2.onDidClose((e) => xmlDocCache.delete(e.document.uri));
   connection2.onCompletion((params) => {
     connection2.console.log(
       `[onCompletion] Triggered for ${params.textDocument.uri} at line ${params.position.line}, char ${params.position.character}`
     );
     const document = documents2.get(params.textDocument.uri);
     if (!document) return [];
-    const xmlDoc = service2.parseXMLDocument(document.uri, document.getText());
+    const xmlDoc = getParsedDoc(document);
     return toLSPCompletionList(
       service2.doComplete(xmlDoc, params.position, getFileName(document.uri), getDocumentPath(document.uri))
     );
@@ -24369,7 +24378,7 @@ function registerRequestHandlers(connection2, documents2, service2, diagnosticsH
       const value = errors.map((d) => `${isError(d) ? "**ERROR**" : "**WARNING**"} \u2014 ${escapeMd(d.message)}`).join("\n\n");
       return { contents: { kind: import_node3.MarkupKind.Markdown, value } };
     }
-    const xmlDoc = service2.parseXMLDocument(document.uri, document.getText());
+    const xmlDoc = getParsedDoc(document);
     const result = service2.doHover(xmlDoc, params.position, getFileName(document.uri), getDocumentPath(document.uri));
     connection2.console.log(`[onHover] Result: ${JSON.stringify(result)}`);
     return result ? toLSPHover(result) : null;
@@ -24378,14 +24387,14 @@ function registerRequestHandlers(connection2, documents2, service2, diagnosticsH
     connection2.console.log(`[onDocumentSymbol] Triggered for ${params.textDocument.uri}`);
     const document = documents2.get(params.textDocument.uri);
     if (!document) return [];
-    const xmlDoc = service2.parseXMLDocument(document.uri, document.getText());
+    const xmlDoc = getParsedDoc(document);
     return service2.findDocumentSymbols(xmlDoc).map(toLSPDocumentSymbol);
   });
   connection2.onFoldingRanges((params) => {
     connection2.console.log(`[onFoldingRanges] Triggered for ${params.textDocument.uri}`);
     const document = documents2.get(params.textDocument.uri);
     if (!document) return [];
-    const xmlDoc = service2.parseXMLDocument(document.uri, document.getText());
+    const xmlDoc = getParsedDoc(document);
     return service2.getFoldingRanges(xmlDoc).map(toLSPFoldingRange);
   });
   connection2.onRenameRequest((params) => {
@@ -24394,7 +24403,7 @@ function registerRequestHandlers(connection2, documents2, service2, diagnosticsH
     );
     const document = documents2.get(params.textDocument.uri);
     if (!document) return null;
-    const xmlDoc = service2.parseXMLDocument(document.uri, document.getText());
+    const xmlDoc = getParsedDoc(document);
     const edits = service2.doRename(xmlDoc, params.position, params.newName);
     if (!edits) return null;
     return {
@@ -24415,7 +24424,7 @@ function registerRequestHandlers(connection2, documents2, service2, diagnosticsH
     );
     const document = documents2.get(params.textDocument.uri);
     if (!document) return null;
-    const xmlDoc = service2.parseXMLDocument(document.uri, document.getText());
+    const xmlDoc = getParsedDoc(document);
     const result = service2.doDefinition(xmlDoc, params.position);
     return result ? { uri: result.uri, range: result.range } : null;
   });
@@ -24425,14 +24434,14 @@ function registerRequestHandlers(connection2, documents2, service2, diagnosticsH
     );
     const document = documents2.get(params.textDocument.uri);
     if (!document) return [];
-    const xmlDoc = service2.parseXMLDocument(document.uri, document.getText());
+    const xmlDoc = getParsedDoc(document);
     return service2.findReferences(xmlDoc, params.position).map((r) => ({ uri: r.uri, range: r.range }));
   });
   connection2.onDocumentFormatting((params) => {
     connection2.console.log(`[onDocumentFormatting] Triggered for ${params.textDocument.uri}`);
     const document = documents2.get(params.textDocument.uri);
     if (!document) return [];
-    const xmlDoc = service2.parseXMLDocument(document.uri, document.getText());
+    const xmlDoc = getParsedDoc(document);
     return service2.format(xmlDoc, {
       tabSize: params.options.tabSize,
       insertSpaces: params.options.insertSpaces
