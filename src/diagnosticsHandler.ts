@@ -8,6 +8,7 @@ import { getLanguageService } from "xml-language-service";
 import * as fs from "fs";
 import * as path from "path";
 import { filterDiagnostics, formatDiagnosticMessage } from "./diagnosticsFilter.js";
+import { findLocalSchemaHint } from "./schemaHint.js";
 
 type LanguageService = ReturnType<typeof getLanguageService>;
 
@@ -54,10 +55,17 @@ export class DiagnosticsHandler {
     const xmlDoc = this.service.parseXMLDocument(document.uri, text);
     const xmlns = (xmlDoc as any).getNamespace?.() ?? undefined;
 
-    // Auto-resolve schema by file name / namespace.
-    const resolved = this.service.resolveSchemaForDocument(fileName, xmlns, documentPath);
+    // Auto-resolve schema by file name / namespace. A schema configured by the user wins;
+    // otherwise the document's own local xsi:schemaLocation hint wins over built-in schemas.
+    let resolved: { xsdText: string; xsdPath?: string; source?: string } | null =
+      this.service.resolveSchemaForDocument(fileName, xmlns, documentPath);
+    if (resolved?.source !== "custom") {
+      const hinted = findLocalSchemaHint(xmlDoc, documentPath);
+      if (hinted) resolved = { ...hinted, source: "custom" };
+    }
     if (resolved) {
-      const autoUri = `auto://${documentPath ?? fileName}`;
+      // Keyed by schema path too, so pointing the document at a different XSD re-registers it.
+      const autoUri = `auto://${documentPath ?? fileName}#${resolved.xsdPath ?? ""}`;
       if (!this.service.hasSchema(autoUri)) {
         const imports = resolved.xsdPath
           ? this.loadReferencedXsds(resolved.xsdPath, resolved.xsdText)
