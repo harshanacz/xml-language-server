@@ -54,6 +54,7 @@ export class DiagnosticsHandler {
     const text = document.getText();
     const xmlDoc = this.service.parseXMLDocument(document.uri, text);
     const xmlns = (xmlDoc as any).getNamespace?.() ?? undefined;
+    const systemId = this.extractSystemId(text);
 
     // Auto-resolve schema by file name / namespace. A schema configured by the user wins;
     // otherwise the document's own local xsi:schemaLocation hint wins over built-in schemas.
@@ -62,6 +63,10 @@ export class DiagnosticsHandler {
     if (resolved?.source !== "custom") {
       const hinted = findLocalSchemaHint(xmlDoc, documentPath);
       if (hinted) resolved = { ...hinted, source: "custom" };
+    }
+    // Remote systemId fallback (with network fetch) when nothing local matched.
+    if (!resolved && (this.service as any).resolveSchemaForDocumentAsync) {
+      resolved = await (this.service as any).resolveSchemaForDocumentAsync(fileName, xmlns, documentPath, systemId);
     }
     if (resolved) {
       // Keyed by schema path too, so pointing the document at a different XSD re-registers it.
@@ -104,6 +109,21 @@ export class DiagnosticsHandler {
   clearDiagnostics(uri: string): void {
     this.connection.console.log(`[DiagnosticsHandler] Clearing diagnostics for ${uri}`);
     this.send(uri, []);
+  }
+
+  private extractSystemId(text: string): string | undefined {
+    const schemaLocMatch = text.match(/xsi:(?:schemaLocation|noNamespaceSchemaLocation)\s*=\s*(["'])([\s\S]*?)\1/i);
+    if (schemaLocMatch) {
+      const parts = schemaLocMatch[2].trim().split(/\s+/);
+      const url = parts.length > 1 ? parts[1] : parts[0];
+      if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    }
+    const doctypeMatch = text.match(/<!DOCTYPE\s+[\s\S]*?SYSTEM\s+(["'])([^"']+)\1/i);
+    if (doctypeMatch) {
+      const url = doctypeMatch[2];
+      if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    }
+    return undefined;
   }
 
   private send(uri: string, diagnostics: Diagnostic[]): void {

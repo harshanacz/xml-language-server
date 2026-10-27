@@ -1072,8 +1072,8 @@ var require_semaphore = __commonJS({
         this._waiting = [];
       }
       lock(thunk) {
-        return new Promise((resolve2, reject2) => {
-          this._waiting.push({ thunk, resolve: resolve2, reject: reject2 });
+        return new Promise((resolve3, reject2) => {
+          this._waiting.push({ thunk, resolve: resolve3, reject: reject2 });
           this.runNext();
         });
       }
@@ -2563,9 +2563,9 @@ ${JSON.stringify(message, null, 4)}`);
           if (typeof cancellationStrategy.sender.enableCancellation === "function") {
             cancellationStrategy.sender.enableCancellation(requestMessage);
           }
-          return new Promise(async (resolve2, reject2) => {
+          return new Promise(async (resolve3, reject2) => {
             const resolveWithCleanup = (r) => {
-              resolve2(r);
+              resolve3(r);
               cancellationStrategy.sender.cleanup(id);
               disposable?.dispose();
             };
@@ -2976,10 +2976,10 @@ var require_ril = __commonJS({
         return api_1.Disposable.create(() => this.stream.off("end", listener));
       }
       write(data, encoding) {
-        return new Promise((resolve2, reject2) => {
+        return new Promise((resolve3, reject2) => {
           const callback = (error) => {
             if (error === void 0 || error === null) {
-              resolve2();
+              resolve3();
             } else {
               reject2(error);
             }
@@ -3082,7 +3082,7 @@ var require_main = __commonJS({
     exports2.createMessageConnection = exports2.createServerSocketTransport = exports2.createClientSocketTransport = exports2.createServerPipeTransport = exports2.createClientPipeTransport = exports2.generateRandomPipeName = exports2.StreamMessageWriter = exports2.StreamMessageReader = exports2.SocketMessageWriter = exports2.SocketMessageReader = exports2.PortMessageWriter = exports2.PortMessageReader = exports2.IPCMessageWriter = exports2.IPCMessageReader = void 0;
     var ril_1 = require_ril();
     ril_1.default.install();
-    var path4 = require("path");
+    var path5 = require("path");
     var os = require("os");
     var crypto_1 = require("crypto");
     var net_1 = require("net");
@@ -3218,9 +3218,9 @@ var require_main = __commonJS({
       }
       let result;
       if (XDG_RUNTIME_DIR) {
-        result = path4.join(XDG_RUNTIME_DIR, `vscode-ipc-${randomSuffix}.sock`);
+        result = path5.join(XDG_RUNTIME_DIR, `vscode-ipc-${randomSuffix}.sock`);
       } else {
-        result = path4.join(os.tmpdir(), `vscode-${randomSuffix}.sock`);
+        result = path5.join(os.tmpdir(), `vscode-${randomSuffix}.sock`);
       }
       const limit = safeIpcPathLengths.get(process.platform);
       if (limit !== void 0 && result.length > limit) {
@@ -3231,10 +3231,10 @@ var require_main = __commonJS({
     exports2.generateRandomPipeName = generateRandomPipeName;
     function createClientPipeTransport(pipeName, encoding = "utf-8") {
       let connectResolve;
-      const connected = new Promise((resolve2, _reject) => {
-        connectResolve = resolve2;
+      const connected = new Promise((resolve3, _reject) => {
+        connectResolve = resolve3;
       });
-      return new Promise((resolve2, reject2) => {
+      return new Promise((resolve3, reject2) => {
         let server = (0, net_1.createServer)((socket) => {
           server.close();
           connectResolve([
@@ -3245,7 +3245,7 @@ var require_main = __commonJS({
         server.on("error", reject2);
         server.listen(pipeName, () => {
           server.removeListener("error", reject2);
-          resolve2({
+          resolve3({
             onConnected: () => {
               return connected;
             }
@@ -3264,10 +3264,10 @@ var require_main = __commonJS({
     exports2.createServerPipeTransport = createServerPipeTransport;
     function createClientSocketTransport(port, encoding = "utf-8") {
       let connectResolve;
-      const connected = new Promise((resolve2, _reject) => {
-        connectResolve = resolve2;
+      const connected = new Promise((resolve3, _reject) => {
+        connectResolve = resolve3;
       });
-      return new Promise((resolve2, reject2) => {
+      return new Promise((resolve3, reject2) => {
         const server = (0, net_1.createServer)((socket) => {
           server.close();
           connectResolve([
@@ -3278,7 +3278,7 @@ var require_main = __commonJS({
         server.on("error", reject2);
         server.listen(port, "127.0.0.1", () => {
           server.removeListener("error", reject2);
-          resolve2({
+          resolve3({
             onConnected: () => {
               return connected;
             }
@@ -4092,21 +4092,21 @@ var require_main2 = __commonJS({
         }
         TextDocumentItem2.is = is;
       })(TextDocumentItem || (exports3.TextDocumentItem = TextDocumentItem = {}));
-      var MarkupKind3;
-      (function(MarkupKind4) {
-        MarkupKind4.PlainText = "plaintext";
-        MarkupKind4.Markdown = "markdown";
+      var MarkupKind2;
+      (function(MarkupKind3) {
+        MarkupKind3.PlainText = "plaintext";
+        MarkupKind3.Markdown = "markdown";
         function is(value) {
           var candidate = value;
-          return candidate === MarkupKind4.PlainText || candidate === MarkupKind4.Markdown;
+          return candidate === MarkupKind3.PlainText || candidate === MarkupKind3.Markdown;
         }
-        MarkupKind4.is = is;
-      })(MarkupKind3 || (exports3.MarkupKind = MarkupKind3 = {}));
+        MarkupKind3.is = is;
+      })(MarkupKind2 || (exports3.MarkupKind = MarkupKind2 = {}));
       var MarkupContent;
       (function(MarkupContent2) {
         function is(value) {
           var candidate = value;
-          return Is.objectLiteral(value) && MarkupKind3.is(candidate.kind) && Is.string(candidate.value);
+          return Is.objectLiteral(value) && MarkupKind2.is(candidate.kind) && Is.string(candidate.value);
         }
         MarkupContent2.is = is;
       })(MarkupContent || (exports3.MarkupContent = MarkupContent = {}));
@@ -7114,7 +7114,7 @@ var require_textDocuments = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TextDocuments = void 0;
     var vscode_languageserver_protocol_1 = require_main3();
-    var TextDocuments3 = class {
+    var TextDocuments2 = class {
       /**
        * Create a new text document manager.
        */
@@ -7268,7 +7268,7 @@ var require_textDocuments = __commonJS({
         });
       }
     };
-    exports2.TextDocuments = TextDocuments3;
+    exports2.TextDocuments = TextDocuments2;
   }
 });
 
@@ -8064,8 +8064,8 @@ var require_server = __commonJS({
         if (value instanceof Promise) {
           return value;
         } else if (Is.thenable(value)) {
-          return new Promise((resolve2, reject2) => {
-            value.then((resolved) => resolve2(resolved), (error) => reject2(error));
+          return new Promise((resolve3, reject2) => {
+            value.then((resolved) => resolve3(resolved), (error) => reject2(error));
           });
         } else {
           return Promise.resolve(value);
@@ -8310,8 +8310,8 @@ var require_files = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.resolveModulePath = exports2.FileSystem = exports2.resolveGlobalYarnPath = exports2.resolveGlobalNodePath = exports2.resolve = exports2.uriToFilePath = void 0;
     var url = require("url");
-    var path4 = require("path");
-    var fs4 = require("fs");
+    var path5 = require("path");
+    var fs5 = require("fs");
     var child_process_1 = require("child_process");
     function uriToFilePath(uri) {
       let parsed = url.parse(uri);
@@ -8329,13 +8329,13 @@ var require_files = __commonJS({
           segments.shift();
         }
       }
-      return path4.normalize(segments.join("/"));
+      return path5.normalize(segments.join("/"));
     }
     exports2.uriToFilePath = uriToFilePath;
     function isWindows() {
       return process.platform === "win32";
     }
-    function resolve2(moduleName, nodePath, cwd, tracer) {
+    function resolve3(moduleName, nodePath, cwd, tracer) {
       const nodePathKey = "NODE_PATH";
       const app = [
         "var p = process;",
@@ -8354,13 +8354,13 @@ var require_files = __commonJS({
         "}",
         "});"
       ].join("");
-      return new Promise((resolve3, reject2) => {
+      return new Promise((resolve4, reject2) => {
         let env = process.env;
         let newEnv = /* @__PURE__ */ Object.create(null);
         Object.keys(env).forEach((key) => newEnv[key] = env[key]);
-        if (nodePath && fs4.existsSync(nodePath)) {
+        if (nodePath && fs5.existsSync(nodePath)) {
           if (newEnv[nodePathKey]) {
-            newEnv[nodePathKey] = nodePath + path4.delimiter + newEnv[nodePathKey];
+            newEnv[nodePathKey] = nodePath + path5.delimiter + newEnv[nodePathKey];
           } else {
             newEnv[nodePathKey] = nodePath;
           }
@@ -8386,7 +8386,7 @@ var require_files = __commonJS({
             if (message2.c === "r") {
               cp.send({ c: "e" });
               if (message2.s) {
-                resolve3(message2.r);
+                resolve4(message2.r);
               } else {
                 reject2(new Error(`Failed to resolve module: ${moduleName}`));
               }
@@ -8402,7 +8402,7 @@ var require_files = __commonJS({
         }
       });
     }
-    exports2.resolve = resolve2;
+    exports2.resolve = resolve3;
     function resolveGlobalNodePath(tracer) {
       let npmCommand = "npm";
       const env = /* @__PURE__ */ Object.create(null);
@@ -8433,9 +8433,9 @@ var require_files = __commonJS({
         }
         if (prefix.length > 0) {
           if (isWindows()) {
-            return path4.join(prefix, "node_modules");
+            return path5.join(prefix, "node_modules");
           } else {
-            return path4.join(prefix, "lib", "node_modules");
+            return path5.join(prefix, "lib", "node_modules");
           }
         }
         return void 0;
@@ -8475,7 +8475,7 @@ var require_files = __commonJS({
           try {
             let yarn = JSON.parse(line);
             if (yarn.type === "log") {
-              return path4.join(yarn.data, "node_modules");
+              return path5.join(yarn.data, "node_modules");
             }
           } catch (e) {
           }
@@ -8498,36 +8498,36 @@ var require_files = __commonJS({
         if (process.platform === "win32") {
           _isCaseSensitive = false;
         } else {
-          _isCaseSensitive = !fs4.existsSync(__filename.toUpperCase()) || !fs4.existsSync(__filename.toLowerCase());
+          _isCaseSensitive = !fs5.existsSync(__filename.toUpperCase()) || !fs5.existsSync(__filename.toLowerCase());
         }
         return _isCaseSensitive;
       }
       FileSystem2.isCaseSensitive = isCaseSensitive;
       function isParent(parent, child) {
         if (isCaseSensitive()) {
-          return path4.normalize(child).indexOf(path4.normalize(parent)) === 0;
+          return path5.normalize(child).indexOf(path5.normalize(parent)) === 0;
         } else {
-          return path4.normalize(child).toLowerCase().indexOf(path4.normalize(parent).toLowerCase()) === 0;
+          return path5.normalize(child).toLowerCase().indexOf(path5.normalize(parent).toLowerCase()) === 0;
         }
       }
       FileSystem2.isParent = isParent;
     })(FileSystem || (exports2.FileSystem = FileSystem = {}));
     function resolveModulePath(workspaceRoot, moduleName, nodePath, tracer) {
       if (nodePath) {
-        if (!path4.isAbsolute(nodePath)) {
-          nodePath = path4.join(workspaceRoot, nodePath);
+        if (!path5.isAbsolute(nodePath)) {
+          nodePath = path5.join(workspaceRoot, nodePath);
         }
-        return resolve2(moduleName, nodePath, nodePath, tracer).then((value) => {
+        return resolve3(moduleName, nodePath, nodePath, tracer).then((value) => {
           if (FileSystem.isParent(nodePath, value)) {
             return value;
           } else {
             return Promise.reject(new Error(`Failed to load ${moduleName} from node path location.`));
           }
         }).then(void 0, (_error) => {
-          return resolve2(moduleName, resolveGlobalNodePath(tracer), workspaceRoot, tracer);
+          return resolve3(moduleName, resolveGlobalNodePath(tracer), workspaceRoot, tracer);
         });
       } else {
-        return resolve2(moduleName, resolveGlobalNodePath(tracer), workspaceRoot, tracer);
+        return resolve3(moduleName, resolveGlobalNodePath(tracer), workspaceRoot, tracer);
       }
     }
     exports2.resolveModulePath = resolveModulePath;
@@ -11321,12 +11321,12 @@ var require_tokens = __commonJS({
       });
     }
     exports2.assignCategoriesMapProp = assignCategoriesMapProp;
-    function singleAssignCategoriesToksMap(path4, nextNode) {
-      utils_1.forEach(path4, function(pathNode) {
+    function singleAssignCategoriesToksMap(path5, nextNode) {
+      utils_1.forEach(path5, function(pathNode) {
         nextNode.categoryMatchesMap[pathNode.tokenTypeIdx] = true;
       });
       utils_1.forEach(nextNode.CATEGORIES, function(nextCategory) {
-        var newPath = path4.concat(nextNode);
+        var newPath = path5.concat(nextNode);
         if (!utils_1.contains(newPath, nextCategory)) {
           singleAssignCategoriesToksMap(newPath, nextCategory);
         }
@@ -13089,10 +13089,10 @@ var require_interpreter = __commonJS({
       /** @class */
       (function(_super) {
         __extends(AbstractNextPossibleTokensWalker2, _super);
-        function AbstractNextPossibleTokensWalker2(topProd, path4) {
+        function AbstractNextPossibleTokensWalker2(topProd, path5) {
           var _this = _super.call(this) || this;
           _this.topProd = topProd;
-          _this.path = path4;
+          _this.path = path5;
           _this.possibleTokTypes = [];
           _this.nextProductionName = "";
           _this.nextProductionOccurrence = 0;
@@ -13146,9 +13146,9 @@ var require_interpreter = __commonJS({
       /** @class */
       (function(_super) {
         __extends(NextAfterTokenWalker2, _super);
-        function NextAfterTokenWalker2(topProd, path4) {
-          var _this = _super.call(this, topProd, path4) || this;
-          _this.path = path4;
+        function NextAfterTokenWalker2(topProd, path5) {
+          var _this = _super.call(this, topProd, path5) || this;
+          _this.path = path5;
           _this.nextTerminalName = "";
           _this.nextTerminalOccurrence = 0;
           _this.nextTerminalName = _this.path.lastTok.name;
@@ -13845,10 +13845,10 @@ var require_lookahead = __commonJS({
       }
       return result;
     }
-    function pathToHashKeys(path4) {
+    function pathToHashKeys(path5) {
       var keys2 = [""];
-      for (var i = 0; i < path4.length; i++) {
-        var tokType = path4[i];
+      for (var i = 0; i < path5.length; i++) {
+        var tokType = path5[i];
         var longerKeys = [];
         for (var j = 0; j < keys2.length; j++) {
           var currShorterKey = keys2[j];
@@ -14160,9 +14160,9 @@ var require_checks = __commonJS({
       return errors;
     }
     exports2.validateRuleIsOverridden = validateRuleIsOverridden;
-    function validateNoLeftRecursion(topRule, currRule, errMsgProvider, path4) {
-      if (path4 === void 0) {
-        path4 = [];
+    function validateNoLeftRecursion(topRule, currRule, errMsgProvider, path5) {
+      if (path5 === void 0) {
+        path5 = [];
       }
       var errors = [];
       var nextNonTerminals = getFirstNoneTerminal(currRule.definition);
@@ -14175,15 +14175,15 @@ var require_checks = __commonJS({
           errors.push({
             message: errMsgProvider.buildLeftRecursionError({
               topLevelRule: topRule,
-              leftRecursionPath: path4
+              leftRecursionPath: path5
             }),
             type: parser_1.ParserDefinitionErrorType.LEFT_RECURSION,
             ruleName
           });
         }
-        var validNextSteps = utils.difference(nextNonTerminals, path4.concat([topRule]));
+        var validNextSteps = utils.difference(nextNonTerminals, path5.concat([topRule]));
         var errorsFromNextSteps = utils.map(validNextSteps, function(currRefRule) {
-          var newPath = utils.cloneArr(path4);
+          var newPath = utils.cloneArr(path5);
           newPath.push(currRefRule);
           return validateNoLeftRecursion(topRule, currRefRule, errMsgProvider, newPath);
         });
@@ -17636,24 +17636,24 @@ var require_xerces_validator = __commonJS({
           _scriptName = self.location.href;
         }
         var scriptDirectory = "";
-        function locateFile(path4) {
+        function locateFile(path5) {
           if (Module["locateFile"]) {
-            return Module["locateFile"](path4, scriptDirectory);
+            return Module["locateFile"](path5, scriptDirectory);
           }
-          return scriptDirectory + path4;
+          return scriptDirectory + path5;
         }
         var readAsync, readBinary;
         if (ENVIRONMENT_IS_NODE) {
-          var fs4 = require("node:fs");
+          var fs5 = require("node:fs");
           scriptDirectory = __dirname + "/";
           readBinary = (filename) => {
             filename = isFileURI(filename) ? new URL(filename) : filename;
-            var ret = fs4.readFileSync(filename);
+            var ret = fs5.readFileSync(filename);
             return ret;
           };
           readAsync = async (filename, binary = true) => {
             filename = isFileURI(filename) ? new URL(filename) : filename;
-            var ret = fs4.readFileSync(filename, binary ? void 0 : "utf8");
+            var ret = fs5.readFileSync(filename, binary ? void 0 : "utf8");
             return ret;
           };
           if (process.argv.length > 1) {
@@ -17681,13 +17681,13 @@ var require_xerces_validator = __commonJS({
             }
             readAsync = async (url) => {
               if (isFileURI(url)) {
-                return new Promise((resolve2, reject2) => {
+                return new Promise((resolve3, reject2) => {
                   var xhr = new XMLHttpRequest();
                   xhr.open("GET", url, true);
                   xhr.responseType = "arraybuffer";
                   xhr.onload = () => {
                     if (xhr.status == 200 || xhr.status == 0 && xhr.response) {
-                      resolve2(xhr.response);
+                      resolve3(xhr.response);
                       return;
                     }
                     reject2(xhr.status);
@@ -17833,9 +17833,9 @@ var require_xerces_validator = __commonJS({
           }
           var info = getWasmImports();
           if (Module["instantiateWasm"]) {
-            return new Promise((resolve2, reject2) => {
+            return new Promise((resolve3, reject2) => {
               Module["instantiateWasm"](info, (inst, mod) => {
-                resolve2(receiveInstance(inst, mod));
+                resolve3(receiveInstance(inst, mod));
               });
             });
           }
@@ -17995,7 +17995,7 @@ var require_xerces_validator = __commonJS({
           }
           throw exceptionLast;
         };
-        var PATH = { isAbs: (path4) => path4.charAt(0) === "/", splitPath: (filename) => {
+        var PATH = { isAbs: (path5) => path5.charAt(0) === "/", splitPath: (filename) => {
           var splitPathRe = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
           return splitPathRe.exec(filename).slice(1);
         }, normalizeArray: (parts, allowAboveRoot) => {
@@ -18018,18 +18018,18 @@ var require_xerces_validator = __commonJS({
             }
           }
           return parts;
-        }, normalize: (path4) => {
-          var isAbsolute3 = PATH.isAbs(path4), trailingSlash = path4.slice(-1) === "/";
-          path4 = PATH.normalizeArray(path4.split("/").filter((p) => !!p), !isAbsolute3).join("/");
-          if (!path4 && !isAbsolute3) {
-            path4 = ".";
+        }, normalize: (path5) => {
+          var isAbsolute4 = PATH.isAbs(path5), trailingSlash = path5.slice(-1) === "/";
+          path5 = PATH.normalizeArray(path5.split("/").filter((p) => !!p), !isAbsolute4).join("/");
+          if (!path5 && !isAbsolute4) {
+            path5 = ".";
           }
-          if (path4 && trailingSlash) {
-            path4 += "/";
+          if (path5 && trailingSlash) {
+            path5 += "/";
           }
-          return (isAbsolute3 ? "/" : "") + path4;
-        }, dirname: (path4) => {
-          var result = PATH.splitPath(path4), root = result[0], dir = result[1];
+          return (isAbsolute4 ? "/" : "") + path5;
+        }, dirname: (path5) => {
+          var result = PATH.splitPath(path5), root = result[0], dir = result[1];
           if (!root && !dir) {
             return ".";
           }
@@ -18037,7 +18037,7 @@ var require_xerces_validator = __commonJS({
             dir = dir.slice(0, -1);
           }
           return root + dir;
-        }, basename: (path4) => path4 && path4.match(/([^\/]+|\/)\/*$/)[1], join: (...paths) => PATH.normalize(paths.join("/")), join2: (l, r) => PATH.normalize(l + "/" + r) };
+        }, basename: (path5) => path5 && path5.match(/([^\/]+|\/)\/*$/)[1], join: (...paths) => PATH.normalize(paths.join("/")), join2: (l, r) => PATH.normalize(l + "/" + r) };
         var initRandomFill = () => {
           if (ENVIRONMENT_IS_NODE) {
             var nodeCrypto = require("node:crypto");
@@ -18049,14 +18049,14 @@ var require_xerces_validator = __commonJS({
         var PATH_FS = { resolve: (...args) => {
           var resolvedPath = "", resolvedAbsolute = false;
           for (var i = args.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-            var path4 = i >= 0 ? args[i] : FS.cwd();
-            if (typeof path4 != "string") {
+            var path5 = i >= 0 ? args[i] : FS.cwd();
+            if (typeof path5 != "string") {
               throw new TypeError("Arguments to path.resolve must be strings");
-            } else if (!path4) {
+            } else if (!path5) {
               return "";
             }
-            resolvedPath = path4 + "/" + resolvedPath;
-            resolvedAbsolute = PATH.isAbs(path4);
+            resolvedPath = path5 + "/" + resolvedPath;
+            resolvedAbsolute = PATH.isAbs(path5);
           }
           resolvedPath = PATH.normalizeArray(resolvedPath.split("/").filter((p) => !!p), !resolvedAbsolute).join("/");
           return (resolvedAbsolute ? "/" : "") + resolvedPath || ".";
@@ -18195,7 +18195,7 @@ var require_xerces_validator = __commonJS({
               var bytesRead = 0;
               var fd = process.stdin.fd;
               try {
-                bytesRead = fs4.readSync(fd, buf, 0, BUFSIZE);
+                bytesRead = fs5.readSync(fd, buf, 0, BUFSIZE);
               } catch (e) {
                 if (e.toString().includes("EOF")) bytesRead = 0;
                 else throw e;
@@ -18652,16 +18652,16 @@ var require_xerces_validator = __commonJS({
           get isDevice() {
             return FS.isChrdev(this.mode);
           }
-        }, lookupPath(path4, opts = {}) {
-          if (!path4) {
+        }, lookupPath(path5, opts = {}) {
+          if (!path5) {
             throw new FS.ErrnoError(44);
           }
           opts.follow_mount ??= true;
-          if (!PATH.isAbs(path4)) {
-            path4 = FS.cwd() + "/" + path4;
+          if (!PATH.isAbs(path5)) {
+            path5 = FS.cwd() + "/" + path5;
           }
           linkloop: for (var nlinks = 0; nlinks < 40; nlinks++) {
-            var parts = path4.split("/").filter((p) => !!p);
+            var parts = path5.split("/").filter((p) => !!p);
             var current = FS.root;
             var current_path = "/";
             for (var i = 0; i < parts.length; i++) {
@@ -18675,7 +18675,7 @@ var require_xerces_validator = __commonJS({
               if (parts[i] === "..") {
                 current_path = PATH.dirname(current_path);
                 if (FS.isRoot(current)) {
-                  path4 = current_path + "/" + parts.slice(i + 1).join("/");
+                  path5 = current_path + "/" + parts.slice(i + 1).join("/");
                   nlinks--;
                   continue linkloop;
                 } else {
@@ -18703,7 +18703,7 @@ var require_xerces_validator = __commonJS({
                 if (!PATH.isAbs(link)) {
                   link = PATH.dirname(current_path) + "/" + link;
                 }
-                path4 = link + "/" + parts.slice(i + 1).join("/");
+                path5 = link + "/" + parts.slice(i + 1).join("/");
                 continue linkloop;
               }
             }
@@ -18711,14 +18711,14 @@ var require_xerces_validator = __commonJS({
           }
           throw new FS.ErrnoError(32);
         }, getPath(node) {
-          var path4;
+          var path5;
           while (true) {
             if (FS.isRoot(node)) {
               var mount = node.mount.mountpoint;
-              if (!path4) return mount;
-              return mount[mount.length - 1] !== "/" ? `${mount}/${path4}` : mount + path4;
+              if (!path5) return mount;
+              return mount[mount.length - 1] !== "/" ? `${mount}/${path5}` : mount + path5;
             }
-            path4 = path4 ? `${node.name}/${path4}` : node.name;
+            path5 = path5 ? `${node.name}/${path5}` : node.name;
             node = node.parent;
           }
         }, hashName(parentid, name) {
@@ -18995,10 +18995,10 @@ var require_xerces_validator = __commonJS({
           node.mount.mounts.splice(idx, 1);
         }, lookup(parent, name) {
           return parent.node_ops.lookup(parent, name);
-        }, mknod(path4, mode, dev) {
-          var lookup = FS.lookupPath(path4, { parent: true });
+        }, mknod(path5, mode, dev) {
+          var lookup = FS.lookupPath(path5, { parent: true });
           var parent = lookup.node;
-          var name = PATH.basename(path4);
+          var name = PATH.basename(path5);
           if (!name) {
             throw new FS.ErrnoError(28);
           }
@@ -19013,8 +19013,8 @@ var require_xerces_validator = __commonJS({
             throw new FS.ErrnoError(63);
           }
           return parent.node_ops.mknod(parent, name, mode, dev);
-        }, statfs(path4) {
-          return FS.statfsNode(FS.lookupPath(path4, { follow: true }).node);
+        }, statfs(path5) {
+          return FS.statfsNode(FS.lookupPath(path5, { follow: true }).node);
         }, statfsStream(stream) {
           return FS.statfsNode(stream.node);
         }, statfsNode(node) {
@@ -19023,20 +19023,20 @@ var require_xerces_validator = __commonJS({
             Object.assign(rtn, node.node_ops.statfs(node.mount.opts.root));
           }
           return rtn;
-        }, create(path4, mode = 438) {
+        }, create(path5, mode = 438) {
           mode &= 4095;
           mode |= 32768;
-          return FS.mknod(path4, mode, 0);
-        }, mkdir(path4, mode = 511) {
+          return FS.mknod(path5, mode, 0);
+        }, mkdir(path5, mode = 511) {
           mode &= 511 | 512;
           mode |= 16384;
-          return FS.mknod(path4, mode, 0);
-        }, mkdirTree(path4, mode) {
-          var dirs = path4.split("/");
+          return FS.mknod(path5, mode, 0);
+        }, mkdirTree(path5, mode) {
+          var dirs = path5.split("/");
           var d = "";
           for (var dir of dirs) {
             if (!dir) continue;
-            if (d || PATH.isAbs(path4)) d += "/";
+            if (d || PATH.isAbs(path5)) d += "/";
             d += dir;
             try {
               FS.mkdir(d, mode);
@@ -19044,13 +19044,13 @@ var require_xerces_validator = __commonJS({
               if (e.errno != 20) throw e;
             }
           }
-        }, mkdev(path4, mode, dev) {
+        }, mkdev(path5, mode, dev) {
           if (typeof dev == "undefined") {
             dev = mode;
             mode = 438;
           }
           mode |= 8192;
-          return FS.mknod(path4, mode, dev);
+          return FS.mknod(path5, mode, dev);
         }, symlink(oldpath, newpath) {
           if (!PATH_FS.resolve(oldpath)) {
             throw new FS.ErrnoError(44);
@@ -19130,10 +19130,10 @@ var require_xerces_validator = __commonJS({
           } finally {
             FS.hashAddNode(old_node);
           }
-        }, rmdir(path4) {
-          var lookup = FS.lookupPath(path4, { parent: true });
+        }, rmdir(path5) {
+          var lookup = FS.lookupPath(path5, { parent: true });
           var parent = lookup.node;
-          var name = PATH.basename(path4);
+          var name = PATH.basename(path5);
           var node = FS.lookupNode(parent, name);
           var errCode = FS.mayDelete(parent, name, true);
           if (errCode) {
@@ -19147,18 +19147,18 @@ var require_xerces_validator = __commonJS({
           }
           parent.node_ops.rmdir(parent, name);
           FS.destroyNode(node);
-        }, readdir(path4) {
-          var lookup = FS.lookupPath(path4, { follow: true });
+        }, readdir(path5) {
+          var lookup = FS.lookupPath(path5, { follow: true });
           var node = lookup.node;
           var readdir = FS.checkOpExists(node.node_ops.readdir, 54);
           return readdir(node);
-        }, unlink(path4) {
-          var lookup = FS.lookupPath(path4, { parent: true });
+        }, unlink(path5) {
+          var lookup = FS.lookupPath(path5, { parent: true });
           var parent = lookup.node;
           if (!parent) {
             throw new FS.ErrnoError(44);
           }
-          var name = PATH.basename(path4);
+          var name = PATH.basename(path5);
           var node = FS.lookupNode(parent, name);
           var errCode = FS.mayDelete(parent, name, false);
           if (errCode) {
@@ -19172,8 +19172,8 @@ var require_xerces_validator = __commonJS({
           }
           parent.node_ops.unlink(parent, name);
           FS.destroyNode(node);
-        }, readlink(path4) {
-          var lookup = FS.lookupPath(path4);
+        }, readlink(path5) {
+          var lookup = FS.lookupPath(path5);
           var link = lookup.node;
           if (!link) {
             throw new FS.ErrnoError(44);
@@ -19182,8 +19182,8 @@ var require_xerces_validator = __commonJS({
             throw new FS.ErrnoError(28);
           }
           return link.node_ops.readlink(link);
-        }, stat(path4, dontFollow) {
-          var lookup = FS.lookupPath(path4, { follow: !dontFollow });
+        }, stat(path5, dontFollow) {
+          var lookup = FS.lookupPath(path5, { follow: !dontFollow });
           var node = lookup.node;
           var getattr = FS.checkOpExists(node.node_ops.getattr, 63);
           return getattr(node);
@@ -19195,37 +19195,37 @@ var require_xerces_validator = __commonJS({
           getattr ??= node.node_ops.getattr;
           FS.checkOpExists(getattr, 63);
           return getattr(arg);
-        }, lstat(path4) {
-          return FS.stat(path4, true);
+        }, lstat(path5) {
+          return FS.stat(path5, true);
         }, doChmod(stream, node, mode, dontFollow) {
           FS.doSetAttr(stream, node, { mode: mode & 4095 | node.mode & ~4095, ctime: Date.now(), dontFollow });
-        }, chmod(path4, mode, dontFollow) {
+        }, chmod(path5, mode, dontFollow) {
           var node;
-          if (typeof path4 == "string") {
-            var lookup = FS.lookupPath(path4, { follow: !dontFollow });
+          if (typeof path5 == "string") {
+            var lookup = FS.lookupPath(path5, { follow: !dontFollow });
             node = lookup.node;
           } else {
-            node = path4;
+            node = path5;
           }
           FS.doChmod(null, node, mode, dontFollow);
-        }, lchmod(path4, mode) {
-          FS.chmod(path4, mode, true);
+        }, lchmod(path5, mode) {
+          FS.chmod(path5, mode, true);
         }, fchmod(fd, mode) {
           var stream = FS.getStreamChecked(fd);
           FS.doChmod(stream, stream.node, mode, false);
         }, doChown(stream, node, dontFollow) {
           FS.doSetAttr(stream, node, { timestamp: Date.now(), dontFollow });
-        }, chown(path4, uid, gid, dontFollow) {
+        }, chown(path5, uid, gid, dontFollow) {
           var node;
-          if (typeof path4 == "string") {
-            var lookup = FS.lookupPath(path4, { follow: !dontFollow });
+          if (typeof path5 == "string") {
+            var lookup = FS.lookupPath(path5, { follow: !dontFollow });
             node = lookup.node;
           } else {
-            node = path4;
+            node = path5;
           }
           FS.doChown(null, node, dontFollow);
-        }, lchown(path4, uid, gid) {
-          FS.chown(path4, uid, gid, true);
+        }, lchown(path5, uid, gid) {
+          FS.chown(path5, uid, gid, true);
         }, fchown(fd, uid, gid) {
           var stream = FS.getStreamChecked(fd);
           FS.doChown(stream, stream.node, false);
@@ -19241,16 +19241,16 @@ var require_xerces_validator = __commonJS({
             throw new FS.ErrnoError(errCode);
           }
           FS.doSetAttr(stream, node, { size: len, timestamp: Date.now() });
-        }, truncate(path4, len) {
+        }, truncate(path5, len) {
           if (len < 0) {
             throw new FS.ErrnoError(28);
           }
           var node;
-          if (typeof path4 == "string") {
-            var lookup = FS.lookupPath(path4, { follow: true });
+          if (typeof path5 == "string") {
+            var lookup = FS.lookupPath(path5, { follow: true });
             node = lookup.node;
           } else {
-            node = path4;
+            node = path5;
           }
           FS.doTruncate(null, node, len);
         }, ftruncate(fd, len) {
@@ -19259,13 +19259,13 @@ var require_xerces_validator = __commonJS({
             throw new FS.ErrnoError(28);
           }
           FS.doTruncate(stream, stream.node, len);
-        }, utime(path4, atime, mtime) {
-          var lookup = FS.lookupPath(path4, { follow: true });
+        }, utime(path5, atime, mtime) {
+          var lookup = FS.lookupPath(path5, { follow: true });
           var node = lookup.node;
           var setattr = FS.checkOpExists(node.node_ops.setattr, 63);
           setattr(node, { atime, mtime });
-        }, open(path4, flags, mode = 438) {
-          if (path4 === "") {
+        }, open(path5, flags, mode = 438) {
+          if (path5 === "") {
             throw new FS.ErrnoError(44);
           }
           flags = FS_modeStringToFlags(flags);
@@ -19276,13 +19276,13 @@ var require_xerces_validator = __commonJS({
           }
           var node;
           var isDirPath;
-          if (typeof path4 == "object") {
-            node = path4;
+          if (typeof path5 == "object") {
+            node = path5;
           } else {
-            isDirPath = path4.endsWith("/");
-            var lookup = FS.lookupPath(path4, { follow: !(flags & 131072), noent_okay: true });
+            isDirPath = path5.endsWith("/");
+            var lookup = FS.lookupPath(path5, { follow: !(flags & 131072), noent_okay: true });
             node = lookup.node;
-            path4 = lookup.path;
+            path5 = lookup.path;
           }
           var created = false;
           if (flags & 64) {
@@ -19293,7 +19293,7 @@ var require_xerces_validator = __commonJS({
             } else if (isDirPath) {
               throw new FS.ErrnoError(31);
             } else {
-              node = FS.mknod(path4, mode | 511, 0);
+              node = FS.mknod(path5, mode | 511, 0);
               created = true;
             }
           }
@@ -19431,14 +19431,14 @@ var require_xerces_validator = __commonJS({
             throw new FS.ErrnoError(59);
           }
           return stream.stream_ops.ioctl(stream, cmd, arg);
-        }, readFile(path4, opts = {}) {
+        }, readFile(path5, opts = {}) {
           opts.flags = opts.flags || 0;
           opts.encoding = opts.encoding || "binary";
           if (opts.encoding !== "utf8" && opts.encoding !== "binary") {
             abort(`Invalid encoding type "${opts.encoding}"`);
           }
-          var stream = FS.open(path4, opts.flags);
-          var stat = FS.stat(path4);
+          var stream = FS.open(path5, opts.flags);
+          var stat = FS.stat(path5);
           var length = stat.size;
           var buf = new Uint8Array(length);
           FS.read(stream, buf, 0, length, 0);
@@ -19447,14 +19447,14 @@ var require_xerces_validator = __commonJS({
           }
           FS.close(stream);
           return buf;
-        }, writeFile(path4, data, opts = {}) {
+        }, writeFile(path5, data, opts = {}) {
           opts.flags = opts.flags || 577;
-          var stream = FS.open(path4, opts.flags, opts.mode);
+          var stream = FS.open(path5, opts.flags, opts.mode);
           data = FS_fileDataToTypedArray(data);
           FS.write(stream, data, 0, data.byteLength, void 0, opts.canOwn);
           FS.close(stream);
-        }, cwd: () => FS.currentPath, chdir(path4) {
-          var lookup = FS.lookupPath(path4, { follow: true });
+        }, cwd: () => FS.currentPath, chdir(path5) {
+          var lookup = FS.lookupPath(path5, { follow: true });
           if (lookup.node === null) {
             throw new FS.ErrnoError(44);
           }
@@ -19547,26 +19547,26 @@ var require_xerces_validator = __commonJS({
               FS.close(stream);
             }
           }
-        }, findObject(path4, dontResolveLastLink) {
-          var ret = FS.analyzePath(path4, dontResolveLastLink);
+        }, findObject(path5, dontResolveLastLink) {
+          var ret = FS.analyzePath(path5, dontResolveLastLink);
           if (!ret.exists) {
             return null;
           }
           return ret.object;
-        }, analyzePath(path4, dontResolveLastLink) {
+        }, analyzePath(path5, dontResolveLastLink) {
           try {
-            var lookup = FS.lookupPath(path4, { follow: !dontResolveLastLink });
-            path4 = lookup.path;
+            var lookup = FS.lookupPath(path5, { follow: !dontResolveLastLink });
+            path5 = lookup.path;
           } catch (e) {
           }
           var ret = { isRoot: false, exists: false, error: 0, name: null, path: null, object: null, parentExists: false, parentPath: null, parentObject: null };
           try {
-            var lookup = FS.lookupPath(path4, { parent: true });
+            var lookup = FS.lookupPath(path5, { parent: true });
             ret.parentExists = true;
             ret.parentPath = lookup.path;
             ret.parentObject = lookup.node;
-            ret.name = PATH.basename(path4);
-            lookup = FS.lookupPath(path4, { follow: !dontResolveLastLink });
+            ret.name = PATH.basename(path5);
+            lookup = FS.lookupPath(path5, { follow: !dontResolveLastLink });
             ret.exists = true;
             ret.path = lookup.path;
             ret.object = lookup.node;
@@ -19576,9 +19576,9 @@ var require_xerces_validator = __commonJS({
             ret.error = e.errno;
           }
           return ret;
-        }, createPath(parent, path4, canRead, canWrite) {
+        }, createPath(parent, path5, canRead, canWrite) {
           parent = typeof parent == "string" ? parent : FS.getPath(parent);
-          var parts = path4.split("/").reverse();
+          var parts = path5.split("/").reverse();
           while (parts.length) {
             var part = parts.pop();
             if (!part) continue;
@@ -19592,17 +19592,17 @@ var require_xerces_validator = __commonJS({
           }
           return current;
         }, createFile(parent, name, properties, canRead, canWrite) {
-          var path4 = PATH.join2(typeof parent == "string" ? parent : FS.getPath(parent), name);
+          var path5 = PATH.join2(typeof parent == "string" ? parent : FS.getPath(parent), name);
           var mode = FS_getMode(canRead, canWrite);
-          return FS.create(path4, mode);
+          return FS.create(path5, mode);
         }, createDataFile(parent, name, data, canRead, canWrite, canOwn) {
-          var path4 = name;
+          var path5 = name;
           if (parent) {
             parent = typeof parent == "string" ? parent : FS.getPath(parent);
-            path4 = name ? PATH.join2(parent, name) : parent;
+            path5 = name ? PATH.join2(parent, name) : parent;
           }
           var mode = FS_getMode(canRead, canWrite);
-          var node = FS.create(path4, mode);
+          var node = FS.create(path5, mode);
           if (data) {
             data = FS_fileDataToTypedArray(data);
             FS.chmod(node, mode | 146);
@@ -19612,7 +19612,7 @@ var require_xerces_validator = __commonJS({
             FS.chmod(node, mode);
           }
         }, createDevice(parent, name, input, output) {
-          var path4 = PATH.join2(typeof parent == "string" ? parent : FS.getPath(parent), name);
+          var path5 = PATH.join2(typeof parent == "string" ? parent : FS.getPath(parent), name);
           var mode = FS_getMode(!!input, !!output);
           FS.createDevice.major ??= 64;
           var dev = FS.makedev(FS.createDevice.major++, 0);
@@ -19655,7 +19655,7 @@ var require_xerces_validator = __commonJS({
             }
             return i;
           } });
-          return FS.mkdev(path4, mode, dev);
+          return FS.mkdev(path5, mode, dev);
         }, forceLoadFile(obj) {
           if (obj.isDevice || obj.isFolder || obj.link || obj.contents) return true;
           if (globalThis.XMLHttpRequest) {
@@ -19800,9 +19800,9 @@ var require_xerces_validator = __commonJS({
           return node;
         } };
         var UTF8ToString = (ptr, maxBytesToRead, ignoreNul) => ptr ? UTF8ArrayToString(HEAPU8, ptr, maxBytesToRead, ignoreNul) : "";
-        var SYSCALLS = { calculateAt(dirfd, path4, allowEmpty) {
-          if (PATH.isAbs(path4)) {
-            return path4;
+        var SYSCALLS = { calculateAt(dirfd, path5, allowEmpty) {
+          if (PATH.isAbs(path5)) {
+            return path5;
           }
           var dir;
           if (dirfd === -100) {
@@ -19811,13 +19811,13 @@ var require_xerces_validator = __commonJS({
             var dirstream = SYSCALLS.getStreamFromFD(dirfd);
             dir = dirstream.path;
           }
-          if (path4.length == 0) {
+          if (path5.length == 0) {
             if (!allowEmpty) {
               throw new FS.ErrnoError(44);
             }
             return dir;
           }
-          return dir + "/" + path4;
+          return dir + "/" + path5;
         }, writeStat(buf, stat) {
           HEAPU32[buf >> 2] = stat.dev;
           HEAPU32[buf + 4 >> 2] = stat.mode;
@@ -20028,24 +20028,24 @@ var require_xerces_validator = __commonJS({
             return -e.errno;
           }
         }
-        function ___syscall_openat(dirfd, path4, flags, varargs) {
+        function ___syscall_openat(dirfd, path5, flags, varargs) {
           SYSCALLS.varargs = varargs;
           try {
-            path4 = SYSCALLS.getStr(path4);
-            path4 = SYSCALLS.calculateAt(dirfd, path4);
+            path5 = SYSCALLS.getStr(path5);
+            path5 = SYSCALLS.calculateAt(dirfd, path5);
             var mode = varargs ? syscallGetVarargI() : 0;
-            return FS.open(path4, flags, mode).fd;
+            return FS.open(path5, flags, mode).fd;
           } catch (e) {
             if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
             return -e.errno;
           }
         }
-        function ___syscall_readlinkat(dirfd, path4, buf, bufsize) {
+        function ___syscall_readlinkat(dirfd, path5, buf, bufsize) {
           try {
-            path4 = SYSCALLS.getStr(path4);
-            path4 = SYSCALLS.calculateAt(dirfd, path4);
+            path5 = SYSCALLS.getStr(path5);
+            path5 = SYSCALLS.calculateAt(dirfd, path5);
             if (bufsize <= 0) return -28;
-            var ret = FS.readlink(path4);
+            var ret = FS.readlink(path5);
             var len = Math.min(bufsize, lengthBytesUTF8(ret));
             var endChar = HEAP8[buf + len];
             stringToUTF8(ret, buf, bufsize + 1);
@@ -21869,8 +21869,8 @@ ${functionBody}
         if (runtimeInitialized) {
           moduleRtn = Module;
         } else {
-          moduleRtn = new Promise((resolve2, reject2) => {
-            readyPromiseResolve = resolve2;
+          moduleRtn = new Promise((resolve3, reject2) => {
+            readyPromiseResolve = resolve3;
             readyPromiseReject = reject2;
           });
         }
@@ -22015,7 +22015,7 @@ var require_dist = __commonJS({
 });
 
 // src/server.ts
-var import_node4 = __toESM(require_node3());
+var import_node3 = __toESM(require_node3());
 
 // node_modules/vscode-languageserver-textdocument/lib/esm/main.js
 var FullTextDocument = class _FullTextDocument {
@@ -22244,6 +22244,81 @@ function getWellformedEdit(textEdit) {
 // ../xml-language-service/dist/parser/xmlParser.js
 var import_parser = __toESM(require_api5(), 1);
 
+// ../xml-language-service/dist/utils/positionUtils.js
+function positionToOffset(text, position) {
+  const lines = text.split("\n");
+  const line = Math.max(0, Math.min(position.line, lines.length - 1));
+  const character = Math.max(0, Math.min(position.character, lines[line].length));
+  let offset = 0;
+  for (let i = 0; i < line; i++) {
+    offset += lines[i].length + 1;
+  }
+  offset += character;
+  return Math.max(0, Math.min(offset, text.length));
+}
+function offsetToPosition(text, offset) {
+  const clamped = Math.max(0, Math.min(offset, text.length));
+  let line = 0;
+  let lineStart = 0;
+  for (let i = 0; i < clamped; i++) {
+    if (text[i] === "\n") {
+      line++;
+      lineStart = i + 1;
+    }
+  }
+  return { line, character: clamped - lineStart };
+}
+
+// ../xml-language-service/dist/parser/wellFormedness.js
+var PREDEFINED_ENTITIES = /* @__PURE__ */ new Set(["amp", "lt", "gt", "quot", "apos"]);
+var ENTITY_DECL_RE = /<!ENTITY\s+([^\s%]+)/g;
+var ATTR_ENTITY_RE = /&([A-Za-z_:][\w.:-]*);/g;
+function collectWellFormednessErrors(cst, text) {
+  const errors = [];
+  const known = new Set(PREDEFINED_ENTITIES);
+  for (const m of text.matchAll(ENTITY_DECL_RE))
+    known.add(m[1]);
+  const report = (message, start, end) => {
+    const s = offsetToPosition(text, start);
+    const e = offsetToPosition(text, end);
+    errors.push({ message, line: s.line, character: s.character, endLine: e.line, endCharacter: e.character });
+  };
+  const checkEntity = (name, start, end) => {
+    if (!known.has(name))
+      report(`entity '${name}' not found`, start, end);
+  };
+  const visitElement = (element) => {
+    const children = element?.children ?? {};
+    const open = children.Name?.[0];
+    const close = children.END_NAME?.[0];
+    if (open && close && open.image !== close.image) {
+      report(`expected end of tag '${open.image}' but found '${close.image}'`, close.startOffset, close.endOffset + 1);
+    }
+    for (const attr of children.attribute ?? []) {
+      const value = attr?.children?.STRING?.[0];
+      if (!value)
+        continue;
+      for (const m of value.image.matchAll(ATTR_ENTITY_RE)) {
+        const start = value.startOffset + m.index;
+        checkEntity(m[1], start, start + m[0].length);
+      }
+    }
+    for (const content of children.content ?? []) {
+      for (const ref of content?.children?.reference ?? []) {
+        const token = ref?.children?.EntityRef?.[0];
+        if (!token)
+          continue;
+        checkEntity(token.image.slice(1, -1), token.startOffset, token.endOffset + 1);
+      }
+      for (const child of content?.children?.element ?? [])
+        visitElement(child);
+    }
+  };
+  for (const root of cst?.children?.element ?? [])
+    visitElement(root);
+  return errors;
+}
+
 // ../xml-language-service/dist/parser/xmlDocument.js
 var XMLDocumentImpl = class {
   constructor(uri, text, cst, lexErrors = [], parseErrors = []) {
@@ -22284,7 +22359,8 @@ var XMLDocumentImpl = class {
           endLine: Math.max(startLine, endLine),
           endCharacter: Math.max(startCol + 1, endCol)
         };
-      })
+      }),
+      ...collectWellFormednessErrors(cst, text)
     ];
   }
   buildTree(cst) {
@@ -22567,31 +22643,6 @@ function cstNodeToJSON(node, opts) {
     return t;
   }
   return null;
-}
-
-// ../xml-language-service/dist/utils/positionUtils.js
-function positionToOffset(text, position) {
-  const lines = text.split("\n");
-  const line = Math.max(0, Math.min(position.line, lines.length - 1));
-  const character = Math.max(0, Math.min(position.character, lines[line].length));
-  let offset = 0;
-  for (let i = 0; i < line; i++) {
-    offset += lines[i].length + 1;
-  }
-  offset += character;
-  return Math.max(0, Math.min(offset, text.length));
-}
-function offsetToPosition(text, offset) {
-  const clamped = Math.max(0, Math.min(offset, text.length));
-  let line = 0;
-  let lineStart = 0;
-  for (let i = 0; i < clamped; i++) {
-    if (text[i] === "\n") {
-      line++;
-      lineStart = i + 1;
-    }
-  }
-  return { line, character: clamped - lineStart };
 }
 
 // ../xml-language-service/dist/services/xmlCompletion.js
@@ -23634,42 +23685,45 @@ var XsdCompletionProvider = class {
 var import_fs = __toESM(require("fs"), 1);
 var import_path = __toESM(require("path"), 1);
 var import_url = require("url");
-function resolveSchemaRoot() {
+function resolveSchemasRoot() {
   try {
     const dir = import_path.default.dirname((0, import_url.fileURLToPath)(_fileUrl));
-    const bundled = import_path.default.join(dir, "resources", "schemas");
-    if (import_fs.default.existsSync(bundled))
-      return bundled;
-    const oldDefault = import_path.default.join(dir, "resources", "default");
-    if (import_fs.default.existsSync(oldDefault))
-      return oldDefault;
-    return import_path.default.join(dir, "..", "resources", "default");
+    const distSchemas = import_path.default.join(dir, "resources", "schemas");
+    if (import_fs.default.existsSync(distSchemas))
+      return distSchemas;
+    const parentDistSchemas = import_path.default.join(dir, "..", "resources", "schemas");
+    if (import_fs.default.existsSync(parentDistSchemas))
+      return parentDistSchemas;
+    const rootSchemas = import_path.default.join(process.cwd(), "resources", "schemas");
+    if (import_fs.default.existsSync(rootSchemas))
+      return rootSchemas;
+    return import_path.default.join(dir, "resources", "default");
   } catch {
-    return import_path.default.join(process.cwd(), "src", "schema", "resources", "default");
+    return import_path.default.join(process.cwd(), "resources", "schemas");
   }
 }
-var SCHEMAS_ROOT = resolveSchemaRoot();
+var SCHEMAS_ROOT = resolveSchemasRoot();
 var SchemaAssociator = class {
   constructor() {
-    this.builtInAssociations = [
-      {
-        pattern: "**/pom.xml",
-        namespace: "http://maven.apache.org/POM/4.0.0",
-        xsdPath: import_path.default.join(SCHEMAS_ROOT, "maven-4.0.0.xsd"),
-        isBuiltIn: true
-      },
-      {
-        pattern: "web.xml",
-        namespace: "http://xmlns.jcp.org/xml/ns/javaee",
-        xsdPath: import_path.default.join(SCHEMAS_ROOT, "web-app_3_1.xsd"),
-        isBuiltIn: true
-      }
-    ];
+    this.catalog = null;
     this.userAssociations = [];
+    this.runtimeCacheDir = import_path.default.join(process.cwd(), ".cache", "xml-schemas");
+    this.loadCatalog();
+  }
+  loadCatalog() {
+    const catalogPath = import_path.default.join(SCHEMAS_ROOT, "catalog.json");
+    if (import_fs.default.existsSync(catalogPath)) {
+      try {
+        const raw = import_fs.default.readFileSync(catalogPath, "utf-8");
+        this.catalog = JSON.parse(raw);
+      } catch (err) {
+        console.warn(`Failed to parse catalog.json at "${catalogPath}": ${err.message}`);
+      }
+    }
   }
   /**
    * Registers a custom schema association.
-   * Custom associations take priority over built-in schemas when patterns overlap.
+   * Custom associations take priority over built-in catalog schemas when patterns overlap.
    */
   addUserAssociation(association) {
     this.userAssociations.push(association);
@@ -23679,18 +23733,20 @@ var SchemaAssociator = class {
     this.userAssociations = [];
   }
   /**
-   * Finds and reads the XSD schema for the given file name and optional xmlns namespace.
-   * Priority: user associations (pattern match) > built-in associations (namespace/pattern match).
-   * Returns null if no matching schema is found.
+   * Finds and reads the XSD schema for the given file name, optional xmlns namespace, and optional systemId.
+   * Priority:
+   * 1. User associations (pattern match)
+   * 2. Catalog associations (pattern / namespace / systemId match from resources/schemas/catalog.json)
+   * 3. Local Runtime Cache (~/.cache/xml-schemas/)
    */
-  findSchema(fileName, xmlns, documentPath) {
+  findSchema(fileName, xmlns, documentPath, systemId) {
     if (fileName === "pom.xml" || fileName.endsWith("/pom.xml") || fileName.endsWith("\\pom.xml")) {
-      const pomAssoc = this.builtInAssociations.find((a) => a.namespace === "http://maven.apache.org/POM/4.0.0");
-      if (pomAssoc) {
-        const xsdText = this.readXsdFile(pomAssoc.xsdPath);
-        if (xsdText)
-          return { xsdText, xsdPath: pomAssoc.xsdPath, source: "builtin" };
-      }
+      const mavenPomPath = import_path.default.join(SCHEMAS_ROOT, "build", "maven-4.0.0.xsd");
+      const fallbackMavenPath = import_path.default.join(SCHEMAS_ROOT, "maven-4.0.0.xsd");
+      const targetPath = import_fs.default.existsSync(mavenPomPath) ? mavenPomPath : fallbackMavenPath;
+      const xsdText = this.readXsdFile(targetPath);
+      if (xsdText)
+        return { xsdText, xsdPath: targetPath, source: "builtin" };
     }
     for (const assoc of this.userAssociations) {
       if (this.matchesPattern(fileName, assoc.pattern, documentPath)) {
@@ -23700,26 +23756,75 @@ var SchemaAssociator = class {
         return { xsdText, xsdPath: assoc.xsdPath, source: "custom" };
       }
     }
-    for (const assoc of this.builtInAssociations) {
-      if (this.matchesPattern(fileName, assoc.pattern, documentPath) || xmlns !== void 0 && assoc.namespace === xmlns) {
-        const xsdText = this.readXsdFile(assoc.xsdPath);
-        if (xsdText === null)
-          return null;
-        return { xsdText, xsdPath: assoc.xsdPath, source: "builtin" };
+    if (this.catalog) {
+      for (const entry of this.catalog.schemas) {
+        const matchesPattern = entry.pattern ? this.matchesPattern(fileName, entry.pattern, documentPath) : false;
+        const matchesNs = xmlns !== void 0 && entry.namespaces ? entry.namespaces.includes(xmlns) : false;
+        const matchesSysId = systemId !== void 0 && entry.systemIds ? entry.systemIds.includes(systemId) : false;
+        if (matchesPattern || matchesNs || matchesSysId) {
+          const fullPath = import_path.default.join(SCHEMAS_ROOT, entry.path);
+          const xsdText = this.readXsdFile(fullPath);
+          if (xsdText)
+            return { xsdText, xsdPath: fullPath, source: "builtin" };
+        }
+      }
+    }
+    if (fileName === "web.xml" || fileName.endsWith("/web.xml") || fileName.endsWith("\\web.xml")) {
+      const webXmlPath = import_path.default.join(SCHEMAS_ROOT, "javaee", "web-app_3_1.xsd");
+      const fallbackWebPath = import_path.default.join(SCHEMAS_ROOT, "web-app_3_1.xsd");
+      const targetPath = import_fs.default.existsSync(webXmlPath) ? webXmlPath : fallbackWebPath;
+      const xsdText = this.readXsdFile(targetPath);
+      if (xsdText)
+        return { xsdText, xsdPath: targetPath, source: "builtin" };
+    }
+    if (systemId && (systemId.startsWith("http://") || systemId.startsWith("https://"))) {
+      const cachedPath = this.getCachePathForUrl(systemId);
+      if (import_fs.default.existsSync(cachedPath)) {
+        const xsdText = this.readXsdFile(cachedPath);
+        if (xsdText)
+          return { xsdText, xsdPath: cachedPath, source: "cache" };
       }
     }
     return null;
+  }
+  /**
+   * Async fallback for remote schemas when not found locally.
+   * Downloads remote XSD URL, saves it to local runtime cache, and returns ResolvedSchema.
+   */
+  async findSchemaAsync(fileName, xmlns, documentPath, systemId) {
+    const local = this.findSchema(fileName, xmlns, documentPath, systemId);
+    if (local)
+      return local;
+    if (systemId && (systemId.startsWith("http://") || systemId.startsWith("https://"))) {
+      try {
+        const response = await fetch(systemId);
+        if (response.ok) {
+          const xsdText = await response.text();
+          const cachedPath = this.getCachePathForUrl(systemId);
+          import_fs.default.mkdirSync(import_path.default.dirname(cachedPath), { recursive: true });
+          import_fs.default.writeFileSync(cachedPath, xsdText, "utf-8");
+          return { xsdText, xsdPath: cachedPath, source: "network" };
+        }
+      } catch (err) {
+        console.warn(`Network fallback fetch failed for systemId "${systemId}": ${err.message}`);
+      }
+    }
+    return null;
+  }
+  getCachePathForUrl(url) {
+    const sanitized = url.replace(/[^a-zA-Z0-9]/g, "_");
+    return import_path.default.join(this.runtimeCacheDir, `${sanitized}.xsd`);
   }
   matchesPattern(fileName, pattern, documentPath) {
     if (fileName === pattern)
       return true;
     if (documentPath && this.globMatches(pattern, documentPath))
       return true;
+    if (this.globMatches(pattern, fileName))
+      return true;
     const stripped = pattern.replace(/^\*\*\//, "").replace(/^\*/, "");
     return !stripped.includes("/") && fileName.endsWith(stripped);
   }
-  // Converts a glob pattern to a RegExp and tests it against filePath.
-  // Supports * (single-segment wildcard) and ** (multi-segment wildcard).
   globMatches(glob, filePath) {
     let re = "";
     let i = 0;
@@ -23743,7 +23848,6 @@ var SchemaAssociator = class {
     }
     return new RegExp(`(^|/)${re}$`).test(filePath);
   }
-  /** Reads and returns the content of an XSD file, or null if not found. */
   readXsdFile(xsdPath) {
     try {
       return import_fs.default.readFileSync(xsdPath, "utf-8");
@@ -23842,6 +23946,10 @@ var SchemaProvider = class {
   /** Returns the raw ResolvedSchema (with xsdText) for the given file name and optional namespace, or null if none matches. */
   findSchemaForDocument(fileName, xmlns, documentPath) {
     return this.associator.findSchema(fileName, xmlns, documentPath);
+  }
+  /** Async variant that supports network fallback for remote HTTP/HTTPS systemIds. */
+  async findSchemaForDocumentAsync(fileName, xmlns, documentPath, systemId) {
+    return this.associator.findSchemaAsync(fileName, xmlns, documentPath, systemId);
   }
   /**
    * Resolves and returns the XsdCompletionProvider for the given file name and optional namespace.
@@ -23998,6 +24106,10 @@ function getLanguageService() {
     resolveSchemaForDocument(fileName, xmlns, documentPath) {
       return schemaProvider.findSchemaForDocument(fileName, xmlns, documentPath);
     },
+    /** Async variant supporting remote HTTP/HTTPS systemId fetching when not found locally. */
+    async resolveSchemaForDocumentAsync(fileName, xmlns, documentPath, systemId) {
+      return schemaProvider.findSchemaForDocumentAsync(fileName, xmlns, documentPath, systemId);
+    },
     /** Registers a custom file-to-schema mapping, taking priority over built-in associations. */
     addUserAssociation(association) {
       schemaProvider.addUserAssociation(association);
@@ -24021,8 +24133,126 @@ function getLanguageService() {
 
 // src/diagnosticsHandler.ts
 var import_node = __toESM(require_node3());
+var fs3 = __toESM(require("fs"));
+var path3 = __toESM(require("path"));
+
+// src/diagnosticsFilter.ts
+function formatDiagnosticMessage(rawMessage) {
+  const contentModelMatch = rawMessage.match(/element '([^']+)' is not allowed for content model '([^']+)'/i);
+  if (contentModelMatch) {
+    const elementName = contentModelMatch[1];
+    const rawContentModel = contentModelMatch[2];
+    const isAllModel = /^All\(/i.test(rawContentModel);
+    const cleanedElements = rawContentModel.replace(/^(?:All|Sequence|Choice)\((.*)\)$/i, "$1").split(/[,|]/).map((s) => s.trim().replace(/[?*+()]/g, "")).filter(Boolean);
+    const isDeclaredInModel = cleanedElements.some(
+      (name) => name === elementName || name.endsWith(":" + elementName)
+    );
+    if (isAllModel && isDeclaredInModel) {
+      return `Duplicate element '${elementName}' is not allowed (exceeds maxOccurs limit).`;
+    } else {
+      const allowedStr = cleanedElements.join(", ");
+      return allowedStr ? `Element '${elementName}' is not allowed here. Allowed elements: ${allowedStr}.` : `Element '${elementName}' is not allowed here.`;
+    }
+  }
+  return rawMessage;
+}
+function filterDiagnostics(diagnostics) {
+  const unknownElements = /* @__PURE__ */ new Set();
+  for (const d of diagnostics) {
+    const m = d.message.match(/no declaration found for element '([^']+)'/);
+    if (m) unknownElements.add(m[1]);
+  }
+  let filtered = diagnostics;
+  if (unknownElements.size > 0) {
+    filtered = diagnostics.filter((d) => {
+      const msg = d.message;
+      if (msg.includes("is not declared for element '") && msg.includes("attribute")) {
+        const m = msg.match(/is not declared for element '([^']+)'/);
+        if (m && unknownElements.has(m[1])) return false;
+      }
+      if (msg.includes("is not allowed for content model")) {
+        const m = msg.match(/element '([^']+)' is not allowed for content model/);
+        if (m && unknownElements.has(m[1])) return false;
+      }
+      return true;
+    });
+  }
+  const seen = /* @__PURE__ */ new Set();
+  return filtered.filter((d) => {
+    const key = `${d.message}|${d.range.start.line}|${d.range.start.character}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+// src/schemaHint.ts
 var fs2 = __toESM(require("fs"));
 var path2 = __toESM(require("path"));
+var import_url2 = require("url");
+var XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
+var MAX_HINT_SCHEMA_BYTES = 2 * 1024 * 1024;
+function findLocalSchemaHint(xmlDoc, documentPath) {
+  const root = xmlDoc.children?.find((node) => node.type === "element");
+  if (!root) return void 0;
+  const attrs = new Map(root.attributes.map((a) => [a.name, a.value ?? ""]));
+  let prefix = "xsi";
+  for (const [name, value] of attrs) {
+    if (name.startsWith("xmlns:") && value === XSI_NAMESPACE) {
+      prefix = name.slice("xmlns:".length);
+      break;
+    }
+  }
+  const rootNamespace = attrs.get("xmlns");
+  const pairs = [];
+  const tokens = (attrs.get(`${prefix}:schemaLocation`) ?? "").trim().split(/\s+/).filter(Boolean);
+  for (let i = 0; i + 1 < tokens.length; i += 2) {
+    pairs.push({ namespace: tokens[i], location: tokens[i + 1] });
+  }
+  const noNamespace = (attrs.get(`${prefix}:noNamespaceSchemaLocation`) ?? "").trim();
+  const candidates = [
+    ...pairs.filter((p) => p.namespace === rootNamespace).map((p) => p.location),
+    ...noNamespace ? [noNamespace] : [],
+    ...pairs.filter((p) => p.namespace !== rootNamespace).map((p) => p.location)
+  ];
+  for (const location of candidates) {
+    const xsdPath = toLocalPath(location, documentPath);
+    if (!xsdPath) continue;
+    const xsdText = readSchema(xsdPath);
+    if (xsdText !== void 0) return { xsdPath, xsdText };
+  }
+  return void 0;
+}
+function toLocalPath(location, documentPath) {
+  let resolved;
+  if (/^file:/i.test(location)) {
+    try {
+      resolved = (0, import_url2.fileURLToPath)(location);
+    } catch {
+      return void 0;
+    }
+  } else if (/^[a-z][a-z0-9+.-]+:/i.test(location)) {
+    return void 0;
+  } else if (path2.isAbsolute(location)) {
+    resolved = location;
+  } else if (documentPath) {
+    resolved = path2.resolve(path2.dirname(documentPath), location);
+  } else {
+    return void 0;
+  }
+  return resolved.toLowerCase().endsWith(".xsd") ? resolved : void 0;
+}
+function readSchema(xsdPath) {
+  try {
+    const stat = fs2.statSync(xsdPath);
+    if (!stat.isFile() || stat.size > MAX_HINT_SCHEMA_BYTES) return void 0;
+    return fs2.readFileSync(xsdPath, "utf-8");
+  } catch {
+    return void 0;
+  }
+}
+
+// src/diagnosticsHandler.ts
 var MAX_SCHEMA_IMPORT_FILES = 200;
 var MAX_SCHEMA_IMPORT_FILE_BYTES = 2 * 1024 * 1024;
 var MAX_SCHEMA_IMPORT_TOTAL_BYTES = 20 * 1024 * 1024;
@@ -24056,9 +24286,13 @@ var DiagnosticsHandler = class {
     const text = document.getText();
     const xmlDoc = this.service.parseXMLDocument(document.uri, text);
     const xmlns = xmlDoc.getNamespace?.() ?? void 0;
-    const resolved = this.service.resolveSchemaForDocument(fileName, xmlns, documentPath);
+    let resolved = this.service.resolveSchemaForDocument(fileName, xmlns, documentPath);
+    if (resolved?.source !== "custom") {
+      const hinted = findLocalSchemaHint(xmlDoc, documentPath);
+      if (hinted) resolved = { ...hinted, source: "custom" };
+    }
     if (resolved) {
-      const autoUri = `auto://${documentPath ?? fileName}`;
+      const autoUri = `auto://${documentPath ?? fileName}#${resolved.xsdPath ?? ""}`;
       if (!this.service.hasSchema(autoUri)) {
         const imports = resolved.xsdPath ? this.loadReferencedXsds(resolved.xsdPath, resolved.xsdText) : void 0;
         const importKeys = imports ? Object.keys(imports) : [];
@@ -24112,15 +24346,15 @@ var DiagnosticsHandler = class {
    *  resolving schemaLocation values relative to memory:///main.xsd. */
   loadReferencedXsds(entryPath, entryText) {
     try {
-      const rootDir = path2.dirname(path2.resolve(entryPath));
-      const entryFullPath = path2.resolve(entryPath);
+      const rootDir = path3.dirname(path3.resolve(entryPath));
+      const entryFullPath = path3.resolve(entryPath);
       const imports = {};
       const visited = /* @__PURE__ */ new Set([entryFullPath]);
       let totalBytes = 0;
       const loadFile = (fullPath, location) => {
         let stat;
         try {
-          stat = fs2.lstatSync(fullPath);
+          stat = fs3.lstatSync(fullPath);
         } catch {
           this.warn(`[DiagnosticsHandler] Skipping missing schema reference '${location}'`);
           return void 0;
@@ -24142,7 +24376,7 @@ var DiagnosticsHandler = class {
           return void 0;
         }
         try {
-          const text = fs2.readFileSync(fullPath, "utf-8");
+          const text = fs3.readFileSync(fullPath, "utf-8");
           totalBytes += stat.size;
           return text;
         } catch {
@@ -24227,30 +24461,31 @@ var DiagnosticsHandler = class {
       this.warn(`[DiagnosticsHandler] Skipping unsupported schema reference '${location}'`);
       return void 0;
     }
-    const resolvedPath = path2.resolve(path2.dirname(currentPath), location);
-    const relativeToRoot = path2.relative(rootDir, resolvedPath);
-    if (relativeToRoot.startsWith("..") || path2.isAbsolute(relativeToRoot)) {
+    const resolvedPath = path3.resolve(path3.dirname(currentPath), location);
+    const relativeToRoot = path3.relative(rootDir, resolvedPath);
+    if (relativeToRoot.startsWith("..") || path3.isAbsolute(relativeToRoot)) {
       this.warn(`[DiagnosticsHandler] Skipping schema reference outside schema root '${location}'`);
       return void 0;
     }
     return resolvedPath;
   }
   toImportKey(rootDir, fullPath) {
-    return path2.relative(rootDir, fullPath).split(path2.sep).join("/");
+    return path3.relative(rootDir, fullPath).split(path3.sep).join("/");
   }
   toDiagnostics(raw) {
-    return raw.map((d) => ({
+    const diagnostics = raw.map((d) => ({
       range: d.range,
-      message: d.message,
+      message: formatDiagnosticMessage(d.message),
       severity: SEVERITY_MAP[d.severity],
       source: "xml-language-service"
     }));
+    return filterDiagnostics(diagnostics);
   }
 };
 
 // src/configuration.ts
-var fs3 = __toESM(require("fs"));
-var path3 = __toESM(require("path"));
+var fs4 = __toESM(require("fs"));
+var path4 = __toESM(require("path"));
 function applySchemaSettings(schemas, connection2, service2, workspaceRoots2, invalidate = false) {
   if (invalidate) service2.invalidateAutoSchemas();
   for (const entry of schemas) {
@@ -24266,18 +24501,15 @@ function applySchemaSettings(schemas, connection2, service2, workspaceRoots2, in
   }
 }
 function resolveXsdPath(xsdPath, workspaceRoots2) {
-  if (path3.isAbsolute(xsdPath)) {
-    return fs3.existsSync(xsdPath) ? xsdPath : null;
+  if (path4.isAbsolute(xsdPath)) {
+    return fs4.existsSync(xsdPath) ? xsdPath : null;
   }
   for (const root of workspaceRoots2) {
-    const candidate = path3.join(root, xsdPath);
-    if (fs3.existsSync(candidate)) return candidate;
+    const candidate = path4.join(root, xsdPath);
+    if (fs4.existsSync(candidate)) return candidate;
   }
   return null;
 }
-
-// src/requestHandlers.ts
-var import_node3 = __toESM(require_node3());
 
 // src/utils.ts
 var import_node2 = __toESM(require_node3());
@@ -24287,9 +24519,6 @@ function getFileName(uri) {
 function getDocumentPath(uri) {
   if (!uri.startsWith("file://")) return void 0;
   return decodeURIComponent(uri.replace("file://", ""));
-}
-function escapeMd(text) {
-  return text.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" })[c]);
 }
 function formatError(error) {
   if (error instanceof Error) return error.stack ?? error.message;
@@ -24373,11 +24602,7 @@ function registerRequestHandlers(connection2, documents2, service2, diagnosticsH
     if (!document) return null;
     const { line, character } = params.position;
     const errors = diagnosticsHandler2.getDiagnosticsAt(document.uri, line, character);
-    if (errors.length > 0) {
-      const isError = (d) => d.severity === void 0 || d.severity === 1;
-      const value = errors.map((d) => `${isError(d) ? "**ERROR**" : "**WARNING**"} \u2014 ${escapeMd(d.message)}`).join("\n\n");
-      return { contents: { kind: import_node3.MarkupKind.Markdown, value } };
-    }
+    if (errors.length > 0) return null;
     const xmlDoc = getParsedDoc(document);
     const result = service2.doHover(xmlDoc, params.position, getFileName(document.uri), getDocumentPath(document.uri));
     connection2.console.log(`[onHover] Result: ${JSON.stringify(result)}`);
@@ -24456,8 +24681,8 @@ function registerRequestHandlers(connection2, documents2, service2, diagnosticsH
 }
 
 // src/server.ts
-var connection = (0, import_node4.createConnection)(import_node4.ProposedFeatures.all);
-var documents = new import_node4.TextDocuments(TextDocument);
+var connection = (0, import_node3.createConnection)(import_node3.ProposedFeatures.all);
+var documents = new import_node3.TextDocuments(TextDocument);
 var service = getLanguageService();
 var diagnosticsHandler = new DiagnosticsHandler(connection, service);
 var workspaceRoots = [];
@@ -24490,7 +24715,7 @@ ${JSON.stringify(params.initializationOptions, null, 2)}`);
   if (schemas.length > 0) applySchemaSettings(schemas, connection, service, workspaceRoots);
   return {
     capabilities: {
-      textDocumentSync: import_node4.TextDocumentSyncKind.Incremental,
+      textDocumentSync: import_node3.TextDocumentSyncKind.Incremental,
       completionProvider: { resolveProvider: false, triggerCharacters: ["<", " ", '"', "/"] },
       hoverProvider: true,
       documentSymbolProvider: true,
