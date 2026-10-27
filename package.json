@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "esbuild src/server.ts --bundle --platform=node --format=cjs --outfile=dist/server.js \"--banner:js=const _fileUrl=require('url').pathToFileURL(__filename).href;\" --define:import.meta.url=_fileUrl && cp node_modules/xml-language-service/node_modules/xerces-wasm/wasm/xerces_validator.wasm dist/xerces_validator.wasm",
-    "bundle": "esbuild src/server.ts --bundle --platform=node --format=cjs --outfile=dist/server.js \"--banner:js=const _fileUrl=require('url').pathToFileURL(__filename).href;\" --define:import.meta.url=_fileUrl && cp node_modules/xml-language-service/node_modules/xerces-wasm/wasm/xerces_validator.wasm dist/xerces_validator.wasm && cp -r resources dist/resources",
+    "bundle": "esbuild src/server.ts --bundle --platform=node --format=cjs --outfile=dist/server.js \"--banner:js=const _fileUrl=require('url').pathToFileURL(__filename).href;\" --define:import.meta.url=_fileUrl && cp node_modules/xml-language-service/node_modules/xerces-wasm/wasm/xerces_validator.wasm dist/xerces_validator.wasm && cp -r resources dist/resources && cp -r node_modules/xml-language-service/dist/resources/schemas dist/resources/schemas",
     "build:watch": "tsc --watch",
     "test": "vitest",
     "test:run": "vitest run"

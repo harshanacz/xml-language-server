@@ -24,6 +24,7 @@ export function buildServerBundle(): { dir: string; serverPath: string } {
   const service = path.join(root, "node_modules", "xml-language-service");
   fs.copyFileSync(path.join(service, "node_modules", "xerces-wasm", "wasm", "xerces_validator.wasm"), path.join(dir, "xerces_validator.wasm"));
   fs.cpSync(path.join(root, "resources"), path.join(dir, "resources"), { recursive: true });
+  fs.cpSync(path.join(service, "dist", "resources", "schemas"), path.join(dir, "resources", "schemas"), { recursive: true });
   return { dir, serverPath };
 }
 

@@ -224,6 +224,37 @@ describe("schema selection", () => {
   });
 });
 
+describe("bundled catalog schemas", () => {
+  const web = '<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="3.1"><display-name>d</display-name><servlet><servlet-name>s</servlet-name><servlet-class>a.B</servlet-class></servlet><welcome-file-list><welcome-file>i.html</welcome-file></welcome-file-list></web-app>';
+  const persistence = '<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.2"><persistence-unit name="u"><class>a.B</class></persistence-unit></persistence>';
+  const spring = '<beans xmlns="http://www.springframework.org/schema/beans"><bean id="a" class="x.Y"/></beans>';
+
+  it.each([
+    ["web.xml", web],
+    ["persistence.xml", persistence],
+    ["spring-beans.xml", spring],
+  ])("accepts a valid %s with no diagnostics", async (file, xml) => {
+    const ws = workspace();
+    const { client } = await start(ws);
+    expect(await diagnose(client, ws, file, xml)).toEqual([]);
+  });
+
+  it.each([
+    ["web.xml", web.replace("<display-name>d</display-name>", "<not-real/>"), "not-real"],
+    ["persistence.xml", persistence.replace("<class>a.B</class>", "<bogus/>"), "bogus"],
+    ["spring-beans.xml", spring.replace('<bean id="a" class="x.Y"/>', "<nope/>"), "nope"],
+  ])("flags an unknown element in %s", async (file, xml, element) => {
+    const ws = workspace();
+    const { client } = await start(ws);
+    expect((await diagnose(client, ws, file, xml)).some((d) => d.message.includes(element))).toBe(true);
+  });
+
+  it("the bundle script ships the catalog schemas next to the server", () => {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "package.json"), "utf-8"));
+    expect(pkg.scripts.bundle).toContain("dist/resources/schemas");
+  });
+});
+
 describe("language features", () => {
   const xml = '<?xml version="1.0"?>\n<library>\n  <book id="1">\n    <year>2000</year>\n  </book>\n</library>';
 
