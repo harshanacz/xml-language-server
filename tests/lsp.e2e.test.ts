@@ -180,6 +180,26 @@ describe("schema selection", () => {
     expect(diagnostics.some((d) => d.message.includes("'abc'"))).toBe(true);
   });
 
+  it("offers schema-driven completions for a document with a local xsi hint", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const { client } = await start(ws);
+    // <year> never appears in the document, so only the schema can suggest it.
+    const text = `<library ${XSI} xsi:noNamespaceSchemaLocation="books.xsd"><book id="1">\n  <\n</book></library>`;
+    const uri = client.open(path.join(ws, "doc.xml"), text);
+    await client.diagnosticsFor(uri);
+    const list = await client.request("textDocument/completion", { textDocument: { uri }, position: { line: 1, character: 3 } });
+    expect(list.items.map((i: any) => i.label)).toContain("year");
+  });
+
+  it("offers schema-driven completions for a configured schema", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const { client } = await start(ws, { configuration: { schemas: [{ pattern: "cfg.xml", xsdPath: "books.xsd" }] } });
+    const uri = client.open(path.join(ws, "cfg.xml"), `<library><book id="1">\n  <\n</book></library>`);
+    await client.diagnosticsFor(uri);
+    const list = await client.request("textDocument/completion", { textDocument: { uri }, position: { line: 1, character: 3 } });
+    expect(list.items.map((i: any) => i.label)).toContain("year");
+  });
+
   it("lets a configured schema override the document's own hint", async () => {
     const ws = workspace({ "books.xsd": BOOKS_XSD, "lenient.xsd": LENIENT_XSD });
     const { client } = await start(ws, { configuration: { schemas: [{ pattern: "doc.xml", xsdPath: "lenient.xsd" }] } });

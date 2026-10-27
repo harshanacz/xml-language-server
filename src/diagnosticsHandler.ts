@@ -28,6 +28,7 @@ export class DiagnosticsHandler {
   private connection: Connection;
   private service: LanguageService;
   private diagnosticsByUri = new Map<string, Diagnostic[]>(); //Keeps errors/warnings per file.
+  private registeredXsd = new Map<string, string | undefined>(); // auto:// URI -> XSD path it was registered with
 
   constructor(connection: Connection, service: LanguageService) {
     this.connection = connection;
@@ -69,9 +70,10 @@ export class DiagnosticsHandler {
       resolved = await (this.service as any).resolveSchemaForDocumentAsync(fileName, xmlns, documentPath, systemId);
     }
     if (resolved) {
-      // Keyed by schema path too, so pointing the document at a different XSD re-registers it.
-      const autoUri = `auto://${documentPath ?? fileName}#${resolved.xsdPath ?? ""}`;
-      if (!this.service.hasSchema(autoUri)) {
+      // The service looks completion providers up by this exact URI, so it must stay `auto://<path>`.
+      // Remember which XSD it was registered with, so pointing the document at another XSD re-registers it.
+      const autoUri = `auto://${documentPath ?? fileName}`;
+      if (!this.service.hasSchema(autoUri) || this.registeredXsd.get(autoUri) !== resolved.xsdPath) {
         const imports = resolved.xsdPath
           ? this.loadReferencedXsds(resolved.xsdPath, resolved.xsdText)
           : undefined;
@@ -85,6 +87,7 @@ export class DiagnosticsHandler {
           imports,
           xsdPath: resolved.xsdPath,
         });
+        this.registeredXsd.set(autoUri, resolved.xsdPath);
         this.connection.console.log(
           `[DiagnosticsHandler] Schema registered at ${autoUri}`
         );
