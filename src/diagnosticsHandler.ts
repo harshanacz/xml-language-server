@@ -7,6 +7,8 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { getLanguageService } from "xml-language-service";
 import * as fs from "fs";
 import * as path from "path";
+import { filterDiagnostics, formatDiagnosticMessage } from "./diagnosticsFilter.js";
+import { findLocalSchemaHint } from "./schemaHint.js";
 
 type LanguageService = ReturnType<typeof getLanguageService>;
 
@@ -26,6 +28,7 @@ export class DiagnosticsHandler {
   private connection: Connection;
   private service: LanguageService;
   private diagnosticsByUri = new Map<string, Diagnostic[]>(); //Keeps errors/warnings per file.
+  private registeredXsd = new Map<string, string | undefined>(); // auto:// URI -> XSD path it was registered with
 
   constructor(connection: Connection, service: LanguageService) {
     this.connection = connection;
@@ -52,12 +55,25 @@ export class DiagnosticsHandler {
     const text = document.getText();
     const xmlDoc = this.service.parseXMLDocument(document.uri, text);
     const xmlns = (xmlDoc as any).getNamespace?.() ?? undefined;
+    const systemId = this.extractSystemId(text);
 
-    // Auto-resolve schema by file name / namespace.
-    const resolved = this.service.resolveSchemaForDocument(fileName, xmlns, documentPath);
+    // Auto-resolve schema by file name / namespace. A schema configured by the user wins;
+    // otherwise the document's own local xsi:schemaLocation hint wins over built-in schemas.
+    let resolved: { xsdText: string; xsdPath?: string; source?: string } | null =
+      this.service.resolveSchemaForDocument(fileName, xmlns, documentPath);
+    if (resolved?.source !== "custom") {
+      const hinted = findLocalSchemaHint(xmlDoc, documentPath);
+      if (hinted) resolved = { ...hinted, source: "custom" };
+    }
+    // Remote systemId fallback (with network fetch) when nothing local matched.
+    if (!resolved && (this.service as any).resolveSchemaForDocumentAsync) {
+      resolved = await (this.service as any).resolveSchemaForDocumentAsync(fileName, xmlns, documentPath, systemId);
+    }
     if (resolved) {
+      // The service looks completion providers up by this exact URI, so it must stay `auto://<path>`.
+      // Remember which XSD it was registered with, so pointing the document at another XSD re-registers it.
       const autoUri = `auto://${documentPath ?? fileName}`;
-      if (!this.service.hasSchema(autoUri)) {
+      if (!this.service.hasSchema(autoUri) || this.registeredXsd.get(autoUri) !== resolved.xsdPath) {
         const imports = resolved.xsdPath
           ? this.loadReferencedXsds(resolved.xsdPath, resolved.xsdText)
           : undefined;
@@ -71,6 +87,7 @@ export class DiagnosticsHandler {
           imports,
           xsdPath: resolved.xsdPath,
         });
+        this.registeredXsd.set(autoUri, resolved.xsdPath);
         this.connection.console.log(
           `[DiagnosticsHandler] Schema registered at ${autoUri}`
         );
@@ -83,17 +100,33 @@ export class DiagnosticsHandler {
       return;
     }
 
-    // No schema found — clear any stale diagnostics.
+    // No schema found — validate XML syntax errors.
     this.connection.console.log(
-      `[DiagnosticsHandler] No schema for ${document.uri}, clearing diagnostics`
+      `[DiagnosticsHandler] No schema for ${document.uri}, validating syntax errors`
     );
-    this.send(document.uri, []);
+    const raw = await this.service.validate(document.uri, xmlDoc);
+    this.send(document.uri, this.toDiagnostics(raw));
   }
 
   /** Clears all diagnostics for the given document URI. */
   clearDiagnostics(uri: string): void {
     this.connection.console.log(`[DiagnosticsHandler] Clearing diagnostics for ${uri}`);
     this.send(uri, []);
+  }
+
+  private extractSystemId(text: string): string | undefined {
+    const schemaLocMatch = text.match(/xsi:(?:schemaLocation|noNamespaceSchemaLocation)\s*=\s*(["'])([\s\S]*?)\1/i);
+    if (schemaLocMatch) {
+      const parts = schemaLocMatch[2].trim().split(/\s+/);
+      const url = parts.length > 1 ? parts[1] : parts[0];
+      if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    }
+    const doctypeMatch = text.match(/<!DOCTYPE\s+[\s\S]*?SYSTEM\s+(["'])([^"']+)\1/i);
+    if (doctypeMatch) {
+      const url = doctypeMatch[2];
+      if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    }
+    return undefined;
   }
 
   private send(uri: string, diagnostics: Diagnostic[]): void {
@@ -268,11 +301,12 @@ export class DiagnosticsHandler {
   }
 
   private toDiagnostics(raw: Awaited<ReturnType<LanguageService["validate"]>>): Diagnostic[] {
-    return raw.map((d) => ({
+    const diagnostics = raw.map((d) => ({
       range: d.range,
-      message: d.message,
+      message: formatDiagnosticMessage(d.message),
       severity: SEVERITY_MAP[d.severity],
       source: "xml-language-service",
     }));
+    return filterDiagnostics(diagnostics);
   }
 }
