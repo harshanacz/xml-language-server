@@ -22320,6 +22320,12 @@ function collectWellFormednessErrors(cst, text) {
 }
 
 // ../xml-language-service/dist/parser/xmlDocument.js
+function isFiniteNumber(n) {
+  return typeof n === "number" && Number.isFinite(n);
+}
+function endOfDocument(text) {
+  return offsetToPosition(text, text.length);
+}
 var XMLDocumentImpl = class {
   constructor(uri, text, cst, lexErrors = [], parseErrors = []) {
     this.type = "root";
@@ -22335,29 +22341,32 @@ var XMLDocumentImpl = class {
     this.children = this.buildTree(cst);
     this.syntaxErrors = [
       ...lexErrors.map((e) => {
-        const startLine = e.line != null ? Math.max(0, e.line - 1) : 0;
-        const startCol = e.column != null ? Math.max(0, e.column - 1) : 0;
-        const len = e.length != null && e.length > 0 ? e.length : 1;
+        const start = isFiniteNumber(e.line) && isFiniteNumber(e.column) ? { line: Math.max(0, e.line - 1), character: Math.max(0, e.column - 1) } : endOfDocument(text);
+        const len = isFiniteNumber(e.length) && e.length > 0 ? e.length : 1;
         return {
           message: e.message,
-          line: startLine,
-          character: startCol,
-          endLine: startLine,
-          endCharacter: startCol + len
+          line: start.line,
+          character: start.character,
+          endLine: start.line,
+          endCharacter: start.character + len
         };
       }),
       ...parseErrors.map((e) => {
-        const token = e.token && e.token.startLine != null ? e.token : e.previousToken;
-        const startLine = token?.startLine != null ? Math.max(0, token.startLine - 1) : 0;
-        const startCol = token?.startColumn != null ? Math.max(0, token.startColumn - 1) : 0;
-        const endLine = token?.endLine != null ? Math.max(0, token.endLine - 1) : startLine;
-        const endCol = token?.endColumn != null ? token.endColumn : startCol + 1;
+        const token = [e.token, e.previousToken].find((t) => isFiniteNumber(t?.startLine) && isFiniteNumber(t?.startColumn));
+        if (!token) {
+          const end = endOfDocument(text);
+          return { message: e.message, line: end.line, character: end.character, endLine: end.line, endCharacter: end.character };
+        }
+        const startLine = Math.max(0, token.startLine - 1);
+        const startCol = Math.max(0, token.startColumn - 1);
+        const endLine = isFiniteNumber(token.endLine) ? Math.max(0, token.endLine - 1) : startLine;
+        const endCol = isFiniteNumber(token.endColumn) ? token.endColumn : startCol + 1;
         return {
           message: e.message,
           line: startLine,
           character: startCol,
           endLine: Math.max(startLine, endLine),
-          endCharacter: Math.max(startCol + 1, endCol)
+          endCharacter: endLine > startLine ? endCol : Math.max(startCol + 1, endCol)
         };
       }),
       ...collectWellFormednessErrors(cst, text)
@@ -22369,7 +22378,7 @@ var XMLDocumentImpl = class {
   }
   buildNode(element, parent) {
     const nameToken = element?.children?.Name?.[0];
-    const isSelfClosing = !element?.children?.SLASH_OPEN?.length;
+    const isSelfClosing = !!element?.children?.SLASH_CLOSE?.length;
     const node = {
       type: "element",
       name: nameToken?.image ?? void 0,
@@ -22659,7 +22668,7 @@ function doComplete(document, position, schemaProvider) {
     }
     return { items: [], isIncomplete: false };
   }
-  if (/<\w*$/.test(textBefore)) {
+  if (/<[\w:.-]*$/.test(textBefore)) {
     if (schemaProvider?.hasData()) {
       const node = document.findNodeAt(offset);
       let parentName;
@@ -22707,13 +22716,13 @@ function doComplete(document, position, schemaProvider) {
   if (lastOpenAngle !== -1) {
     const fragment = textBefore.slice(lastOpenAngle);
     if (!fragment.startsWith("</") && !fragment.includes(">")) {
-      const tagMatch = /^<([\w:]+)/.exec(fragment);
+      const tagMatch = /^<([\w:.-]+)/.exec(fragment);
       if (tagMatch && fragment.length > tagMatch[0].length) {
         const afterTagName = fragment.slice(tagMatch[0].length);
         if (/^\s/.test(afterTagName)) {
           const tagName = tagMatch[1];
           if (schemaProvider?.hasData()) {
-            const schemaAttrs = schemaProvider.getAttributes(tagName) ?? [];
+            const schemaAttrs = schemaProvider.getAttributes(tagName);
             const schemaAttrNames = new Set(schemaAttrs.map((a) => a.name));
             const docAttrs = /* @__PURE__ */ new Set();
             document.traverse((n) => {
@@ -22768,49 +22777,39 @@ function offsetsToRange(text, startOffset, endOffset) {
 function doHover(document, position, schemaProvider) {
   const offset = positionToOffset(document.text, position);
   const node = document.findNodeAt(offset);
-  if (!node || node.type === "root")
+  if (!node || node.type !== "element")
     return null;
-  if (node.type === "element") {
-    if (schemaProvider?.hasData() && node.name) {
-      const info = schemaProvider.getElement(node.name);
-      if (info) {
-        const sections2 = [`### \`<${node.name}>\``];
-        if (info.description)
-          sections2.push(info.description);
-        if (info.attributes.length > 0) {
-          const attrLines = info.attributes.map((a) => `- \`${a.name}\`${a.type ? ` \u2014 *${a.type}*` : ""}${a.required ? " *(required)*" : ""}`).join("\n");
-          sections2.push(`**Attributes:**
+  if (schemaProvider?.hasData() && node.name) {
+    const info = schemaProvider.getElement(node.name);
+    if (info) {
+      const sections2 = [`### \`<${node.name}>\``];
+      if (info.description)
+        sections2.push(info.description);
+      if (info.attributes.length > 0) {
+        const attrLines = info.attributes.map((a) => `- \`${a.name}\`${a.type ? ` \u2014 *${a.type}*` : ""}${a.required ? " *(required)*" : ""}`).join("\n");
+        sections2.push(`**Attributes:**
 ${attrLines}`);
-        }
-        if (info.children.length > 0) {
-          sections2.push(`**Children:** ${info.children.join(", ")}`);
-        }
-        return {
-          contents: sections2.join("\n\n"),
-          range: offsetsToRange(document.text, node.startOffset, node.endOffset)
-        };
       }
+      if (info.children.length > 0) {
+        sections2.push(`**Children:** ${info.children.join(", ")}`);
+      }
+      return {
+        contents: sections2.join("\n\n"),
+        range: offsetsToRange(document.text, node.startOffset, node.endOffset)
+      };
     }
-    const sections = [`### \`<${node.name}>\``];
-    if (node.attributes.length > 0) {
-      const attrLines = node.attributes.map((attr) => `- \`${attr.name}="${attr.value ?? ""}"\``).join("\n");
-      sections.push(`**Attributes:**
+  }
+  const sections = [`### \`<${node.name}>\``];
+  if (node.attributes.length > 0) {
+    const attrLines = node.attributes.map((attr) => `- \`${attr.name}="${attr.value ?? ""}"\``).join("\n");
+    sections.push(`**Attributes:**
 ${attrLines}`);
-    }
-    sections.push(`**Children:** ${node.children.length}`);
-    return {
-      contents: sections.join("\n\n"),
-      range: offsetsToRange(document.text, node.startOffset, node.endOffset)
-    };
   }
-  if (node.type === "comment") {
-    return {
-      contents: `### Comment
-${node.name ?? ""}`,
-      range: offsetsToRange(document.text, node.startOffset, node.endOffset)
-    };
-  }
-  return null;
+  sections.push(`**Children:** ${node.children.length}`);
+  return {
+    contents: sections.join("\n\n"),
+    range: offsetsToRange(document.text, node.startOffset, node.endOffset)
+  };
 }
 
 // ../xml-language-service/dist/services/xmlSymbols.js
@@ -22894,9 +22893,13 @@ function buildSymbols(nodes, text) {
   }
   return symbols;
 }
+var IDENTIFIER_ATTRIBUTES = ["name", "id", "key"];
+function getIdentifier(node) {
+  return node.attributes.find((attr) => IDENTIFIER_ATTRIBUTES.includes(attr.name) && attr.value)?.value;
+}
 function getSymbolName(node) {
-  const identifier = node.attributes.find((attr) => ["name", "id", "key"].includes(attr.name))?.value;
-  return identifier != null && identifier !== "" ? `${node.name} (${identifier})` : node.name ?? "";
+  const identifier = getIdentifier(node);
+  return identifier ? `${node.name} (${identifier})` : node.name ?? "";
 }
 function getSymbolKind(node) {
   const name = node.name;
@@ -22916,30 +22919,29 @@ function getSymbolKind(node) {
     return "struct";
   if (MEDIATOR_ELEMENTS.has(name))
     return "function";
-  if (ARTIFACT_ELEMENTS.has(name) && hasIdentifier(node))
+  if (ARTIFACT_ELEMENTS.has(name) && getIdentifier(node))
     return "class";
   return node.children.length > 0 ? "object" : "field";
-}
-function hasIdentifier(node) {
-  return node.attributes.some((attr) => ["name", "id", "key"].includes(attr.name) && attr.value != null && attr.value !== "");
 }
 
 // ../xml-language-service/dist/services/xmlFolding.js
 function getFoldingRanges(document) {
   const result = [];
   collectRanges(document.children, document.text, result);
+  collectCommentRanges(document.text, result);
   return result;
+}
+function collectCommentRanges(text, result) {
+  for (const m of text.matchAll(/<!--[\s\S]*?-->/g)) {
+    const startLine = offsetToPosition(text, m.index).line;
+    const endLine = offsetToPosition(text, m.index + m[0].length).line;
+    if (startLine < endLine) {
+      result.push({ startLine, endLine, kind: "comment" });
+    }
+  }
 }
 function collectRanges(nodes, text, result) {
   for (const node of nodes) {
-    if (node.type === "comment") {
-      const startLine2 = offsetToPosition(text, node.startOffset).line;
-      const endLine2 = offsetToPosition(text, node.endOffset).line;
-      if (startLine2 < endLine2) {
-        result.push({ startLine: startLine2, endLine: endLine2, kind: "comment" });
-      }
-      continue;
-    }
     if (node.type !== "element" || node.isSelfClosing)
       continue;
     const startLine = offsetToPosition(text, node.startOffset).line;
@@ -22951,6 +22953,22 @@ function collectRanges(nodes, text, result) {
   }
 }
 
+// ../xml-language-service/dist/utils/tagUtils.js
+function findCloseTagStart(text, node) {
+  if (!node.name || node.isSelfClosing)
+    return -1;
+  const pattern = `</${node.name}`;
+  const idx = text.lastIndexOf(pattern, node.endOffset - pattern.length);
+  if (idx <= node.startOffset)
+    return -1;
+  const next = text[idx + pattern.length];
+  return next === ">" || next !== void 0 && /\s/.test(next) ? idx : -1;
+}
+function getRootNamespace(document) {
+  const root = document.children.find((n) => n.type === "element");
+  return root?.attributes.find((a) => a.name === "xmlns")?.value;
+}
+
 // ../xml-language-service/dist/services/xmlFormatter.js
 function format(document, options) {
   if (!document.text)
@@ -22958,8 +22976,10 @@ function format(document, options) {
   const tabSize = options?.tabSize ?? 2;
   const insertSpaces = options?.insertSpaces ?? true;
   const unit = insertSpaces ? " ".repeat(tabSize) : "	";
+  const eol = document.text.includes("\r\n") ? "\r\n" : "\n";
+  const trailing = /\r?\n$/.test(document.text) ? eol : "";
   const output = formatTopLevel(document, unit);
-  return [{ startOffset: 0, endOffset: document.text.length, newText: output.join("\n") }];
+  return [{ startOffset: 0, endOffset: document.text.length, newText: output.join(eol) + trailing }];
 }
 function formatTopLevel(document, unit) {
   const output = [];
@@ -23077,9 +23097,7 @@ function findOpeningTagEnd(text, startOffset) {
   return -1;
 }
 function findClosingTagStart(text, node, openTagEnd) {
-  if (!node.name)
-    return -1;
-  const closeTagStart = text.lastIndexOf(`</${node.name}`, node.endOffset - 1);
+  const closeTagStart = findCloseTagStart(text, node);
   return closeTagStart > openTagEnd ? closeTagStart : -1;
 }
 function normalizeTag(tag) {
@@ -23130,15 +23148,10 @@ function doRename(document, position, newName) {
   const openNameStart = node.startOffset + 1;
   const openNameEnd = openNameStart + node.name.length;
   edits.push({ startOffset: openNameStart, endOffset: openNameEnd, newText: newName });
-  if (!node.isSelfClosing) {
-    const closePattern = "</" + node.name;
-    const searchText = document.text.substring(0, node.endOffset);
-    const closeIdx = searchText.lastIndexOf(closePattern);
-    if (closeIdx !== -1) {
-      const closeNameStart = closeIdx + 2;
-      const closeNameEnd = closeNameStart + node.name.length;
-      edits.push({ startOffset: closeNameStart, endOffset: closeNameEnd, newText: newName });
-    }
+  const closeIdx = findCloseTagStart(document.text, node);
+  if (closeIdx !== -1) {
+    const closeNameStart = closeIdx + 2;
+    edits.push({ startOffset: closeNameStart, endOffset: closeNameStart + node.name.length, newText: newName });
   }
   return edits;
 }
@@ -23149,16 +23162,14 @@ function doDefinition(document, position) {
   const node = document.findNodeAt(offset);
   if (!node || node.type !== "element" || !node.name || node.isSelfClosing)
     return null;
+  const closeIdx = findCloseTagStart(document.text, node);
+  if (closeIdx === -1)
+    return null;
   const openTagEnd = node.startOffset + node.name.length + 1;
-  const isOnOpenTag = offset <= openTagEnd;
-  if (isOnOpenTag) {
-    const closePattern = "</" + node.name;
-    const closeIdx = document.text.indexOf(closePattern, node.startOffset + 1);
-    if (closeIdx === -1)
-      return null;
+  if (offset <= openTagEnd) {
     return {
       uri: document.uri,
-      range: offsetsToRange(document.text, closeIdx, closeIdx + closePattern.length + 1)
+      range: offsetsToRange(document.text, closeIdx, closeIdx + node.name.length + 3)
     };
   }
   return {
@@ -23286,16 +23297,9 @@ var XsdValidatorService = class _XsdValidatorService {
     return new _XsdValidatorService(xsd);
   }
   async validate(xmlText) {
-    let result;
-    if (isSchemaBundle(this.xsd)) {
-      const entryText = await toText(this.xsd.entry);
-      const targetNs = entryText.match(/\btargetNamespace\s*=\s*(["'])(.*?)\1/)?.[2] ?? "";
-      result = await (0, import_xerces_wasm.validate)(xmlText, this.xsd, targetNs);
-    } else {
-      const xsdText = await toText(this.xsd);
-      const targetNs = xsdText.match(/\btargetNamespace\s*=\s*(["'])(.*?)\1/)?.[2] ?? "";
-      result = await (0, import_xerces_wasm.validate)(xmlText, this.xsd, targetNs);
-    }
+    const entryText = await toText(isSchemaBundle(this.xsd) ? this.xsd.entry : this.xsd);
+    const targetNs = entryText.match(/\btargetNamespace\s*=\s*(["'])(.*?)\1/)?.[2] ?? "";
+    const result = await (0, import_xerces_wasm.validate)(xmlText, this.xsd, targetNs);
     return mapResults(result, xmlText);
   }
   dispose() {
@@ -23685,22 +23689,13 @@ var XsdCompletionProvider = class {
 var import_fs = __toESM(require("fs"), 1);
 var import_path = __toESM(require("path"), 1);
 var import_url = require("url");
-function resolveSchemasRoot() {
-  try {
-    const dir = import_path.default.dirname((0, import_url.fileURLToPath)(_fileUrl));
-    const distSchemas = import_path.default.join(dir, "resources", "schemas");
-    if (import_fs.default.existsSync(distSchemas))
-      return distSchemas;
-    const parentDistSchemas = import_path.default.join(dir, "..", "resources", "schemas");
-    if (import_fs.default.existsSync(parentDistSchemas))
-      return parentDistSchemas;
-    const rootSchemas = import_path.default.join(process.cwd(), "resources", "schemas");
-    if (import_fs.default.existsSync(rootSchemas))
-      return rootSchemas;
-    return import_path.default.join(dir, "resources", "default");
-  } catch {
-    return import_path.default.join(process.cwd(), "resources", "schemas");
-  }
+function resolveSchemasRoot(dir = import_path.default.dirname((0, import_url.fileURLToPath)(_fileUrl))) {
+  const candidates = [
+    import_path.default.join(dir, "resources", "schemas"),
+    import_path.default.join(dir, "..", "resources", "schemas"),
+    import_path.default.join(dir, "..", "..", "resources", "schemas")
+  ];
+  return candidates.find((p) => import_fs.default.existsSync(p)) ?? candidates[0];
 }
 var SCHEMAS_ROOT = resolveSchemasRoot();
 var SchemaAssociator = class {
@@ -23737,16 +23732,14 @@ var SchemaAssociator = class {
    * Priority:
    * 1. User associations (pattern match)
    * 2. Catalog associations (pattern / namespace / systemId match from resources/schemas/catalog.json)
-   * 3. Local Runtime Cache (~/.cache/xml-schemas/)
+   * 3. Runtime cache of downloaded schemas (<cwd>/.cache/xml-schemas/)
    */
   findSchema(fileName, xmlns, documentPath, systemId) {
     if (fileName === "pom.xml" || fileName.endsWith("/pom.xml") || fileName.endsWith("\\pom.xml")) {
       const mavenPomPath = import_path.default.join(SCHEMAS_ROOT, "build", "maven-4.0.0.xsd");
-      const fallbackMavenPath = import_path.default.join(SCHEMAS_ROOT, "maven-4.0.0.xsd");
-      const targetPath = import_fs.default.existsSync(mavenPomPath) ? mavenPomPath : fallbackMavenPath;
-      const xsdText = this.readXsdFile(targetPath);
+      const xsdText = this.readXsdFile(mavenPomPath);
       if (xsdText)
-        return { xsdText, xsdPath: targetPath, source: "builtin" };
+        return { xsdText, xsdPath: mavenPomPath, source: "builtin" };
     }
     for (const assoc of this.userAssociations) {
       if (this.matchesPattern(fileName, assoc.pattern, documentPath)) {
@@ -23768,14 +23761,6 @@ var SchemaAssociator = class {
             return { xsdText, xsdPath: fullPath, source: "builtin" };
         }
       }
-    }
-    if (fileName === "web.xml" || fileName.endsWith("/web.xml") || fileName.endsWith("\\web.xml")) {
-      const webXmlPath = import_path.default.join(SCHEMAS_ROOT, "javaee", "web-app_3_1.xsd");
-      const fallbackWebPath = import_path.default.join(SCHEMAS_ROOT, "web-app_3_1.xsd");
-      const targetPath = import_fs.default.existsSync(webXmlPath) ? webXmlPath : fallbackWebPath;
-      const xsdText = this.readXsdFile(targetPath);
-      if (xsdText)
-        return { xsdText, xsdPath: targetPath, source: "builtin" };
     }
     if (systemId && (systemId.startsWith("http://") || systemId.startsWith("https://"))) {
       const cachedPath = this.getCachePathForUrl(systemId);
@@ -23887,6 +23872,7 @@ var SchemaProvider = class {
     this.validators = /* @__PURE__ */ new Map();
     this.documentToSchema = /* @__PURE__ */ new Map();
     this.completionProviders = /* @__PURE__ */ new Map();
+    this.resolvedProviders = /* @__PURE__ */ new Map();
     this.associator = new SchemaAssociator();
   }
   /**
@@ -23899,13 +23885,9 @@ var SchemaProvider = class {
     const xsdKey = info.xsdPath ?? info.uri;
     const prevKey = this.documentToSchema.get(info.uri);
     this.documentToSchema.set(info.uri, xsdKey);
-    if (prevKey && prevKey !== xsdKey && !this._isKeyReferenced(prevKey)) {
-      const prevPromise = this.validators.get(prevKey);
-      this.validators.delete(prevKey);
-      if (prevPromise) {
-        prevPromise.then((v) => v.dispose()).catch(() => {
-        });
-      }
+    if (prevKey && prevKey !== xsdKey && !this.isKeyReferenced(prevKey)) {
+      this.releaseKey(prevKey).catch(() => {
+      });
     }
     if (!this.validators.has(xsdKey)) {
       const xsd = info.imports ? { entry: info.xsdText, imports: info.imports } : info.xsdText;
@@ -23928,12 +23910,24 @@ var SchemaProvider = class {
       this.completionProviders.set(xsdKey, provider);
     }
   }
-  _isKeyReferenced(xsdKey) {
+  isKeyReferenced(xsdKey) {
     for (const k of this.documentToSchema.values()) {
       if (k === xsdKey)
         return true;
     }
     return false;
+  }
+  /** Drops the validator and completion provider stored under xsdKey. */
+  async releaseKey(xsdKey) {
+    const promise = this.validators.get(xsdKey);
+    this.validators.delete(xsdKey);
+    this.completionProviders.delete(xsdKey);
+    if (promise) {
+      try {
+        (await promise).dispose();
+      } catch {
+      }
+    }
   }
   /** Registers a custom file-to-schema mapping that takes priority over built-in associations. */
   addUserAssociation(association) {
@@ -23953,7 +23947,8 @@ var SchemaProvider = class {
   }
   /**
    * Resolves and returns the XsdCompletionProvider for the given file name and optional namespace.
-   * Automatically loads and caches the provider on first access via the built-in associations.
+   * A provider registered for `auto://<documentPath>` wins; otherwise the schema is
+   * looked up through the associations and its provider is cached by XSD path.
    * Returns null if no matching schema is found.
    */
   resolveSchemaForDocument(fileName, xmlns, documentPath) {
@@ -23966,18 +23961,19 @@ var SchemaProvider = class {
           return registered;
       }
     }
-    const cacheKey = `${documentPath ?? fileName}|${xmlns ?? ""}`;
-    const cached = this.completionProviders.get(cacheKey);
-    if (cached)
-      return cached;
     const resolved = this.associator.findSchema(fileName, xmlns, documentPath);
     if (!resolved)
       return null;
-    return new XsdCompletionProvider(resolved.xsdText);
+    let provider = this.resolvedProviders.get(resolved.xsdPath);
+    if (!provider) {
+      provider = new XsdCompletionProvider(resolved.xsdText);
+      this.resolvedProviders.set(resolved.xsdPath, provider);
+    }
+    return provider;
   }
   /**
    * Validates the document against the schema registered under schemaUri.
-   * Returns a warning diagnostic when no matching schema is found.
+   * Without a registered validator, returns the parser's syntax errors instead.
    */
   async validate(schemaUri, document) {
     const xsdKey = this.documentToSchema.get(schemaUri);
@@ -23999,11 +23995,14 @@ var SchemaProvider = class {
     const validator = await validatorPromise;
     return validator.validate(document.text);
   }
-  /** Returns true when a compiled validator for the given document URI exists in the registry. */
+  /** Returns true when a schema (validator or completion provider) is registered for the document URI. */
   hasSchema(uri) {
     return this.documentToSchema.has(uri);
   }
-  /** Removes all auto:// schemas so they are re-registered fresh on next validation. */
+  /**
+   * Removes all auto:// schema registrations and every cached completion provider
+   * built from associated schema files, so schemas are re-read from disk on next use.
+   */
   async invalidateAutoSchemas() {
     const keysToCheck = /* @__PURE__ */ new Set();
     for (const [docUri, xsdKey] of this.documentToSchema) {
@@ -24013,23 +24012,10 @@ var SchemaProvider = class {
       }
     }
     for (const xsdKey of keysToCheck) {
-      if (!this._isKeyReferenced(xsdKey)) {
-        const promise = this.validators.get(xsdKey);
-        this.validators.delete(xsdKey);
-        if (promise) {
-          try {
-            const v = await promise;
-            v.dispose();
-          } catch {
-          }
-        }
-      }
+      if (!this.isKeyReferenced(xsdKey))
+        await this.releaseKey(xsdKey);
     }
-    for (const key of this.completionProviders.keys()) {
-      if (key.startsWith("auto://")) {
-        this.completionProviders.delete(key);
-      }
-    }
+    this.resolvedProviders.clear();
   }
   /** Disposes all registered validators and clears the registry. */
   async dispose() {
@@ -24043,6 +24029,7 @@ var SchemaProvider = class {
     this.validators.clear();
     this.documentToSchema.clear();
     this.completionProviders.clear();
+    this.resolvedProviders.clear();
   }
 };
 
@@ -24050,19 +24037,17 @@ var SchemaProvider = class {
 function getLanguageService() {
   const schemaProvider = new SchemaProvider();
   return {
-    // ── Phase 01 — XML Core ──────────────────────────────────────────────────
+    // ── XML core ─────────────────────────────────────────────────────────────
     parseXMLDocument(uri, text) {
       return parseXMLDocument(uri, text);
     },
     doComplete(document, position, fileName, documentPath) {
-      const xmlns = document.getNamespace?.() ?? void 0;
-      const completionProvider = schemaProvider.resolveSchemaForDocument(fileName ?? "", xmlns, documentPath);
-      return doComplete(document, position, completionProvider);
+      const provider = schemaProvider.resolveSchemaForDocument(fileName ?? "", getRootNamespace(document), documentPath);
+      return doComplete(document, position, provider);
     },
     doHover(document, position, fileName, documentPath) {
-      const xmlns = document.getNamespace?.() ?? void 0;
-      const completionProvider = schemaProvider.resolveSchemaForDocument(fileName ?? "", xmlns, documentPath);
-      return doHover(document, position, completionProvider);
+      const provider = schemaProvider.resolveSchemaForDocument(fileName ?? "", getRootNamespace(document), documentPath);
+      return doHover(document, position, provider);
     },
     findDocumentSymbols(document) {
       return findDocumentSymbols(document);
@@ -24092,7 +24077,7 @@ function getLanguageService() {
     printTreeAST(document) {
       return printTreeAST(document);
     },
-    // ── Phase 02 — XSD Schema Validation ────────────────────────────────────
+    // ── XSD schema validation ────────────────────────────────────────────────
     async registerSchema(info) {
       return schemaProvider.registerSchema(info);
     },
@@ -24263,9 +24248,11 @@ var SEVERITY_MAP = {
   info: import_node.DiagnosticSeverity.Information
 };
 var DiagnosticsHandler = class {
-  //Keeps errors/warnings per file.
+  // auto:// URI -> XSD path it was registered with
   constructor(connection2, service2) {
     this.diagnosticsByUri = /* @__PURE__ */ new Map();
+    //Keeps errors/warnings per file.
+    this.registeredXsd = /* @__PURE__ */ new Map();
     this.connection = connection2;
     this.service = service2;
   }
@@ -24286,14 +24273,18 @@ var DiagnosticsHandler = class {
     const text = document.getText();
     const xmlDoc = this.service.parseXMLDocument(document.uri, text);
     const xmlns = xmlDoc.getNamespace?.() ?? void 0;
+    const systemId = this.extractSystemId(text);
     let resolved = this.service.resolveSchemaForDocument(fileName, xmlns, documentPath);
     if (resolved?.source !== "custom") {
       const hinted = findLocalSchemaHint(xmlDoc, documentPath);
       if (hinted) resolved = { ...hinted, source: "custom" };
     }
+    if (!resolved && this.service.resolveSchemaForDocumentAsync) {
+      resolved = await this.service.resolveSchemaForDocumentAsync(fileName, xmlns, documentPath, systemId);
+    }
     if (resolved) {
-      const autoUri = `auto://${documentPath ?? fileName}#${resolved.xsdPath ?? ""}`;
-      if (!this.service.hasSchema(autoUri)) {
+      const autoUri = `auto://${documentPath ?? fileName}`;
+      if (!this.service.hasSchema(autoUri) || this.registeredXsd.get(autoUri) !== resolved.xsdPath) {
         const imports = resolved.xsdPath ? this.loadReferencedXsds(resolved.xsdPath, resolved.xsdText) : void 0;
         const importKeys = imports ? Object.keys(imports) : [];
         this.connection.console.log(
@@ -24305,6 +24296,7 @@ var DiagnosticsHandler = class {
           imports,
           xsdPath: resolved.xsdPath
         });
+        this.registeredXsd.set(autoUri, resolved.xsdPath);
         this.connection.console.log(
           `[DiagnosticsHandler] Schema registered at ${autoUri}`
         );
@@ -24326,6 +24318,20 @@ var DiagnosticsHandler = class {
   clearDiagnostics(uri) {
     this.connection.console.log(`[DiagnosticsHandler] Clearing diagnostics for ${uri}`);
     this.send(uri, []);
+  }
+  extractSystemId(text) {
+    const schemaLocMatch = text.match(/xsi:(?:schemaLocation|noNamespaceSchemaLocation)\s*=\s*(["'])([\s\S]*?)\1/i);
+    if (schemaLocMatch) {
+      const parts = schemaLocMatch[2].trim().split(/\s+/);
+      const url = parts.length > 1 ? parts[1] : parts[0];
+      if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    }
+    const doctypeMatch = text.match(/<!DOCTYPE\s+[\s\S]*?SYSTEM\s+(["'])([^"']+)\1/i);
+    if (doctypeMatch) {
+      const url = doctypeMatch[2];
+      if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    }
+    return void 0;
   }
   send(uri, diagnostics) {
     this.diagnosticsByUri.set(uri, diagnostics);
