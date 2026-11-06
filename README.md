@@ -1,3 +1,5 @@
+[![Schema-Aware XML (0.1.0, preview) on the Visual Studio Code Marketplace](images/marketplace-banner.png)](https://marketplace.visualstudio.com/items?itemName=harshanacz.xml-language-client)
+
 # xml-language-server
 
 LSP (Language Server Protocol) wrapper around `xml-language-service`.
