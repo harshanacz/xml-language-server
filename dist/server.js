@@ -24695,6 +24695,7 @@ var documents = new import_node3.TextDocuments(TextDocument);
 var service = getLanguageService();
 var diagnosticsHandler = new DiagnosticsHandler(connection, service);
 var workspaceRoots = [];
+var initializationSchemas = [];
 var initialConfigurationLoaded = false;
 async function validateAndSendSafely(document, reason) {
   try {
@@ -24720,8 +24721,8 @@ ${JSON.stringify(params, null, 2)}`);
   connection.console.log(`initalize options:
 ${JSON.stringify(params.initializationOptions, null, 2)}`);
   connection.console.log("======");
-  const schemas = params.initializationOptions?.schemas ?? [];
-  if (schemas.length > 0) applySchemaSettings(schemas, connection, service, workspaceRoots);
+  initializationSchemas = params.initializationOptions?.schemas ?? [];
+  if (initializationSchemas.length > 0) applySchemaSettings(initializationSchemas, connection, service, workspaceRoots);
   return {
     capabilities: {
       textDocumentSync: import_node3.TextDocumentSyncKind.Incremental,
@@ -24754,7 +24755,7 @@ connection.onDidChangeConfiguration((params) => {
     `[config] onDidChangeConfiguration fired: ${JSON.stringify(params.settings?.xmlLanguageServer)}`
   );
   const schemas = params.settings?.xmlLanguageServer?.schemas ?? [];
-  applySchemaSettings(schemas, connection, service, workspaceRoots, true);
+  applySchemaSettings([...initializationSchemas, ...schemas], connection, service, workspaceRoots, true);
   if (!initialConfigurationLoaded) {
     connection.console.log("[config] Deferring configuration-change validation until initial configuration is loaded");
     return;

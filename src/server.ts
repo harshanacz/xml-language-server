@@ -20,6 +20,8 @@ const service = getLanguageService();
 const diagnosticsHandler = new DiagnosticsHandler(connection, service);
 
 let workspaceRoots: string[] = [];
+// Associations the client passed at startup; a settings change must not drop them.
+let initializationSchemas: SchemaConfig[] = [];
 let initialConfigurationLoaded = false;
 
 // ── Validation helpers ───────────────────────────────────────────────────────
@@ -51,8 +53,8 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
   connection.console.log(`initalize options:\n${JSON.stringify(params.initializationOptions, null, 2)}`);
   connection.console.log("======");
 
-  const schemas: SchemaConfig[] = (params.initializationOptions as any)?.schemas ?? [];
-  if (schemas.length > 0) applySchemaSettings(schemas, connection, service, workspaceRoots);
+  initializationSchemas = (params.initializationOptions as any)?.schemas ?? [];
+  if (initializationSchemas.length > 0) applySchemaSettings(initializationSchemas, connection, service, workspaceRoots);
 
   return {
     capabilities: {
@@ -88,7 +90,7 @@ connection.onDidChangeConfiguration((params: DidChangeConfigurationParams) => {
     `[config] onDidChangeConfiguration fired: ${JSON.stringify(params.settings?.xmlLanguageServer)}`
   );
   const schemas: SchemaConfig[] = params.settings?.xmlLanguageServer?.schemas ?? [];
-  applySchemaSettings(schemas, connection, service, workspaceRoots, true);
+  applySchemaSettings([...initializationSchemas, ...schemas], connection, service, workspaceRoots, true);
   if (!initialConfigurationLoaded) {
     connection.console.log("[config] Deferring configuration-change validation until initial configuration is loaded");
     return;
