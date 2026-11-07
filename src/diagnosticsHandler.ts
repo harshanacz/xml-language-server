@@ -9,6 +9,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { filterDiagnostics, formatDiagnosticMessage } from "./diagnosticsFilter.js";
 import { findLocalSchemaHint } from "./schemaHint.js";
+import { getDocumentPath } from "./utils.js";
 
 type LanguageService = ReturnType<typeof getLanguageService>;
 
@@ -49,9 +50,7 @@ export class DiagnosticsHandler {
 
   async validateAndSend(document: TextDocument): Promise<void> {
     const fileName = document.uri.split("/").pop() ?? "";
-    const documentPath = document.uri.startsWith("file://")
-      ? decodeURIComponent(document.uri.replace("file://", ""))
-      : undefined;
+    const documentPath = getDocumentPath(document.uri);
     const text = document.getText();
     const xmlDoc = this.service.parseXMLDocument(document.uri, text);
     const xmlns = (xmlDoc as any).getNamespace?.() ?? undefined;

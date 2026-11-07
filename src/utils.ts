@@ -13,6 +13,7 @@ import {
   HoverResult,
   FoldingRange as XmlFoldingRange,
 } from "xml-language-service";
+import { fileURLToPath } from "url";
 
 // ── String utilities ─────────────────────────────────────────────────────────
 
@@ -22,7 +23,12 @@ export function getFileName(uri: string): string {
 
 export function getDocumentPath(uri: string): string | undefined {
   if (!uri.startsWith("file://")) return undefined;
-  return decodeURIComponent(uri.replace("file://", ""));
+  try {
+    // Handles Windows drive letters (file:///c%3A/dir -> c:\dir) and percent-encoding.
+    return fileURLToPath(uri);
+  } catch {
+    return decodeURIComponent(uri.replace("file://", ""));
+  }
 }
 
 export function escapeMd(text: string): string {
