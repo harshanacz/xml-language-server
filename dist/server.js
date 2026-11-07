@@ -24493,7 +24493,10 @@ var DiagnosticsHandler = class {
 var fs4 = __toESM(require("fs"));
 var path4 = __toESM(require("path"));
 function applySchemaSettings(schemas, connection2, service2, workspaceRoots2, invalidate = false) {
-  if (invalidate) service2.invalidateAutoSchemas();
+  if (invalidate) {
+    service2.clearUserAssociations();
+    service2.invalidateAutoSchemas();
+  }
   for (const entry of schemas) {
     const resolved = resolveXsdPath(entry.xsdPath, workspaceRoots2);
     if (!resolved) {
