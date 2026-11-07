@@ -180,6 +180,28 @@ describe("schema selection", () => {
     expect(diagnostics.some((d) => d.message.includes("'abc'"))).toBe(true);
   });
 
+  it("drops a configured schema when the setting is removed", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const { client } = await start(ws, { configuration: { schemas: [{ pattern: "cfg.xml", xsdPath: "books.xsd" }] } });
+    const uri = client.open(path.join(ws, "cfg.xml"), `<library>${INVALID_BOOK}</library>`);
+    expect((await client.diagnosticsFor(uri)).some((d) => d.message.includes("'abc'"))).toBe(true);
+
+    const seen = client.publishCount(uri);
+    client.notify("workspace/didChangeConfiguration", { settings: { xmlLanguageServer: { schemas: [] } } });
+    expect(await client.diagnosticsFor(uri, seen)).toEqual([]);
+  });
+
+  it("keeps initializationOptions schemas when the settings change", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const { client } = await start(ws, { initializationOptions: { schemas: [{ pattern: "cfg.xml", xsdPath: "books.xsd" }] } });
+    const uri = client.open(path.join(ws, "cfg.xml"), `<library>${INVALID_BOOK}</library>`);
+    expect((await client.diagnosticsFor(uri)).some((d) => d.message.includes("'abc'"))).toBe(true);
+
+    const seen = client.publishCount(uri);
+    client.notify("workspace/didChangeConfiguration", { settings: { xmlLanguageServer: { schemas: [] } } });
+    expect((await client.diagnosticsFor(uri, seen)).some((d) => d.message.includes("'abc'"))).toBe(true);
+  });
+
   it("offers schema-driven completions for a document with a local xsi hint", async () => {
     const ws = workspace({ "books.xsd": BOOKS_XSD });
     const { client } = await start(ws);

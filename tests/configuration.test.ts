@@ -218,3 +218,50 @@ describe("applySchemaSettings — multi-root workspace", () => {
     expect(warnings.some((w) => w.includes("missing.xsd"))).toBe(true);
   });
 });
+
+// ── Re-applying settings ──────────────────────────────────────────────────────
+
+describe("applySchemaSettings — settings change", () => {
+  function createTrackingService() {
+    const calls: string[] = [];
+    return {
+      calls,
+      service: {
+        addUserAssociation: (assoc: { pattern: string }) => calls.push(`add:${assoc.pattern}`),
+        clearUserAssociations: () => calls.push("clear"),
+        invalidateAutoSchemas: () => calls.push("invalidate"),
+      } as any,
+    };
+  }
+
+  it("clears the previous associations before adding the new ones", () => {
+    const root = makeTempDir();
+    writeFile(path.join(root, "a.xsd"), "<xs:schema/>");
+    const { connection } = createConnection();
+    const { service, calls } = createTrackingService();
+
+    applySchemaSettings([{ pattern: "**/*.a.xml", xsdPath: "a.xsd" }], connection, service, [root], true);
+
+    expect(calls).toEqual(["clear", "invalidate", "add:**/*.a.xml"]);
+  });
+
+  it("removes every association when the list becomes empty", () => {
+    const { connection } = createConnection();
+    const { service, calls } = createTrackingService();
+
+    applySchemaSettings([], connection, service, [], true);
+
+    expect(calls).toEqual(["clear", "invalidate"]);
+  });
+
+  it("leaves existing associations alone on the initial load", () => {
+    const root = makeTempDir();
+    writeFile(path.join(root, "a.xsd"), "<xs:schema/>");
+    const { connection } = createConnection();
+    const { service, calls } = createTrackingService();
+
+    applySchemaSettings([{ pattern: "**/*.a.xml", xsdPath: "a.xsd" }], connection, service, [root]);
+
+    expect(calls).toEqual(["add:**/*.a.xml"]);
+  });
+});

@@ -17,7 +17,11 @@ export function applySchemaSettings(
   workspaceRoots: string[],
   invalidate = false
 ): void {
-  if (invalidate) service.invalidateAutoSchemas();
+  if (invalidate) {
+    // A settings change replaces the whole list, so drop the associations from the previous one.
+    service.clearUserAssociations();
+    service.invalidateAutoSchemas();
+  }
   for (const entry of schemas) {
     const resolved = resolveXsdPath(entry.xsdPath, workspaceRoots);
 
