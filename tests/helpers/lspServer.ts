@@ -22,7 +22,12 @@ export function buildServerBundle(): { dir: string; serverPath: string } {
     logLevel: "silent",
   });
   const service = path.join(root, "node_modules", "xml-language-service");
-  fs.copyFileSync(path.join(service, "node_modules", "xerces-wasm", "wasm", "xerces_validator.wasm"), path.join(dir, "xerces_validator.wasm"));
+  // npm hoists xerces-wasm beside the service; a local file: link keeps it nested.
+  const wasm = [service, root]
+    .map((base) => path.join(base, "node_modules", "xerces-wasm", "wasm", "xerces_validator.wasm"))
+    .find((candidate) => fs.existsSync(candidate));
+  if (!wasm) throw new Error("xerces_validator.wasm not found; run npm ci");
+  fs.copyFileSync(wasm, path.join(dir, "xerces_validator.wasm"));
   fs.cpSync(path.join(root, "resources"), path.join(dir, "resources"), { recursive: true });
   fs.cpSync(path.join(service, "dist", "resources", "schemas"), path.join(dir, "resources", "schemas"), { recursive: true });
   return { dir, serverPath };

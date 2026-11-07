@@ -8876,9 +8876,9 @@ var require_node3 = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/version.js
+// node_modules/chevrotain/lib/src/version.js
 var require_version = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/version.js"(exports2) {
+  "node_modules/chevrotain/lib/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.VERSION = void 0;
@@ -8886,9 +8886,9 @@ var require_version = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/utils/utils.js
+// node_modules/chevrotain/lib/src/utils/utils.js
 var require_utils = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/utils/utils.js"(exports, module) {
+  "node_modules/chevrotain/lib/src/utils/utils.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.peek = exports.toFastProperties = exports.applyMixins = exports.isES2015MapSupported = exports.PRINT_WARNING = exports.PRINT_ERROR = exports.packArray = exports.IDENTITY = exports.NOOP = exports.merge = exports.groupBy = exports.defaults = exports.assignNoOverwrite = exports.assign = exports.zipObject = exports.sortBy = exports.indexOf = exports.some = exports.difference = exports.every = exports.isObject = exports.isRegExp = exports.isArray = exports.partial = exports.uniq = exports.compact = exports.reduce = exports.findAll = exports.find = exports.cloneObj = exports.cloneArr = exports.contains = exports.has = exports.pick = exports.reject = exports.filter = exports.dropRight = exports.drop = exports.isFunction = exports.isUndefined = exports.isString = exports.forEach = exports.last = exports.first = exports.flatten = exports.map = exports.mapValues = exports.values = exports.keys = exports.isEmpty = void 0;
@@ -9334,9 +9334,9 @@ var require_utils = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/regexp-to-ast/lib/regexp-to-ast.js
+// node_modules/regexp-to-ast/lib/regexp-to-ast.js
 var require_regexp_to_ast = __commonJS({
-  "../xml-language-service/node_modules/regexp-to-ast/lib/regexp-to-ast.js"(exports2, module2) {
+  "node_modules/regexp-to-ast/lib/regexp-to-ast.js"(exports2, module2) {
     (function(root, factory) {
       if (typeof define === "function" && define.amd) {
         define([], factory);
@@ -10212,9 +10212,9 @@ var require_regexp_to_ast = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/scan/reg_exp_parser.js
+// node_modules/chevrotain/lib/src/scan/reg_exp_parser.js
 var require_reg_exp_parser = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/scan/reg_exp_parser.js"(exports2) {
+  "node_modules/chevrotain/lib/src/scan/reg_exp_parser.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.clearRegExpParserCache = exports2.getRegExpAst = void 0;
@@ -10239,9 +10239,9 @@ var require_reg_exp_parser = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/scan/reg_exp.js
+// node_modules/chevrotain/lib/src/scan/reg_exp.js
 var require_reg_exp = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/scan/reg_exp.js"(exports2) {
+  "node_modules/chevrotain/lib/src/scan/reg_exp.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -10478,9 +10478,9 @@ var require_reg_exp = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer.js
+// node_modules/chevrotain/lib/src/scan/lexer.js
 var require_lexer = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer.js"(exports2) {
+  "node_modules/chevrotain/lib/src/scan/lexer.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -11234,9 +11234,9 @@ var require_lexer = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/scan/tokens.js
+// node_modules/chevrotain/lib/src/scan/tokens.js
 var require_tokens = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/scan/tokens.js"(exports2) {
+  "node_modules/chevrotain/lib/src/scan/tokens.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.isTokenType = exports2.hasExtendingTokensTypesMapProperty = exports2.hasExtendingTokensTypesProperty = exports2.hasCategoriesProperty = exports2.hasShortKeyProperty = exports2.singleAssignCategoriesToksMap = exports2.assignCategoriesMapProp = exports2.assignCategoriesTokensProp = exports2.assignTokenDefaultProps = exports2.expandCategories = exports2.augmentTokenTypes = exports2.tokenIdxToClass = exports2.tokenShortNameIdx = exports2.tokenStructuredMatcherNoCategories = exports2.tokenStructuredMatcher = void 0;
@@ -11356,9 +11356,9 @@ var require_tokens = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer_errors_public.js
+// node_modules/chevrotain/lib/src/scan/lexer_errors_public.js
 var require_lexer_errors_public = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer_errors_public.js"(exports2) {
+  "node_modules/chevrotain/lib/src/scan/lexer_errors_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defaultLexerErrorProvider = void 0;
@@ -11373,9 +11373,9 @@ var require_lexer_errors_public = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer_public.js
+// node_modules/chevrotain/lib/src/scan/lexer_public.js
 var require_lexer_public = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/scan/lexer_public.js"(exports2) {
+  "node_modules/chevrotain/lib/src/scan/lexer_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Lexer = exports2.LexerDefinitionErrorType = void 0;
@@ -11941,9 +11941,9 @@ var require_lexer_public = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/scan/tokens_public.js
+// node_modules/chevrotain/lib/src/scan/tokens_public.js
 var require_tokens_public = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/scan/tokens_public.js"(exports2) {
+  "node_modules/chevrotain/lib/src/scan/tokens_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.tokenMatcher = exports2.createTokenInstance = exports2.EOF = exports2.createToken = exports2.hasTokenLabel = exports2.tokenName = exports2.tokenLabel = void 0;
@@ -12039,9 +12039,9 @@ var require_tokens_public = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_public.js
+// node_modules/chevrotain/lib/src/parse/grammar/gast/gast_public.js
 var require_gast_public = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_public.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/gast/gast_public.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -12361,9 +12361,9 @@ var require_gast_public = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/rest.js
+// node_modules/chevrotain/lib/src/parse/grammar/rest.js
 var require_rest = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/rest.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/rest.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RestWalker = void 0;
@@ -12460,9 +12460,9 @@ var require_rest = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_visitor_public.js
+// node_modules/chevrotain/lib/src/parse/grammar/gast/gast_visitor_public.js
 var require_gast_visitor_public = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_visitor_public.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/gast/gast_visitor_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.GAstVisitor = void 0;
@@ -12527,9 +12527,9 @@ var require_gast_visitor_public = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast.js
+// node_modules/chevrotain/lib/src/parse/grammar/gast/gast.js
 var require_gast = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/gast/gast.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -12684,9 +12684,9 @@ var require_gast = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/first.js
+// node_modules/chevrotain/lib/src/parse/grammar/first.js
 var require_first = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/first.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/first.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.firstForTerminal = exports2.firstForBranching = exports2.firstForSequence = exports2.first = void 0;
@@ -12738,9 +12738,9 @@ var require_first = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/constants.js
+// node_modules/chevrotain/lib/src/parse/constants.js
 var require_constants = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/constants.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.IN = void 0;
@@ -12748,9 +12748,9 @@ var require_constants = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/follow.js
+// node_modules/chevrotain/lib/src/parse/grammar/follow.js
 var require_follow = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/follow.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/follow.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -12824,9 +12824,9 @@ var require_follow = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/errors_public.js
+// node_modules/chevrotain/lib/src/parse/errors_public.js
 var require_errors_public = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/errors_public.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/errors_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defaultGrammarValidatorErrorProvider = exports2.defaultGrammarResolverErrorProvider = exports2.defaultParserErrorProvider = void 0;
@@ -12987,9 +12987,9 @@ var require_errors_public = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/resolver.js
+// node_modules/chevrotain/lib/src/parse/grammar/resolver.js
 var require_resolver = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/resolver.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/resolver.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -13058,9 +13058,9 @@ var require_resolver = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/interpreter.js
+// node_modules/chevrotain/lib/src/parse/grammar/interpreter.js
 var require_interpreter = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/interpreter.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/interpreter.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -13562,9 +13562,9 @@ var require_interpreter = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/lookahead.js
+// node_modules/chevrotain/lib/src/parse/grammar/lookahead.js
 var require_lookahead = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/lookahead.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/lookahead.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -13987,9 +13987,9 @@ var require_lookahead = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/checks.js
+// node_modules/chevrotain/lib/src/parse/grammar/checks.js
 var require_checks = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/checks.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/checks.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -14465,9 +14465,9 @@ var require_checks = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_resolver_public.js
+// node_modules/chevrotain/lib/src/parse/grammar/gast/gast_resolver_public.js
 var require_gast_resolver_public = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/gast/gast_resolver_public.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/gast/gast_resolver_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.assignOccurrenceIndices = exports2.validateGrammar = exports2.resolveGrammar = void 0;
@@ -14509,9 +14509,9 @@ var require_gast_resolver_public = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/exceptions_public.js
+// node_modules/chevrotain/lib/src/parse/exceptions_public.js
 var require_exceptions_public = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/exceptions_public.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/exceptions_public.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -14624,9 +14624,9 @@ var require_exceptions_public = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recoverable.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/recoverable.js
 var require_recoverable = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recoverable.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/parser/traits/recoverable.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.attemptInRepetitionRecovery = exports2.Recoverable = exports2.InRuleRecoveryException = exports2.IN_RULE_RECOVERY_EXCEPTION = exports2.EOF_FOLLOW_KEY = void 0;
@@ -14880,9 +14880,9 @@ var require_recoverable = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/keys.js
+// node_modules/chevrotain/lib/src/parse/grammar/keys.js
 var require_keys = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/grammar/keys.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/grammar/keys.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getKeyForAutomaticLookahead = exports2.AT_LEAST_ONE_SEP_IDX = exports2.MANY_SEP_IDX = exports2.AT_LEAST_ONE_IDX = exports2.MANY_IDX = exports2.OPTION_IDX = exports2.OR_IDX = exports2.BITS_FOR_ALT_IDX = exports2.BITS_FOR_RULE_IDX = exports2.BITS_FOR_OCCURRENCE_IDX = exports2.BITS_FOR_METHOD_TYPE = void 0;
@@ -14904,9 +14904,9 @@ var require_keys = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/looksahead.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/looksahead.js
 var require_looksahead = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/looksahead.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/parser/traits/looksahead.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.LooksAhead = void 0;
@@ -15005,9 +15005,9 @@ var require_looksahead = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/cst/cst.js
+// node_modules/chevrotain/lib/src/parse/cst/cst.js
 var require_cst = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/cst/cst.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/cst/cst.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.addNoneTerminalToCst = exports2.addTerminalToCst = exports2.setNodeLocationFull = exports2.setNodeLocationOnlyOffset = void 0;
@@ -15054,9 +15054,9 @@ var require_cst = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/lang/lang_extensions.js
+// node_modules/chevrotain/lib/src/lang/lang_extensions.js
 var require_lang_extensions = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/lang/lang_extensions.js"(exports2) {
+  "node_modules/chevrotain/lib/src/lang/lang_extensions.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defineNameProp = exports2.functionName = exports2.classNameFromInstance = void 0;
@@ -15092,9 +15092,9 @@ var require_lang_extensions = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/cst/cst_visitor.js
+// node_modules/chevrotain/lib/src/parse/cst/cst_visitor.js
 var require_cst_visitor = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/cst/cst_visitor.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/cst/cst_visitor.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.validateRedundantMethods = exports2.validateMissingCstMethods = exports2.validateVisitor = exports2.CstVisitorDefinitionError = exports2.createBaseVisitorConstructorWithDefaults = exports2.createBaseSemanticVisitorConstructor = exports2.defaultVisit = void 0;
@@ -15202,9 +15202,9 @@ var require_cst_visitor = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/tree_builder.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/tree_builder.js
 var require_tree_builder = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/tree_builder.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/parser/traits/tree_builder.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TreeBuilder = void 0;
@@ -15377,9 +15377,9 @@ var require_tree_builder = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/lexer_adapter.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/lexer_adapter.js
 var require_lexer_adapter = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/lexer_adapter.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/parser/traits/lexer_adapter.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.LexerAdapter = void 0;
@@ -15450,9 +15450,9 @@ var require_lexer_adapter = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_api.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_api.js
 var require_recognizer_api = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_api.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RecognizerApi = void 0;
@@ -15792,9 +15792,9 @@ var require_recognizer_api = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_engine.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_engine.js
 var require_recognizer_engine = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_engine.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/parser/traits/recognizer_engine.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RecognizerEngine = void 0;
@@ -16244,9 +16244,9 @@ var require_recognizer_engine = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/error_handler.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/error_handler.js
 var require_error_handler = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/error_handler.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/parser/traits/error_handler.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ErrorHandler = void 0;
@@ -16328,9 +16328,9 @@ var require_error_handler = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/context_assist.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/context_assist.js
 var require_context_assist = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/context_assist.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/parser/traits/context_assist.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ContentAssist = void 0;
@@ -16364,9 +16364,9 @@ var require_context_assist = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/gast_recorder.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/gast_recorder.js
 var require_gast_recorder = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/gast_recorder.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/parser/traits/gast_recorder.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.GastRecorder = void 0;
@@ -16648,9 +16648,9 @@ var require_gast_recorder = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/perf_tracer.js
+// node_modules/chevrotain/lib/src/parse/parser/traits/perf_tracer.js
 var require_perf_tracer = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/traits/perf_tracer.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/parser/traits/perf_tracer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PerformanceTracer = void 0;
@@ -16698,9 +16698,9 @@ var require_perf_tracer = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/parser.js
+// node_modules/chevrotain/lib/src/parse/parser/parser.js
 var require_parser = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/parse/parser/parser.js"(exports2) {
+  "node_modules/chevrotain/lib/src/parse/parser/parser.js"(exports2) {
     "use strict";
     var __extends = exports2 && exports2.__extends || /* @__PURE__ */ (function() {
       var extendStatics = function(d, b) {
@@ -16922,9 +16922,9 @@ var require_parser = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/diagrams/render_public.js
+// node_modules/chevrotain/lib/src/diagrams/render_public.js
 var require_render_public = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/diagrams/render_public.js"(exports2) {
+  "node_modules/chevrotain/lib/src/diagrams/render_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createSyntaxDiagramsCode = void 0;
@@ -16943,9 +16943,9 @@ var require_render_public = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/generate/generate.js
+// node_modules/chevrotain/lib/src/generate/generate.js
 var require_generate = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/generate/generate.js"(exports2) {
+  "node_modules/chevrotain/lib/src/generate/generate.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.genSingleAlt = exports2.genAlternation = exports2.genNonTerminal = exports2.genTerminal = exports2.genRule = exports2.genAllRules = exports2.genClass = exports2.genWrapperFunction = exports2.genUmdModule = void 0;
@@ -17063,9 +17063,9 @@ var require_generate = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/generate/generate_public.js
+// node_modules/chevrotain/lib/src/generate/generate_public.js
 var require_generate_public = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/generate/generate_public.js"(exports2) {
+  "node_modules/chevrotain/lib/src/generate/generate_public.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.generateParserModule = exports2.generateParserFactory = void 0;
@@ -17093,9 +17093,9 @@ var require_generate_public = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/chevrotain/lib/src/api.js
+// node_modules/chevrotain/lib/src/api.js
 var require_api4 = __commonJS({
-  "../xml-language-service/node_modules/chevrotain/lib/src/api.js"(exports2) {
+  "node_modules/chevrotain/lib/src/api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Parser = exports2.generateParserModule = exports2.generateParserFactory = exports2.createSyntaxDiagramsCode = exports2.clearCache = exports2.validateGrammar = exports2.resolveGrammar = exports2.assignOccurrenceIndices = exports2.GAstVisitor = exports2.serializeProduction = exports2.serializeGrammar = exports2.Terminal = exports2.Rule = exports2.RepetitionWithSeparator = exports2.RepetitionMandatoryWithSeparator = exports2.RepetitionMandatory = exports2.Repetition = exports2.Option = exports2.NonTerminal = exports2.Alternative = exports2.Alternation = exports2.defaultLexerErrorProvider = exports2.NoViableAltException = exports2.NotAllInputParsedException = exports2.MismatchedTokenException = exports2.isRecognitionException = exports2.EarlyExitException = exports2.defaultParserErrorProvider = exports2.defaultGrammarValidatorErrorProvider = exports2.defaultGrammarResolverErrorProvider = exports2.tokenName = exports2.tokenMatcher = exports2.tokenLabel = exports2.EOF = exports2.createTokenInstance = exports2.createToken = exports2.LexerDefinitionErrorType = exports2.Lexer = exports2.EMPTY_ALT = exports2.ParserDefinitionErrorType = exports2.EmbeddedActionsParser = exports2.CstParser = exports2.VERSION = void 0;
@@ -17252,9 +17252,9 @@ var require_api4 = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/@xml-tools/parser/lib/lexer.js
+// node_modules/@xml-tools/parser/lib/lexer.js
 var require_lexer2 = __commonJS({
-  "../xml-language-service/node_modules/@xml-tools/parser/lib/lexer.js"(exports2, module2) {
+  "node_modules/@xml-tools/parser/lib/lexer.js"(exports2, module2) {
     var { createToken: createTokenOrg, Lexer } = require_api4();
     var fragments = {};
     var f = fragments;
@@ -17422,9 +17422,9 @@ var require_lexer2 = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/@xml-tools/parser/lib/parser.js
+// node_modules/@xml-tools/parser/lib/parser.js
 var require_parser2 = __commonJS({
-  "../xml-language-service/node_modules/@xml-tools/parser/lib/parser.js"(exports2, module2) {
+  "node_modules/@xml-tools/parser/lib/parser.js"(exports2, module2) {
     var { CstParser, tokenMatcher } = require_api4();
     var { tokensDictionary: t } = require_lexer2();
     var Parser = class extends CstParser {
@@ -17592,9 +17592,9 @@ var require_parser2 = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/@xml-tools/parser/lib/api.js
+// node_modules/@xml-tools/parser/lib/api.js
 var require_api5 = __commonJS({
-  "../xml-language-service/node_modules/@xml-tools/parser/lib/api.js"(exports2, module2) {
+  "node_modules/@xml-tools/parser/lib/api.js"(exports2, module2) {
     var { xmlLexer } = require_lexer2();
     var { xmlParser } = require_parser2();
     module2.exports = {
@@ -17614,9 +17614,9 @@ var require_api5 = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/xerces-wasm/wasm/xerces_validator.js
+// node_modules/xerces-wasm/wasm/xerces_validator.js
 var require_xerces_validator = __commonJS({
-  "../xml-language-service/node_modules/xerces-wasm/wasm/xerces_validator.js"(exports2, module2) {
+  "node_modules/xerces-wasm/wasm/xerces_validator.js"(exports2, module2) {
     var XercesModule = (() => {
       var _scriptName = globalThis.document?.currentScript?.src;
       return async function(moduleArg = {}) {
@@ -21885,9 +21885,9 @@ ${functionBody}
   }
 });
 
-// ../xml-language-service/node_modules/xerces-wasm/dist/project-validator.js
+// node_modules/xerces-wasm/dist/project-validator.js
 var require_project_validator = __commonJS({
-  "../xml-language-service/node_modules/xerces-wasm/dist/project-validator.js"(exports2) {
+  "node_modules/xerces-wasm/dist/project-validator.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createProjectValidator = createProjectValidator;
@@ -21937,9 +21937,9 @@ var require_project_validator = __commonJS({
   }
 });
 
-// ../xml-language-service/node_modules/xerces-wasm/dist/index.js
+// node_modules/xerces-wasm/dist/index.js
 var require_dist = __commonJS({
-  "../xml-language-service/node_modules/xerces-wasm/dist/index.js"(exports2) {
+  "node_modules/xerces-wasm/dist/index.js"(exports2) {
     "use strict";
     var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -22241,10 +22241,10 @@ function getWellformedEdit(textEdit) {
   return textEdit;
 }
 
-// ../xml-language-service/dist/parser/xmlParser.js
+// node_modules/xml-language-service/dist/parser/xmlParser.js
 var import_parser = __toESM(require_api5(), 1);
 
-// ../xml-language-service/dist/utils/positionUtils.js
+// node_modules/xml-language-service/dist/utils/positionUtils.js
 function positionToOffset(text, position) {
   const lines = text.split("\n");
   const line = Math.max(0, Math.min(position.line, lines.length - 1));
@@ -22269,7 +22269,7 @@ function offsetToPosition(text, offset) {
   return { line, character: clamped - lineStart };
 }
 
-// ../xml-language-service/dist/parser/wellFormedness.js
+// node_modules/xml-language-service/dist/parser/wellFormedness.js
 var PREDEFINED_ENTITIES = /* @__PURE__ */ new Set(["amp", "lt", "gt", "quot", "apos"]);
 var ENTITY_DECL_RE = /<!ENTITY\s+([^\s%]+)/g;
 var ATTR_ENTITY_RE = /&([A-Za-z_:][\w.:-]*);/g;
@@ -22319,7 +22319,7 @@ function collectWellFormednessErrors(cst, text) {
   return errors;
 }
 
-// ../xml-language-service/dist/parser/xmlDocument.js
+// node_modules/xml-language-service/dist/parser/xmlDocument.js
 function isFiniteNumber(n) {
   return typeof n === "number" && Number.isFinite(n);
 }
@@ -22437,13 +22437,13 @@ var XMLDocumentImpl = class {
   }
 };
 
-// ../xml-language-service/dist/parser/xmlParser.js
+// node_modules/xml-language-service/dist/parser/xmlParser.js
 function parseXMLDocument(uri, text) {
   const { cst, lexErrors, parseErrors } = (0, import_parser.parse)(text);
   return new XMLDocumentImpl(uri, text, cst, lexErrors, parseErrors);
 }
 
-// ../xml-language-service/dist/utils/xmlPrinter.js
+// node_modules/xml-language-service/dist/utils/xmlPrinter.js
 function printTreeAST(document) {
   const lines = ["Document"];
   renderTreeNodes(document.children.filter((c) => c.type === "element"), "", lines);
@@ -22654,7 +22654,7 @@ function cstNodeToJSON(node, opts) {
   return null;
 }
 
-// ../xml-language-service/dist/services/xmlCompletion.js
+// node_modules/xml-language-service/dist/services/xmlCompletion.js
 function doComplete(document, position, schemaProvider) {
   const offset = positionToOffset(document.text, position);
   const textBefore = document.text.substring(0, offset);
@@ -22765,7 +22765,7 @@ function doComplete(document, position, schemaProvider) {
   return { items: [], isIncomplete: false };
 }
 
-// ../xml-language-service/dist/utils/rangeUtils.js
+// node_modules/xml-language-service/dist/utils/rangeUtils.js
 function offsetsToRange(text, startOffset, endOffset) {
   return {
     start: offsetToPosition(text, startOffset),
@@ -22773,7 +22773,7 @@ function offsetsToRange(text, startOffset, endOffset) {
   };
 }
 
-// ../xml-language-service/dist/services/xmlHover.js
+// node_modules/xml-language-service/dist/services/xmlHover.js
 function doHover(document, position, schemaProvider) {
   const offset = positionToOffset(document.text, position);
   const node = document.findNodeAt(offset);
@@ -22812,7 +22812,7 @@ ${attrLines}`);
   };
 }
 
-// ../xml-language-service/dist/services/xmlSymbols.js
+// node_modules/xml-language-service/dist/services/xmlSymbols.js
 var ARTIFACT_ELEMENTS = /* @__PURE__ */ new Set([
   "api",
   "endpoint",
@@ -22924,7 +22924,7 @@ function getSymbolKind(node) {
   return node.children.length > 0 ? "object" : "field";
 }
 
-// ../xml-language-service/dist/services/xmlFolding.js
+// node_modules/xml-language-service/dist/services/xmlFolding.js
 function getFoldingRanges(document) {
   const result = [];
   collectRanges(document.children, document.text, result);
@@ -22953,7 +22953,7 @@ function collectRanges(nodes, text, result) {
   }
 }
 
-// ../xml-language-service/dist/utils/tagUtils.js
+// node_modules/xml-language-service/dist/utils/tagUtils.js
 function findCloseTagStart(text, node) {
   if (!node.name || node.isSelfClosing)
     return -1;
@@ -22969,7 +22969,7 @@ function getRootNamespace(document) {
   return root?.attributes.find((a) => a.name === "xmlns")?.value;
 }
 
-// ../xml-language-service/dist/services/xmlFormatter.js
+// node_modules/xml-language-service/dist/services/xmlFormatter.js
 function format(document, options) {
   if (!document.text)
     return [];
@@ -23136,7 +23136,7 @@ function indent(level, unit) {
   return unit.repeat(level);
 }
 
-// ../xml-language-service/dist/services/xmlRename.js
+// node_modules/xml-language-service/dist/services/xmlRename.js
 function doRename(document, position, newName) {
   if (!newName || /[\s<>]/.test(newName))
     return null;
@@ -23156,7 +23156,7 @@ function doRename(document, position, newName) {
   return edits;
 }
 
-// ../xml-language-service/dist/services/xmlDefinition.js
+// node_modules/xml-language-service/dist/services/xmlDefinition.js
 function doDefinition(document, position) {
   const offset = positionToOffset(document.text, position);
   const node = document.findNodeAt(offset);
@@ -23178,7 +23178,7 @@ function doDefinition(document, position) {
   };
 }
 
-// ../xml-language-service/dist/services/xmlReferences.js
+// node_modules/xml-language-service/dist/services/xmlReferences.js
 function findReferences(document, position) {
   const offset = positionToOffset(document.text, position);
   const node = document.findNodeAt(offset);
@@ -23197,7 +23197,7 @@ function findReferences(document, position) {
   return results;
 }
 
-// ../xml-language-service/dist/schema/xsdValidator.js
+// node_modules/xml-language-service/dist/schema/xsdValidator.js
 var import_xerces_wasm = __toESM(require_dist(), 1);
 async function toText(input) {
   if (typeof input === "string")
@@ -23306,7 +23306,7 @@ var XsdValidatorService = class _XsdValidatorService {
   }
 };
 
-// ../xml-language-service/dist/schema/xsdCompletionProvider.js
+// node_modules/xml-language-service/dist/schema/xsdCompletionProvider.js
 var import_parser2 = __toESM(require_api5(), 1);
 var XsdCompletionProvider = class {
   constructor(xsdText) {
@@ -23685,7 +23685,7 @@ var XsdCompletionProvider = class {
   }
 };
 
-// ../xml-language-service/dist/schema/schemaAssociator.js
+// node_modules/xml-language-service/dist/schema/schemaAssociator.js
 var import_fs = __toESM(require("fs"), 1);
 var import_path = __toESM(require("path"), 1);
 var import_url = require("url");
@@ -23843,7 +23843,7 @@ var SchemaAssociator = class {
   }
 };
 
-// ../xml-language-service/dist/schema/schemaProvider.js
+// node_modules/xml-language-service/dist/schema/schemaProvider.js
 function resolveRelativePath(basePath, location) {
   const parts = basePath.split("/");
   parts.pop();
@@ -24033,7 +24033,7 @@ var SchemaProvider = class {
   }
 };
 
-// ../xml-language-service/dist/xmlLanguageService.js
+// node_modules/xml-language-service/dist/xmlLanguageService.js
 function getLanguageService() {
   const schemaProvider = new SchemaProvider();
   return {
