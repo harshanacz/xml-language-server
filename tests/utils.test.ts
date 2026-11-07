@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import * as os from "os";
+import * as path from "path";
+import { pathToFileURL } from "url";
 import { CompletionItemKind, MarkupKind, SymbolKind } from "vscode-languageserver/node.js";
 import {
   escapeMd,
@@ -26,12 +29,23 @@ describe("getFileName", () => {
 });
 
 describe("getDocumentPath", () => {
-  it("converts file URIs to paths", () => {
-    expect(getDocumentPath("file:///a/b/c.xml")).toBe("/a/b/c.xml");
+  it("round-trips a path through a file URI on any platform", () => {
+    const file = path.join(os.tmpdir(), "my dir", "café.xml");
+    expect(getDocumentPath(pathToFileURL(file).href)).toBe(file);
   });
 
-  it("decodes percent-encoded characters", () => {
+  it.runIf(process.platform !== "win32")("converts file URIs to paths", () => {
+    expect(getDocumentPath("file:///a/b/c.xml")).toBe("/a/b/c.xml");
     expect(getDocumentPath("file:///my%20dir/caf%C3%A9.xml")).toBe("/my dir/café.xml");
+  });
+
+  it.runIf(process.platform === "win32")("converts Windows drive URIs, including the encoded colon VS Code sends", () => {
+    expect(getDocumentPath("file:///C:/Users/me/a.xml")).toBe("C:\\Users\\me\\a.xml");
+    expect(getDocumentPath("file:///c%3A/Users/me/a.xml")).toBe("c:\\Users\\me\\a.xml");
+  });
+
+  it("does not throw for a file URI that fileURLToPath rejects", () => {
+    expect(() => getDocumentPath("file://some-host/share/a.xml")).not.toThrow();
   });
 
   it("returns undefined for non-file URIs", () => {

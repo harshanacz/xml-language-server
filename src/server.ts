@@ -12,7 +12,7 @@ import { getLanguageService } from "xml-language-service";
 import { DiagnosticsHandler } from "./diagnosticsHandler.js";
 import { SchemaConfig, applySchemaSettings } from "./configuration.js";
 import { registerRequestHandlers } from "./requestHandlers.js";
-import { formatError } from "./utils.js";
+import { formatError, getDocumentPath } from "./utils.js";
 
 const connection = createConnection(ProposedFeatures.all);
 const documents = new TextDocuments(TextDocument);
@@ -42,9 +42,9 @@ async function validateOpenDocumentsSafely(reason: string): Promise<void> {
 // ── LSP lifecycle ────────────────────────────────────────────────────────────
 
 connection.onInitialize((params: InitializeParams): InitializeResult => {
-  workspaceRoots = (params.workspaceFolders ?? []).map((f) =>
-    decodeURIComponent(f.uri.replace("file://", ""))
-  );
+  workspaceRoots = (params.workspaceFolders ?? [])
+    .map((f) => getDocumentPath(f.uri))
+    .filter((root): root is string => root !== undefined);
   connection.console.log("=== STARTUP WAS TRIGGERED!===");
   connection.console.log("==================");
   connection.console.log(`intalize params:\n${JSON.stringify(params, null, 2)}`);
