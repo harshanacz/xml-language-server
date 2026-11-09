@@ -24117,7 +24117,7 @@ function getLanguageService() {
 }
 
 // src/diagnosticsHandler.ts
-var import_node = __toESM(require_node3());
+var import_node2 = __toESM(require_node3());
 var fs3 = __toESM(require("fs"));
 var path3 = __toESM(require("path"));
 
@@ -24237,15 +24237,81 @@ function readSchema(xsdPath) {
   }
 }
 
+// src/utils.ts
+var import_node = __toESM(require_node3());
+var import_url3 = require("url");
+function getFileName(uri) {
+  return uri.split("/").pop();
+}
+function getDocumentPath(uri) {
+  if (!uri.startsWith("file://")) return void 0;
+  try {
+    return (0, import_url3.fileURLToPath)(uri);
+  } catch {
+    return decodeURIComponent(uri.replace("file://", ""));
+  }
+}
+function formatError(error) {
+  if (error instanceof Error) return error.stack ?? error.message;
+  return String(error);
+}
+var COMPLETION_KIND_MAP = {
+  element: import_node.CompletionItemKind.Class,
+  attribute: import_node.CompletionItemKind.Property,
+  value: import_node.CompletionItemKind.Value,
+  closeTag: import_node.CompletionItemKind.Keyword
+};
+var DOCUMENT_SYMBOL_KIND_MAP = {
+  namespace: import_node.SymbolKind.Namespace,
+  class: import_node.SymbolKind.Class,
+  method: import_node.SymbolKind.Method,
+  function: import_node.SymbolKind.Function,
+  property: import_node.SymbolKind.Property,
+  field: import_node.SymbolKind.Field,
+  interface: import_node.SymbolKind.Interface,
+  struct: import_node.SymbolKind.Struct,
+  array: import_node.SymbolKind.Array,
+  object: import_node.SymbolKind.Object
+};
+function toLSPCompletionList(list) {
+  return {
+    isIncomplete: list.isIncomplete,
+    items: list.items.map((item) => ({
+      label: item.label,
+      kind: COMPLETION_KIND_MAP[item.kind],
+      insertText: item.insertText,
+      detail: item.detail
+    }))
+  };
+}
+function toLSPDocumentSymbol(sym) {
+  return {
+    name: sym.name,
+    kind: DOCUMENT_SYMBOL_KIND_MAP[sym.kind],
+    range: sym.range,
+    selectionRange: sym.selectionRange,
+    children: sym.children.map(toLSPDocumentSymbol)
+  };
+}
+function toLSPHover(result) {
+  return {
+    contents: { kind: import_node.MarkupKind.Markdown, value: result.contents },
+    range: result.range
+  };
+}
+function toLSPFoldingRange(r) {
+  return { startLine: r.startLine, endLine: r.endLine, kind: r.kind };
+}
+
 // src/diagnosticsHandler.ts
 var MAX_SCHEMA_IMPORT_FILES = 200;
 var MAX_SCHEMA_IMPORT_FILE_BYTES = 2 * 1024 * 1024;
 var MAX_SCHEMA_IMPORT_TOTAL_BYTES = 20 * 1024 * 1024;
 var MAX_SCHEMA_IMPORT_DEPTH = 10;
 var SEVERITY_MAP = {
-  error: import_node.DiagnosticSeverity.Error,
-  warning: import_node.DiagnosticSeverity.Warning,
-  info: import_node.DiagnosticSeverity.Information
+  error: import_node2.DiagnosticSeverity.Error,
+  warning: import_node2.DiagnosticSeverity.Warning,
+  info: import_node2.DiagnosticSeverity.Information
 };
 var DiagnosticsHandler = class {
   // auto:// URI -> XSD path it was registered with
@@ -24269,7 +24335,7 @@ var DiagnosticsHandler = class {
   }
   async validateAndSend(document) {
     const fileName = document.uri.split("/").pop() ?? "";
-    const documentPath = document.uri.startsWith("file://") ? decodeURIComponent(document.uri.replace("file://", "")) : void 0;
+    const documentPath = getDocumentPath(document.uri);
     const text = document.getText();
     const xmlDoc = this.service.parseXMLDocument(document.uri, text);
     const xmlns = xmlDoc.getNamespace?.() ?? void 0;
@@ -24517,67 +24583,6 @@ function resolveXsdPath(xsdPath, workspaceRoots2) {
   return null;
 }
 
-// src/utils.ts
-var import_node2 = __toESM(require_node3());
-function getFileName(uri) {
-  return uri.split("/").pop();
-}
-function getDocumentPath(uri) {
-  if (!uri.startsWith("file://")) return void 0;
-  return decodeURIComponent(uri.replace("file://", ""));
-}
-function formatError(error) {
-  if (error instanceof Error) return error.stack ?? error.message;
-  return String(error);
-}
-var COMPLETION_KIND_MAP = {
-  element: import_node2.CompletionItemKind.Class,
-  attribute: import_node2.CompletionItemKind.Property,
-  value: import_node2.CompletionItemKind.Value,
-  closeTag: import_node2.CompletionItemKind.Keyword
-};
-var DOCUMENT_SYMBOL_KIND_MAP = {
-  namespace: import_node2.SymbolKind.Namespace,
-  class: import_node2.SymbolKind.Class,
-  method: import_node2.SymbolKind.Method,
-  function: import_node2.SymbolKind.Function,
-  property: import_node2.SymbolKind.Property,
-  field: import_node2.SymbolKind.Field,
-  interface: import_node2.SymbolKind.Interface,
-  struct: import_node2.SymbolKind.Struct,
-  array: import_node2.SymbolKind.Array,
-  object: import_node2.SymbolKind.Object
-};
-function toLSPCompletionList(list) {
-  return {
-    isIncomplete: list.isIncomplete,
-    items: list.items.map((item) => ({
-      label: item.label,
-      kind: COMPLETION_KIND_MAP[item.kind],
-      insertText: item.insertText,
-      detail: item.detail
-    }))
-  };
-}
-function toLSPDocumentSymbol(sym) {
-  return {
-    name: sym.name,
-    kind: DOCUMENT_SYMBOL_KIND_MAP[sym.kind],
-    range: sym.range,
-    selectionRange: sym.selectionRange,
-    children: sym.children.map(toLSPDocumentSymbol)
-  };
-}
-function toLSPHover(result) {
-  return {
-    contents: { kind: import_node2.MarkupKind.Markdown, value: result.contents },
-    range: result.range
-  };
-}
-function toLSPFoldingRange(r) {
-  return { startLine: r.startLine, endLine: r.endLine, kind: r.kind };
-}
-
 // src/requestHandlers.ts
 function registerRequestHandlers(connection2, documents2, service2, diagnosticsHandler2) {
   const xmlDocCache = /* @__PURE__ */ new Map();
@@ -24707,9 +24712,7 @@ async function validateOpenDocumentsSafely(reason) {
   await Promise.all(documents.all().map((doc) => validateAndSendSafely(doc, reason)));
 }
 connection.onInitialize((params) => {
-  workspaceRoots = (params.workspaceFolders ?? []).map(
-    (f) => decodeURIComponent(f.uri.replace("file://", ""))
-  );
+  workspaceRoots = (params.workspaceFolders ?? []).map((f) => getDocumentPath(f.uri)).filter((root) => root !== void 0);
   connection.console.log("=== STARTUP WAS TRIGGERED!===");
   connection.console.log("==================");
   connection.console.log(`intalize params:
