@@ -62,6 +62,10 @@ async function diagnose(client: LspClient, ws: string, file: string, text: strin
   return diagnostics;
 }
 
+function changeSchemas(client: LspClient, schemas: unknown): void {
+  client.notify("workspace/didChangeConfiguration", { settings: { xmlLanguageServer: { schemas } } });
+}
+
 beforeAll(() => {
   ({ dir: bundleDir, serverPath } = buildServerBundle());
 }, 60_000);
@@ -221,6 +225,157 @@ describe("schema selection", () => {
     const pom = '<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><bogus/></project>';
     const messages = (await diagnose(client, ws, "pom.xml", pom)).map((d) => d.message);
     expect(messages.some((m) => m.includes("bogus"))).toBe(true);
+  });
+});
+
+describe("schema settings changes", () => {
+  const invalid = `<library>${INVALID_BOOK}</library>`;
+  const hasYearError = (diagnostics: PublishedDiagnostic[]) => diagnostics.some((d) => d.message.includes("'abc'"));
+
+  /** Sends a settings change and resolves with the next diagnostics published for each uri. */
+  async function afterChange(client: LspClient, schemas: unknown, ...uris: string[]): Promise<PublishedDiagnostic[][]> {
+    const counts = uris.map((uri) => client.publishCount(uri));
+    changeSchemas(client, schemas);
+    return Promise.all(uris.map((uri, i) => client.diagnosticsFor(uri, counts[i])));
+  }
+
+  it("applies a schema added by a settings change", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const { client } = await start(ws);
+    const uri = client.open(path.join(ws, "cfg.xml"), `<library>${INVALID_BOOK}</library>`);
+    expect((await client.diagnosticsFor(uri)).some((d) => d.message.includes("'abc'"))).toBe(false);
+
+    const before = client.publishCount(uri);
+    changeSchemas(client, [{ pattern: "cfg.xml", xsdPath: "books.xsd" }]);
+    expect((await client.diagnosticsFor(uri, before)).some((d) => d.message.includes("'abc'"))).toBe(true);
+  });
+
+  it("stops using a schema removed by a settings change", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const { client } = await start(ws, { configuration: { schemas: [{ pattern: "cfg.xml", xsdPath: "books.xsd" }] } });
+    const uri = client.open(path.join(ws, "cfg.xml"), `<library>${INVALID_BOOK}</library>`);
+    expect((await client.diagnosticsFor(uri)).some((d) => d.message.includes("'abc'"))).toBe(true);
+
+    const before = client.publishCount(uri);
+    changeSchemas(client, []);
+    expect(await client.diagnosticsFor(uri, before)).toEqual([]);
+  });
+
+  it("keeps schemas from initializationOptions after a settings change", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const { client } = await start(ws, { initializationOptions: { schemas: [{ pattern: "cfg.xml", xsdPath: "books.xsd" }] } });
+    const uri = client.open(path.join(ws, "cfg.xml"), `<library>${INVALID_BOOK}</library>`);
+    expect((await client.diagnosticsFor(uri)).some((d) => d.message.includes("'abc'"))).toBe(true);
+
+    const before = client.publishCount(uri);
+    changeSchemas(client, []);
+    expect((await client.diagnosticsFor(uri, before)).some((d) => d.message.includes("'abc'"))).toBe(true);
+  });
+
+  it("switches to the new XSD when an entry's xsdPath is edited", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD, "lenient.xsd": LENIENT_XSD });
+    const { client } = await start(ws, { configuration: { schemas: [{ pattern: "cfg.xml", xsdPath: "books.xsd" }] } });
+    const uri = client.open(path.join(ws, "cfg.xml"), invalid);
+    expect(hasYearError(await client.diagnosticsFor(uri))).toBe(true);
+
+    const [after] = await afterChange(client, [{ pattern: "cfg.xml", xsdPath: "lenient.xsd" }], uri);
+    expect(after).toEqual([]);
+  });
+
+  it("moves validation to other files when an entry's pattern is edited", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const { client } = await start(ws, { configuration: { schemas: [{ pattern: "a.xml", xsdPath: "books.xsd" }] } });
+    const a = client.open(path.join(ws, "a.xml"), invalid);
+    const b = client.open(path.join(ws, "b.xml"), invalid);
+    expect(hasYearError(await client.diagnosticsFor(a))).toBe(true);
+    expect(hasYearError(await client.diagnosticsFor(b))).toBe(false);
+
+    const [afterA, afterB] = await afterChange(client, [{ pattern: "b.xml", xsdPath: "books.xsd" }], a, b);
+    expect(afterA).toEqual([]);
+    expect(hasYearError(afterB)).toBe(true);
+  });
+
+  it("does not accumulate associations across repeated changes", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD, "lenient.xsd": LENIENT_XSD });
+    const { client } = await start(ws);
+    const uri = client.open(path.join(ws, "cfg.xml"), invalid);
+    await client.diagnosticsFor(uri);
+
+    const books = [{ pattern: "cfg.xml", xsdPath: "books.xsd" }];
+    const lenient = [{ pattern: "cfg.xml", xsdPath: "lenient.xsd" }];
+    expect(hasYearError((await afterChange(client, books, uri))[0])).toBe(true);
+    expect((await afterChange(client, lenient, uri))[0]).toEqual([]);
+    expect(hasYearError((await afterChange(client, books, uri))[0])).toBe(true);
+    expect((await afterChange(client, [], uri))[0]).toEqual([]);
+    expect(hasYearError((await afterChange(client, books, uri))[0])).toBe(true);
+  });
+
+  it("falls back to the document's own xsi hint when the configured schema is removed", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD, "lenient.xsd": LENIENT_XSD });
+    const { client } = await start(ws, { configuration: { schemas: [{ pattern: "doc.xml", xsdPath: "lenient.xsd" }] } });
+    const uri = client.open(path.join(ws, "doc.xml"), `<library ${XSI} xsi:noNamespaceSchemaLocation="books.xsd">${INVALID_BOOK}</library>`);
+    expect(await client.diagnosticsFor(uri)).toEqual([]);
+
+    const [after] = await afterChange(client, [], uri);
+    expect(hasYearError(after)).toBe(true);
+  });
+
+  it("revalidates every open document", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const { client } = await start(ws);
+    const uris = ["one.xml", "two.xml", "nested/three.xml"].map((file) => client.open(path.join(ws, file), invalid));
+    await Promise.all(uris.map((uri) => client.diagnosticsFor(uri)));
+
+    const after = await afterChange(client, [{ pattern: "**/*.xml", xsdPath: "books.xsd" }], ...uris);
+    expect(after.every(hasYearError)).toBe(true);
+  });
+
+  it("re-reads the XSD from disk when settings change", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const schemas = [{ pattern: "cfg.xml", xsdPath: "books.xsd" }];
+    const { client } = await start(ws, { configuration: { schemas } });
+    const uri = client.open(path.join(ws, "cfg.xml"), invalid);
+    expect(hasYearError(await client.diagnosticsFor(uri))).toBe(true);
+
+    fs.writeFileSync(path.join(ws, "books.xsd"), LENIENT_XSD);
+    const [after] = await afterChange(client, schemas, uri);
+    expect(after).toEqual([]);
+  });
+
+  it("applies the valid entries and skips malformed ones", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const { client } = await start(ws);
+    const uri = client.open(path.join(ws, "cfg.xml"), invalid);
+    await client.diagnosticsFor(uri);
+
+    const [after] = await afterChange(client, [{ pattern: 1 }, "books.xsd", null, { pattern: "cfg.xml", xsdPath: "books.xsd" }], uri);
+    expect(hasYearError(after)).toBe(true);
+    expect(client.logs.some((m) => m.includes("Ignoring schema entry"))).toBe(true);
+  });
+
+  it("treats a non-array or missing schemas value as no schemas", async () => {
+    const ws = workspace({ "books.xsd": BOOKS_XSD });
+    const { client } = await start(ws, { configuration: { schemas: [{ pattern: "cfg.xml", xsdPath: "books.xsd" }] } });
+    const uri = client.open(path.join(ws, "cfg.xml"), invalid);
+    expect(hasYearError(await client.diagnosticsFor(uri))).toBe(true);
+
+    expect((await afterChange(client, "books.xsd", uri))[0]).toEqual([]);
+
+    expect(hasYearError((await afterChange(client, [{ pattern: "cfg.xml", xsdPath: "books.xsd" }], uri))[0])).toBe(true);
+    const before = client.publishCount(uri);
+    client.notify("workspace/didChangeConfiguration", { settings: {} });
+    expect(await client.diagnosticsFor(uri, before)).toEqual([]);
+  });
+
+  it("warns and falls back to syntax checks when a configured xsdPath does not exist", async () => {
+    const ws = workspace();
+    const { client } = await start(ws);
+    const uri = client.open(path.join(ws, "cfg.xml"), "<library><a></b></library>");
+    await client.diagnosticsFor(uri);
+
+    const [after] = await afterChange(client, [{ pattern: "cfg.xml", xsdPath: "missing.xsd" }], uri);
+    expect(after.some((d) => d.message.startsWith("expected end of tag"))).toBe(true);
+    expect(client.logs.some((m) => m.includes("Cannot resolve xsdPath 'missing.xsd'"))).toBe(true);
   });
 });
 
