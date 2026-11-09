@@ -10,15 +10,27 @@ export interface SchemaConfig {
   xsdPath: string;
 }
 
-export function applySchemaSettings(
+/**
+ * Registers the configured schema associations. With `replace`, the associations from earlier
+ * settings and the schemas already registered for documents are dropped first, so removed or
+ * edited entries stop applying.
+ */
+export async function applySchemaSettings(
   schemas: SchemaConfig[],
   connection: Connection,
   service: LanguageService,
   workspaceRoots: string[],
-  invalidate = false
-): void {
-  if (invalidate) service.invalidateAutoSchemas();
-  for (const entry of schemas) {
+  replace = false
+): Promise<void> {
+  if (replace) {
+    service.clearUserAssociations();
+    await service.invalidateAutoSchemas();
+  }
+  for (const entry of Array.isArray(schemas) ? schemas : []) {
+    if (typeof entry?.pattern !== "string" || typeof entry?.xsdPath !== "string") {
+      connection.console.warn(`[config] Ignoring schema entry without a string pattern and xsdPath: ${JSON.stringify(entry)}`);
+      continue;
+    }
     const resolved = resolveXsdPath(entry.xsdPath, workspaceRoots);
 
     if (!resolved) {

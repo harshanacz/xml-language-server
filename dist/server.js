@@ -24558,9 +24558,16 @@ var DiagnosticsHandler = class {
 // src/configuration.ts
 var fs4 = __toESM(require("fs"));
 var path4 = __toESM(require("path"));
-function applySchemaSettings(schemas, connection2, service2, workspaceRoots2, invalidate = false) {
-  if (invalidate) service2.invalidateAutoSchemas();
-  for (const entry of schemas) {
+async function applySchemaSettings(schemas, connection2, service2, workspaceRoots2, replace = false) {
+  if (replace) {
+    service2.clearUserAssociations();
+    await service2.invalidateAutoSchemas();
+  }
+  for (const entry of Array.isArray(schemas) ? schemas : []) {
+    if (typeof entry?.pattern !== "string" || typeof entry?.xsdPath !== "string") {
+      connection2.console.warn(`[config] Ignoring schema entry without a string pattern and xsdPath: ${JSON.stringify(entry)}`);
+      continue;
+    }
     const resolved = resolveXsdPath(entry.xsdPath, workspaceRoots2);
     if (!resolved) {
       connection2.console.warn(
@@ -24721,7 +24728,7 @@ ${JSON.stringify(params, null, 2)}`);
 ${JSON.stringify(params.initializationOptions, null, 2)}`);
   connection.console.log("======");
   const schemas = params.initializationOptions?.schemas ?? [];
-  if (schemas.length > 0) applySchemaSettings(schemas, connection, service, workspaceRoots);
+  if (schemas.length > 0) void applySchemaSettings(schemas, connection, service, workspaceRoots);
   return {
     capabilities: {
       textDocumentSync: import_node3.TextDocumentSyncKind.Incremental,
@@ -24741,7 +24748,7 @@ connection.onInitialized(async () => {
   try {
     const config = await connection.workspace.getConfiguration("xmlLanguageServer");
     connection.console.log(`[config] Fetched initial config: ${JSON.stringify(config)}`);
-    applySchemaSettings(config?.schemas ?? [], connection, service, workspaceRoots);
+    await applySchemaSettings(config?.schemas ?? [], connection, service, workspaceRoots);
   } catch (e) {
     connection.console.log(`[config] Could not fetch initial config: ${e}`);
   } finally {
@@ -24749,12 +24756,12 @@ connection.onInitialized(async () => {
     await validateOpenDocumentsSafely("initial configuration");
   }
 });
-connection.onDidChangeConfiguration((params) => {
+connection.onDidChangeConfiguration(async (params) => {
   connection.console.log(
     `[config] onDidChangeConfiguration fired: ${JSON.stringify(params.settings?.xmlLanguageServer)}`
   );
   const schemas = params.settings?.xmlLanguageServer?.schemas ?? [];
-  applySchemaSettings(schemas, connection, service, workspaceRoots, true);
+  await applySchemaSettings(schemas, connection, service, workspaceRoots, true);
   if (!initialConfigurationLoaded) {
     connection.console.log("[config] Deferring configuration-change validation until initial configuration is loaded");
     return;

@@ -218,3 +218,43 @@ describe("applySchemaSettings — multi-root workspace", () => {
     expect(warnings.some((w) => w.includes("missing.xsd"))).toBe(true);
   });
 });
+
+// ── Malformed settings and replacement ───────────────────────────────────────
+
+describe("applySchemaSettings — malformed settings and replacement", () => {
+  it("skips entries without a string pattern and xsdPath, and ignores a non-array value", async () => {
+    const root = makeTempDir();
+    writeFile(path.join(root, "main.xsd"), "<xs:schema/>");
+
+    const { connection, warnings } = createConnection();
+    const { service, registered } = createService();
+
+    await applySchemaSettings(
+      [{ pattern: "**/*.xml" }, null, { pattern: "a.xml", xsdPath: "main.xsd" }] as any,
+      connection,
+      service,
+      [root]
+    );
+    await applySchemaSettings({} as any, connection, service, [root]);
+
+    expect(registered.map((r) => r.pattern)).toEqual(["a.xml"]);
+    expect(warnings.filter((w) => w.includes("Ignoring schema entry"))).toHaveLength(2);
+  });
+
+  it("clears earlier associations and registered schemas before applying when replacing", async () => {
+    const calls: string[] = [];
+    const service = {
+      clearUserAssociations: () => calls.push("clear"),
+      invalidateAutoSchemas: async () => {
+        calls.push("invalidate");
+      },
+      addUserAssociation: () => calls.push("add"),
+    } as any;
+    const root = makeTempDir();
+    writeFile(path.join(root, "main.xsd"), "<xs:schema/>");
+
+    await applySchemaSettings([{ pattern: "a.xml", xsdPath: "main.xsd" }], createConnection().connection, service, [root], true);
+
+    expect(calls).toEqual(["clear", "invalidate", "add"]);
+  });
+});

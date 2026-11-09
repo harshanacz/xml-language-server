@@ -52,7 +52,7 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
   connection.console.log("======");
 
   const schemas: SchemaConfig[] = (params.initializationOptions as any)?.schemas ?? [];
-  if (schemas.length > 0) applySchemaSettings(schemas, connection, service, workspaceRoots);
+  if (schemas.length > 0) void applySchemaSettings(schemas, connection, service, workspaceRoots);
 
   return {
     capabilities: {
@@ -74,7 +74,7 @@ connection.onInitialized(async () => {
   try {
     const config = await connection.workspace.getConfiguration("xmlLanguageServer");
     connection.console.log(`[config] Fetched initial config: ${JSON.stringify(config)}`);
-    applySchemaSettings(config?.schemas ?? [], connection, service, workspaceRoots);
+    await applySchemaSettings(config?.schemas ?? [], connection, service, workspaceRoots);
   } catch (e) {
     connection.console.log(`[config] Could not fetch initial config: ${e}`);
   } finally {
@@ -83,12 +83,12 @@ connection.onInitialized(async () => {
   }
 });
 
-connection.onDidChangeConfiguration((params: DidChangeConfigurationParams) => {
+connection.onDidChangeConfiguration(async (params: DidChangeConfigurationParams) => {
   connection.console.log(
     `[config] onDidChangeConfiguration fired: ${JSON.stringify(params.settings?.xmlLanguageServer)}`
   );
   const schemas: SchemaConfig[] = params.settings?.xmlLanguageServer?.schemas ?? [];
-  applySchemaSettings(schemas, connection, service, workspaceRoots, true);
+  await applySchemaSettings(schemas, connection, service, workspaceRoots, true);
   if (!initialConfigurationLoaded) {
     connection.console.log("[config] Deferring configuration-change validation until initial configuration is loaded");
     return;
