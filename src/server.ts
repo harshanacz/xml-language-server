@@ -21,6 +21,8 @@ const diagnosticsHandler = new DiagnosticsHandler(connection, service);
 
 let workspaceRoots: string[] = [];
 let initialConfigurationLoaded = false;
+// Schemas from initializationOptions are fixed for the session; settings changes are applied on top of them.
+let initializationSchemas: SchemaConfig[] = [];
 
 // ── Validation helpers ───────────────────────────────────────────────────────
 
@@ -51,8 +53,9 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
   connection.console.log(`initalize options:\n${JSON.stringify(params.initializationOptions, null, 2)}`);
   connection.console.log("======");
 
-  const schemas: SchemaConfig[] = (params.initializationOptions as any)?.schemas ?? [];
-  if (schemas.length > 0) void applySchemaSettings(schemas, connection, service, workspaceRoots);
+  const schemas = (params.initializationOptions as any)?.schemas;
+  initializationSchemas = Array.isArray(schemas) ? schemas : [];
+  if (initializationSchemas.length > 0) void applySchemaSettings(initializationSchemas, connection, service, workspaceRoots);
 
   return {
     capabilities: {
@@ -87,8 +90,14 @@ connection.onDidChangeConfiguration(async (params: DidChangeConfigurationParams)
   connection.console.log(
     `[config] onDidChangeConfiguration fired: ${JSON.stringify(params.settings?.xmlLanguageServer)}`
   );
-  const schemas: SchemaConfig[] = params.settings?.xmlLanguageServer?.schemas ?? [];
-  await applySchemaSettings(schemas, connection, service, workspaceRoots, true);
+  const schemas = params.settings?.xmlLanguageServer?.schemas;
+  await applySchemaSettings(
+    [...initializationSchemas, ...(Array.isArray(schemas) ? schemas : [])],
+    connection,
+    service,
+    workspaceRoots,
+    true
+  );
   if (!initialConfigurationLoaded) {
     connection.console.log("[config] Deferring configuration-change validation until initial configuration is loaded");
     return;
