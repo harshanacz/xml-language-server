@@ -30,7 +30,7 @@ src/
 1. The editor spawns the server process and communicates over **stdio** using standard JSON-RPC (LSP).
 2. On `initialize`, the server reads schema associations from `initializationOptions` and registers them.
 3. On `onInitialized`, it fetches `xmlLanguageServer.schemas` from the editor workspace config and applies them.
-4. Every time a document changes, `DiagnosticsHandler` resolves the matching XSD schema (by filename or namespace), loads all `xs:include`/`xs:import` references from disk, and pushes validation diagnostics back to the editor.
+4. Every time a document changes, `DiagnosticsHandler` picks the XSD schema for it (see [Schema selection](#schema-selection)), loads all `xs:include`/`xs:import` references from disk, and pushes validation diagnostics back to the editor.
 5. All other requests (completion, hover, rename, etc.) parse the document on demand and delegate directly to `xml-language-service`.
 
 ## Configuration
@@ -44,7 +44,18 @@ In your editor's workspace settings, map file patterns to local XSD schemas:
 ]
 ```
 
-`xsdPath` can be absolute or relative to the workspace root. The server automatically follows `xs:include`/`xs:import` chains in the XSD (up to 10 levels deep, 200 files, 20 MB total).
+`xsdPath` can be absolute or relative to a workspace folder. In a multi-root workspace, each folder is tried in order and the first one that contains the file is used. The server automatically follows `xs:include`/`xs:import` chains in the XSD (up to 10 levels deep, 200 files, 20 MB total).
+
+### Schema selection
+
+For each document the server uses the first of these that applies:
+
+1. **Your settings.** The first entry in `xmlLanguageServer.schemas` whose `pattern` matches the file.
+2. **The document's own hint.** `xsi:noNamespaceSchemaLocation` or `xsi:schemaLocation` on the root element, when it points to a local `.xsd` file. A relative location is resolved against the document's folder. `http(s)` locations are ignored at this step.
+3. **The built-in catalog.** Matched by file name or by the root element's namespace.
+4. **A remote schema.** An `http(s)` schema location in the document is downloaded once and cached.
+
+If none applies, the document is only checked for XML syntax errors.
 
 ## LSP capabilities
 
